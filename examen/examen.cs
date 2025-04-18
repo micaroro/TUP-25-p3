@@ -211,10 +211,9 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void GuardarRespuestas(string destino){
-        var random = new Random();
         using (var sw = new StreamWriter(destino)) {
             foreach (var pregunta in this.OrderBy(p => p.Numero)) {
-                sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + random.Next(1,3) - 1)}");
+                sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + pregunta.Correcta - 1)}");
             }
         }
     }
