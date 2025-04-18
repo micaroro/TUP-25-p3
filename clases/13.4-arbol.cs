@@ -47,48 +47,33 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
                 Mayor = Mayor?.Eliminar(min.Valor);
             } 
             
-            // Actualizar el contador de elementos después de eliminar
             Cantidad = 1 + CantidadEn(Menor) + CantidadEn(Mayor);
             return this;
-        }
-
-        public void InOrden(List<T> elementos) {
-            Menor?.InOrden(elementos);
-            elementos.Add(Valor);
-            Mayor?.InOrden(elementos);
         }
 
         // Método para obtener elemento por índice de manera optimizada
         public T ObtenerPorIndice(int indice) {
             int cantidadIzquierda = CantidadEn(Menor);
             
-            if (indice < cantidadIzquierda) {
-                return Menor.ObtenerPorIndice(indice);
-            } else if (indice == cantidadIzquierda) {
-                return Valor;
-            } else {
-                return Mayor.ObtenerPorIndice(indice - cantidadIzquierda - 1);
-            }
+            if (indice == cantidadIzquierda) return Valor;
+            if (indice <  cantidadIzquierda) return Menor.ObtenerPorIndice(indice);
+            return Mayor.ObtenerPorIndice(indice - cantidadIzquierda - 1);
         }
 
         // Recorrido in-order utilizando yield return
-        public IEnumerable<T> EnumerarInOrden() {
+        public IEnumerable<T> Recorrer() {
             // Primero recorremos el subárbol izquierdo
-            if (Menor != null) {
-                foreach (var elemento in Menor.EnumerarInOrden()) {
+            if (Menor != null)
+                foreach (var elemento in Menor.Recorrer()) 
                     yield return elemento;
-                }
-            }
             
             // Luego devolvemos el elemento actual
             yield return Valor;
             
             // Finalmente recorremos el subárbol derecho
-            if (Mayor != null) {
-                foreach (var elemento in Mayor.EnumerarInOrden()) {
+            if (Mayor != null) 
+                foreach (var elemento in Mayor.Recorrer()) 
                     yield return elemento;
-                }
-            }
         }
     }
 
@@ -96,7 +81,6 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
     public int Cantidad { get; private set; } = 0;
 
     public ListaOrdenada() {}
-
     public ListaOrdenada(IEnumerable<T> elementos) : this() {
         foreach (var elemento in elementos) {
             Agregar(elemento);
@@ -128,23 +112,18 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
     }
 
     public ListaOrdenada<T> Filtrar(Func<T, bool> predicado) {
-        var elementos = new List<T>();
-        raiz?.InOrden(elementos);
+        var elementos = raiz?.Recorrer().ToList() ?? new List<T>();
         return new ListaOrdenada<T>(elementos.Where(predicado));
     }
 
-    // Implementación de IEnumerable<T>
     public IEnumerator<T> GetEnumerator() {
         if (raiz == null) yield break;
-        foreach (var elemento in raiz.EnumerarInOrden()) {
+        foreach (var elemento in raiz.Recorrer()) {
             yield return elemento;
         }
     }
 
-    // Implementación requerida de IEnumerable (no genérica)
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() =>  GetEnumerator();
 }
 
 class Contacto : IComparable<Contacto> {
@@ -161,10 +140,7 @@ class Contacto : IComparable<Contacto> {
     }
 
     public override bool Equals(object obj) {
-        if (obj is Contacto otro) {
-            return Nombre == otro.Nombre && Telefono == otro.Telefono;
-        }
-        return false;
+        return obj is Contacto otro && Nombre == otro.Nombre && Telefono == otro.Telefono;
     }
 
     public override int GetHashCode() {
@@ -222,21 +198,6 @@ Assert(lista[0], 1, "Primer elemento tras eliminar 2");
 Assert(lista[1], 3, "Segundo elemento tras eliminar 2");
 lista.Eliminar(100);
 Assert(lista.Cantidad, 3, "Cantidad de elementos tras eliminar elemento inexistente");
-
-// Cambiamos el nombre de la variable lista a lista2 para evitar conflictos
-var lista2 = new ListaOrdenada<int>();
-lista2.Agregar(5);
-lista2.Agregar(3);
-lista2.Agregar(7);
-
-// Uso directo en foreach
-foreach (var elemento in lista2) {
-    Console.WriteLine(elemento);
-}
-
-// Uso con LINQ
-var mayoresQueCinco = lista2.Where(x => x > 5);
-
 
 /// Pruebas de lista ordenada (con cadenas)
 /// 
