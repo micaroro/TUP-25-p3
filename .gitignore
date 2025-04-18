@@ -12,7 +12,10 @@
 .DS_Store
 Thumbs.db
 
-# Carpetas del proyecto que no quer�s subir
+# Carpetas del proyecto que no queres subir
 fechas/
-**/tempCodeRunnerFile.cs
 /datos/Soluciones
+
+**/tempCodeRunnerFile.cs
+
+tempCodeRunnerFile.csharp

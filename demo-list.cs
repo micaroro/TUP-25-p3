@@ -1,92 +1,114 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; // Necesario para Where en Filtrar (alternativa)
 
-class ListaOrdenada<T> where T : IComparable<T>
-{
-    private List<T> elementos;
 
-    public ListaOrdenada()
-    {
-        elementos = new List<T>();
-    }
+class ListaOrdenada<T> where T : IComparable<T> {
+    private List<T> lista = new List<T>();
 
-    public ListaOrdenada(IEnumerable<T> coleccion)
-    {
-        elementos = new List<T>();
-        foreach (var item in coleccion)
-        {
-            Agregar(item);
+    // Constructor por defecto
+    public ListaOrdenada() { }
+
+    // Constructor que inicializa con una colección de elementos
+    public ListaOrdenada(IEnumerable<T> elementos) {
+        foreach (var elemento in elementos) {
+            Agregar(elemento);
         }
     }
 
-    public int Cantidad => elementos.Count;
+    // Propiedad para obtener la cantidad de elementos
+    public int Cantidad => lista.Count;
 
-    public void Agregar(T elemento)
-    {
-        if (Contiene(elemento)) return;
-
-        int i = 0;
-        while (i < elementos.Count && elementos[i].CompareTo(elemento) < 0)
-        {
-            i++;
+    // Indexador para acceder a los elementos por índice
+    public T this[int index] {
+        get {
+            if (index < 0 || index >= lista.Count) {
+                throw new IndexOutOfRangeException("El índice está fuera del rango de la lista.");
+            }
+            return lista[index];
         }
-        elementos.Insert(i, elemento);
     }
 
-    public void Eliminar(T elemento)
-    {
-        elementos.Remove(elemento);
+    // Agrega un elemento manteniendo el orden y sin duplicados
+    public void Agregar(T elemento) {
+        int index = lista.BinarySearch(elemento);
+        // BinarySearch devuelve:
+        // - El índice del elemento si se encuentra.
+        // - Un número negativo cuyo complemento bit a bit (~) es el índice
+        //   del primer elemento mayor que el valor buscado, o Count si todos
+        //   los elementos son menores.
+        if (index < 0) {
+            // El elemento no existe, insertarlo en la posición correcta
+            lista.Insert(~index, elemento);
+        }
+        // Si index >= 0, el elemento ya existe, no hacemos nada.
     }
 
-    public bool Contiene(T elemento)
-    {
-        return elementos.Contains(elemento);
+    // Elimina un elemento de la lista
+    public void Eliminar(T elemento) {
+        int index = lista.BinarySearch(elemento);
+        if (index >= 0) {
+            // El elemento fue encontrado, eliminarlo
+            lista.RemoveAt(index);
+        }
+        // Si index < 0, el elemento no existe, no hacemos nada.
     }
 
-    public T this[int indice]
-    {
-        get => elementos[indice];
+    // Verifica si un elemento está contenido en la lista
+    public bool Contiene(T elemento) {
+        int index = lista.BinarySearch(elemento);
+        return index >= 0;
     }
 
-    public ListaOrdenada<T> Filtrar(Predicate<T> condicion)
-    {
-        return new ListaOrdenada<T>(elementos.Where(x => condicion(x)));
+    // Devuelve una nueva ListaOrdenada con los elementos que cumplen el predicado
+    public ListaOrdenada<T> Filtrar(Func<T, bool> predicado) {
+        var resultado = new ListaOrdenada<T>();
+        // Iteramos sobre la lista interna ordenada
+        foreach (var elemento in lista) {
+            if (predicado(elemento)) {
+                // Como la lista original está ordenada y solo estamos filtrando,
+                // los elementos que cumplen el predicado ya estarán ordenados
+                // entre sí. Podemos agregarlos directamente a la lista interna
+                // de la nueva instancia. Esto es más eficiente que llamar a Agregar.
+                resultado.lista.Add(elemento);
+            }
+        }
+        return resultado;
+
+        // Alternativa usando LINQ (un poco menos eficiente porque crea una lista intermedia):
+        // var elementosFiltrados = lista.Where(predicado);
+        // return new ListaOrdenada<T>(elementosFiltrados);
     }
 }
 
-class Contacto : IComparable<Contacto>
-{
+class Contacto : IComparable<Contacto> {
     public string Nombre { get; set; }
     public string Telefono { get; set; }
 
-    public Contacto(string nombre, string telefono)
-    {
+    public Contacto(string nombre, string telefono) {
         Nombre = nombre;
         Telefono = telefono;
     }
 
-    public int CompareTo(Contacto otro)
-    {
-        return string.Compare(this.Nombre, otro.Nombre, StringComparison.Ordinal);
+    public int CompareTo(Contacto otro) {
+        if (otro == null) return 1;
+        return string.Compare(this.Nombre, otro.Nombre, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.CompareOptions.IgnoreCase | System.Globalization.CompareOptions.IgnoreNonSpace);
     }
 
-    public override bool Equals(object obj)
-    {
-        if (obj is Contacto c)
-        {
-            return this.Nombre == c.Nombre && this.Telefono == c.Telefono;
-        }
-        return false;
+    public override bool Equals(object obj) {
+      return obj is Contacto otro && CompareTo(otro) == 0;
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Nombre, Telefono);
+    public override int GetHashCode() {
+        return HashCode.Combine(Nombre);
+    }
+
+    public override string ToString() {
+        return $"{Nombre} ({Telefono})";
     }
 }
 
+#region 
 /// --------------------------------------------------------///
 ///   Desde aca para abajo no se puede modificar el código  ///
 /// --------------------------------------------------------///
@@ -215,3 +237,4 @@ Assert(contactos.Cantidad, 3, "Cantidad de contactos tras eliminar un elemento i
 Assert(contactos[0].Nombre, "Ana", "Primer contacto tras eliminar Otro");
 Assert(contactos[1].Nombre, "Juan", "Segundo contacto tras eliminar Otro");
 Assert(contactos[2].Nombre, "Pedro", "Tercer contacto tras eliminar Otro");
+#endregion

@@ -10,13 +10,13 @@ Los estudiantes que deban recuperar deberán realizar el trabajo y presentarlo d
 
 Estos tres trabajos prácticos sirvieron, en parte, para poner en funcionamiento el sistema de corrección, que ya está automatizado. Si no se siguen estrictamente las reglas de presentación, el trabajo presentado no será tomado en cuenta por el sistema.
 
-Cada trabajo práctico que deba recuperarse debe presentarse de forma independiente, asegurándose de subir únicamente el archivo `ejercicio.cs` con la solución funcionando como un `script`. Es decir, si deben recuperar dos trabajos prácticos, deberán realizar dos solicitudes de incorporación (`pull request`), una para cada TP.
+Cada trabajo práctico que deba recuperarse debe presentarse de forma independiente, asegurándose de subir únicamente el archivo `ejercicio.cs` con la solución funcionando como un *script*. Es decir, si deben recuperar dos trabajos prácticos, deberán realizar dos solicitudes de incorporación (*pull request*), una para cada TP.
 
-Recuerden que para poder presentar el trabajo deberan primero pasa a la rama principal y actualizar el repositorio asi tiene los ultimos cambios realizados. Luego crear una rama nueva para implementar la solución y finalmente hacer la solicitud de incorporacion. 
+Recuerden que, para poder presentar el trabajo, primero deben pasar a la rama principal y actualizar el repositorio para contar con los últimos cambios realizados. Luego, deben crear una rama nueva para implementar la solución y, finalmente, hacer la solicitud de incorporación.
 
-Este proceso debe repetirse para cada uno de los practicos que se deben recuperar.
+Este proceso debe repetirse para cada uno de los prácticos que se deban recuperar.
 
-En el caso del TP3, todos los tests deben estar incluidos en el código, y el programa debe ejecutarse sin errores.
+En el caso del TP3, todos los tests deben estar incluidos en el código y el programa debe ejecutarse sin errores.
 
 ---
 
@@ -26,38 +26,38 @@ En el caso del TP3, todos los tests deben estar incluidos en el código, y el pr
 
 | Legajo | Nombre Completo                 | TP1       | TP2       | TP3       |
 |--------|---------------------------------|-----------|-----------|-----------|
-| 61203 | Acevedo Costello, Juan Ignacio  |           | Recuperar | Recuperar |
-| 62055 | Ahumada, Aiquén                 |           |           | Corregir 🚩|
-| 61118 | Barrios, Santiago Alexis        |           |           | Recuperar |
-| 61214 | Collazos Cortez, Máximo Alberto |           | Recuperar | Recuperar |
-| 61221 | Duclós, Marcelo Ezequiel        |           |           | Corregir 🚩|
-| 62093 | Frías Silva, Juan Segundo       |           |           | Recuperar |
-| 61139 | Gallo, María Matilde            |           |           | Corregir 🚩|
-| 61624 | Godoy, Alan                     |           | Recuperar |           |
-| 61595 | González Patti, Valentín        |           |           | Corregir 🚩|
-| 61562 | Helguera, Agustina Elizabeth    |           | Recuperar | Recuperar |
-| 61818 | Lopez Tisera, Gaston            |           |           | Recuperar |
-| 61579 | Marti, Gonzalo                  |           | Recuperar | Recuperar |
-| 61676 | Massey, Maximiliano             | Recuperar |           | Recuperar |
-| 61113 | Oriz Caballero, Juan José       |           |           | Recuperar |
-| 61572 | Parrado Navarrete, Alex Daniel  |           |           | Corregir 🚩|
-| 61793 | Trujillo, Facundo Nahuel        |           | Recuperar |           |
-| 61596 | Zamora, Gonzalo Alejandro       |           | Recuperar | Recuperar |
+| 61203  | Acevedo Costello, Juan Ignacio  |           | Recuperar | Recuperar |
+| 62055  | Ahumada, Aiquén                 |           |           | Corregir 🚩|
+| 61118  | Barrios, Santiago Alexis        |           |           | Recuperar |
+| 61214  | Collazos Cortez, Máximo Alberto |           | Recuperar | Recuperar |
+| 61221  | Duclós, Marcelo Ezequiel        |           |           | Corregir 🚩|
+| 62093  | Frías Silva, Juan Segundo       |           |           | Recuperar |
+| 61139  | Gallo, María Matilde            |           |           | Corregir 🚩|
+| 61624  | Godoy, Alan                     |           | Recuperar |           |
+| 61595  | González Patti, Valentín        |           |           | Corregir 🚩|
+| 61562  | Helguera, Agustina Elizabeth    |           | Recuperar | Recuperar |
+| 61818  | Lopez Tisera, Gaston            |           |           | Recuperar |
+| 61579  | Marti, Gonzalo                  |           | Recuperar | Recuperar |
+| 61676  | Massey, Maximiliano             | Recuperar |           | Recuperar |
+| 61113  | Oriz Caballero, Juan José       |           |           | Recuperar |
+| 61572  | Parrado Navarrete, Alex Daniel  |           |           | Corregir 🚩|
+| 61793  | Trujillo, Facundo Nahuel        |           | Recuperar |           |
+| 61596  | Zamora, Gonzalo Alejandro       |           | Recuperar | Recuperar |
 
 ### Comisión C5
 
 | Legajo | Nombre Completo                 | TP1       | TP2       | TP3       |
 |--------|---------------------------------|-----------|-----------|-----------|
-| 62612 | Campos, Julieta Antonella       |           | Recuperar | Recuperar |
-| 61611 | Coronel, Julieta Antonella      |           | Recuperar | Recuperar |
-| 61535 | Mainardi, Facundo               |           |           | Recuperar |
-| 61905 | Martinez, Augusto               |           | Recuperar | Corregir 🚩|
-| 61588 | Mussa, Agustín                  |           |           | Recuperar |
-| 61912 | Nuñez, Arturo Valentin          | Recuperar | Recuperar |           |
-| 61644 | Ortega, Fernando Nicolas        |           |           | Recuperar |
-| 61140 | Perez, Fernando Alberto         |           |           | Corregir 🚩|
-| 61962 | Robledo, Rocio Micaela          |           |           | Corregir 🚩|
-| 61061 | Velardez, Leandro Ivan          |           |           | Recuperar |
+| 62612  | Campos, Julieta Antonella       |           | Recuperar | Recuperar |
+| 61611  | Coronel, Julieta Antonella      |           | Recuperar | Recuperar |
+| 61535  | Mainardi, Facundo               |           |           | Recuperar |
+| 61905  | Martinez, Augusto               |           | Recuperar | Corregir 🚩|
+| 61588  | Mussa, Agustín                  |           |           | Recuperar |
+| 61912  | Nuñez, Arturo Valentin          | Recuperar | Recuperar |           |
+| 61644  | Ortega, Fernando Nicolas        |           |           | Recuperar |
+| 61140  | Perez, Fernando Alberto         |           |           | Corregir 🚩|
+| 61962  | Robledo, Rocio Micaela          |           |           | Corregir 🚩|
+| 61061  | Velardez, Leandro Ivan          |           |           | Recuperar |
 
 > Nota: Si alguno de los estudiantes que deben recuperar ya ha presentado los trabajos, comuníquense conmigo para verificar la situación.
 

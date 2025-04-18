@@ -1,92 +1,146 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
-class ListaOrdenada<T> where T : IComparable<T>
-{
-    private List<T> elementos;
 
-    public ListaOrdenada()
-    {
-        elementos = new List<T>();
+class ListaOrdenada<T> where T : IComparable<T> {
+    private T[] items;
+    private int cantidad;
+    private const int CAPACIDAD_INICIAL = 4;
+
+    public ListaOrdenada() {
+        items = new T[0]; // Empezar con tamaño 0, Array.Resize lo manejará
+        cantidad = 0;
     }
 
-    public ListaOrdenada(IEnumerable<T> coleccion)
-    {
-        elementos = new List<T>();
-        foreach (var item in coleccion)
-        {
+    public ListaOrdenada(IEnumerable<T> itemsIniciales) : this() {
+        foreach (var item in itemsIniciales) {
             Agregar(item);
         }
     }
 
-    public int Cantidad => elementos.Count;
+    public int Cantidad => cantidad;
 
-    public void Agregar(T elemento)
-    {
-        if (Contiene(elemento)) return;
-
-        int i = 0;
-        while (i < elementos.Count && elementos[i].CompareTo(elemento) < 0)
-        {
-            i++;
+    public T this[int index] {
+        get {
+            if (index < 0 || index >= cantidad) {
+                throw new IndexOutOfRangeException("Índice fuera de rango.");
+            }
+            return items[index];
         }
-        elementos.Insert(i, elemento);
     }
 
-    public void Eliminar(T elemento)
-    {
-        elementos.Remove(elemento);
+    // Método privado para buscar el índice usando búsqueda binaria.
+    // Devuelve el índice si se encuentra.
+    // Devuelve el complemento bitwise (~) del índice donde debería insertarse si no se encuentra.
+    private int BuscarIndice(T item) {
+        int bajo = 0;
+        int alto = cantidad - 1;
+
+        while (bajo <= alto) {
+            int medio = bajo + (alto - bajo) / 2;
+            int comparacion = items[medio].CompareTo(item);
+
+            if (comparacion == 0) {
+                return medio; // Encontrado
+            }
+
+            if (comparacion < 0) {
+                bajo = medio + 1; // Buscar en la mitad derecha
+            } else {
+                alto = medio - 1; // Buscar en la mitad izquierda
+            }
+        }
+
+        return ~bajo; // No encontrado, devuelve dónde debería estar
     }
 
-    public bool Contiene(T elemento)
-    {
-        return elementos.Contains(elemento);
+    // Método privado para asegurar la capacidad del array interno.
+    private void AsegurarCapacidad() {
+        if (cantidad == items.Length) {
+            int nuevaCapacidad = items.Length == 0 ? CAPACIDAD_INICIAL : items.Length * 2;
+            Array.Resize(ref items, nuevaCapacidad);
+        }
     }
 
-    public T this[int indice]
-    {
-        get => elementos[indice];
+    public void Agregar(T item) {
+        int indice = BuscarIndice(item);
+
+        if (indice >= 0) return; // El elemento ya existe, no agregar duplicados
+
+        int indiceInsercion = ~indice; // Calcular índice de inserción real
+
+        // Asegurar capacidad antes de insertar
+        AsegurarCapacidad();
+
+        // Desplazar elementos a la derecha para hacer espacio usando Array.Copy
+        if (indiceInsercion < cantidad) {
+            Array.Copy(items, indiceInsercion, items, indiceInsercion + 1, cantidad - indiceInsercion);
+        }
+
+        // Insertar el nuevo elemento
+        items[indiceInsercion] = item;
+        cantidad++;
     }
 
-    public ListaOrdenada<T> Filtrar(Predicate<T> condicion)
-    {
-        return new ListaOrdenada<T>(elementos.Where(x => condicion(x)));
+    public void Eliminar(T item) {
+        int indiceEliminar = BuscarIndice(item);
+
+        if (indiceEliminar >= 0) { // Solo eliminar si se encuentra el elemento
+            cantidad--;
+            // Desplazar elementos a la izquierda para llenar el espacio usando Array.Copy
+            if (indiceEliminar < cantidad) {
+                Array.Copy(items, indiceEliminar + 1, items, indiceEliminar, cantidad - indiceEliminar);
+            }
+            items[cantidad] = default(T); // Limpiar la última posición (opcional)
+        }
+    }
+
+    public bool Contiene(T item) {
+        return BuscarIndice(item) >= 0;
+    }
+
+    public ListaOrdenada<T> Filtrar(Func<T, bool> predicado) {
+        ListaOrdenada<T> resultado = new ListaOrdenada<T>();
+        // Filtrar no se beneficia directamente de la búsqueda binaria,
+        // ya que debe evaluar el predicado para cada elemento.
+        for (int i = 0; i < cantidad; i++) {
+            if (predicado(items[i])) {
+                // Usamos el Agregar optimizado del resultado.
+                resultado.Agregar(items[i]);
+            }
+        }
+        return resultado;
     }
 }
 
-class Contacto : IComparable<Contacto>
-{
+class Contacto : IComparable<Contacto> {
     public string Nombre { get; set; }
     public string Telefono { get; set; }
 
-    public Contacto(string nombre, string telefono)
-    {
+    public Contacto(string nombre, string telefono) {
         Nombre = nombre;
         Telefono = telefono;
     }
 
-    public int CompareTo(Contacto otro)
-    {
-        return string.Compare(this.Nombre, otro.Nombre, StringComparison.Ordinal);
+    public int CompareTo(Contacto otro) {
+        if (otro == null) return 1;
+        return string.Compare(this.Nombre, otro.Nombre, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.CompareOptions.IgnoreCase | System.Globalization.CompareOptions.IgnoreNonSpace);
     }
 
-    public override bool Equals(object obj)
-    {
-        if (obj is Contacto c)
-        {
-            return this.Nombre == c.Nombre && this.Telefono == c.Telefono;
-        }
-        return false;
+    public override bool Equals(object obj) {
+      return obj is Contacto otro && CompareTo(otro) == 0;
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Nombre, Telefono);
+    public override int GetHashCode() {
+        return Nombre.GetHashCode();
+    }
+
+    public override string ToString() {
+        return $"{Nombre} ({Telefono})";
     }
 }
 
+#region 
 /// --------------------------------------------------------///
 ///   Desde aca para abajo no se puede modificar el código  ///
 /// --------------------------------------------------------///
@@ -215,3 +269,4 @@ Assert(contactos.Cantidad, 3, "Cantidad de contactos tras eliminar un elemento i
 Assert(contactos[0].Nombre, "Ana", "Primer contacto tras eliminar Otro");
 Assert(contactos[1].Nombre, "Juan", "Segundo contacto tras eliminar Otro");
 Assert(contactos[2].Nombre, "Pedro", "Tercer contacto tras eliminar Otro");
+#endregion

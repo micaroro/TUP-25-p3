@@ -1,7 +1,7 @@
 # Listado de alumnos
 
 ## Comisión C3
-01.  61203  Acevedo Costello, Juan Ignacio            (381) 388-7804        10 +                 0
+01.  61203  Acevedo Costello, Juan Ignacio            (381) 388-7804        10 + +              58
 02.  61667  Acosta, Maira                             (381) 562-8162        12 +++              58
 03.  62055  Ahumada, Aiquén                           (381) 419-9202        12 +++              -2
 04.  61118  Barrios, Santiago Alexis                  (381) 526-8193        12 ++                0
@@ -79,7 +79,7 @@
 22.  61322  Juarez, Thiago                            (381) 418-2169         5                   0
 23.  61218  Liendo, Lautaro                           (381) 582-5319         9 +++              58
 24.  61226  Luna, Andres Maximiliano                  (381) 412-2061         8 +++              58
-25.  61535  Mainardi, Facundo                         (381) 584-1265        10 ++                0
+25.  61535  Mainardi, Facundo                         (381) 584-1265        10 +++              58
 26.  61905  Martinez, Augusto                         (381) 580-1228        10 + +             -11
 27.  61053  Matas Molina, Agustín                     (381) 689-6591        10 +++              58
 28.  61848  Mazza Leon, Fabrizio Lautaro              (381) 598-7961        10 +++              58

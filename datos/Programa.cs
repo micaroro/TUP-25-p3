@@ -14,32 +14,10 @@ class Program {
         return Consola.ElegirOpcion("\nElija una opción (0-6): ", "0123456");
     }
 
-    static void RenameTP3Directories(string path = "../TP") {
-        foreach (var dir in Directory.GetDirectories(path)) {
-            string folderName = Path.GetFileName(dir);
-            if (folderName.Equals("TP3", StringComparison.Ordinal)) {
-                string newDir = Path.Combine(Path.GetDirectoryName(dir)!, "tp3");
-                Console.WriteLine($"Renombrando: {dir} -> {newDir}");
-                Directory.Move(dir, newDir);
-            }
-        }
-    }
-
-    static void ListarLineasEfectivaPracticos(string path = "../TP") {
-        foreach (var dir in Directory.GetDirectories(path)) {
-            string folderName = Path.GetFileName(dir);
-            if (folderName.Equals("tp3", StringComparison.Ordinal)) {
-                string[] lines = File.ReadAllLines(Path.Combine(dir, "efectiva.txt"));
-                foreach (var line in lines) {
-                    Console.WriteLine(line);
-                }
-            }
-        }
-    }
 
     static void OpcionListarAlumnos(Clase clase) {
         Consola.Escribir("=== Listado de alumnos ===", ConsoleColor.Cyan);
-        clase.ListarAlumnos();
+        clase.DebenRecuperar().ListarAlumnos();
         clase.ExportarDatos();
     }
 

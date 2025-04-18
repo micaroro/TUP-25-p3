@@ -5,55 +5,48 @@ using System.Linq;
 
 class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
     class Nodo {
-        T Elemento;
-        Nodo Menor;
-        Nodo Mayor;
-        int Cantidad; // Cantidad total de elementos en este subárbol
+        T Valor;
+        Nodo Menor, Mayor;
+        int Cantidad = 1; 
 
-        public Nodo(T elemento) {
-            Elemento = elemento;
-            Cantidad = 1; // Este nodo contiene 1 elemento
+        public Nodo(T valor) {
+            Valor = valor;
         }
 
         // Obtiene la cantidad de elementos en un subárbol (evitando NullReferenceException)
         int CantidadEn(Nodo nodo) => nodo?.Cantidad ?? 0;
 
-        public Nodo Agregar(T nuevo) {
-            if (nuevo.CompareTo(Elemento) < 0) {
-                Menor = Menor?.Agregar(nuevo) ?? new Nodo(nuevo);
-            } else {
-                Mayor = Mayor?.Agregar(nuevo) ?? new Nodo(nuevo);
-            }
-            // Actualizar el contador de elementos
+        public Nodo Agregar(T valor) {
+            var cmp = valor.CompareTo(Valor);
+            if (cmp < 0) Menor = Menor?.Agregar(valor) ?? new Nodo(valor);
+            if (cmp > 0) Mayor = Mayor?.Agregar(valor) ?? new Nodo(valor);
+
             Cantidad = 1 + CantidadEn(Menor) + CantidadEn(Mayor);
             return this;
         }
 
-        public bool Contiene(T elemento) {
-            if (elemento.Equals(Elemento)) return true;
-            if (elemento.CompareTo(Elemento) < 0) {
-                return Menor?.Contiene(elemento) ?? false;
-            } else {
-                return Mayor?.Contiene(elemento) ?? false;
-            }
+        public bool Contiene(T valor) {
+            var cmp = valor.CompareTo(Valor);
+            if (cmp < 0) return Menor?.Contiene(valor) ?? false;
+            if (cmp > 0) return Mayor?.Contiene(valor) ?? false;
+            return (cmp == 0);
         }
 
-        public Nodo Eliminar(T elemento) {
-            if (elemento.CompareTo(Elemento) < 0) {
-                Menor = Menor?.Eliminar(elemento);
-            } else if (elemento.CompareTo(Elemento) > 0) {
-                Mayor = Mayor?.Eliminar(elemento);
-            } else {
+        public Nodo Eliminar(T valor) {
+            var cmp = valor.CompareTo(Valor);
+            if (cmp < 0) Menor = Menor?.Eliminar(valor); 
+            if (cmp > 0) Mayor = Mayor?.Eliminar(valor);
+            if (cmp == 0) {
                 if (Menor == null) return Mayor;
                 if (Mayor == null) return Menor;
 
-                var menorMayor = Mayor;
-                while (menorMayor.Menor != null) {
-                    menorMayor = menorMayor.Menor;
-                }
-                Elemento = menorMayor.Elemento;
-                Mayor = Mayor?.Eliminar(menorMayor.Elemento);
-            }
+                var min = Mayor;
+                while (min.Menor != null) min = min.Menor;
+                
+                Valor = min.Valor;
+                Mayor = Mayor?.Eliminar(min.Valor);
+            } 
+            
             // Actualizar el contador de elementos después de eliminar
             Cantidad = 1 + CantidadEn(Menor) + CantidadEn(Mayor);
             return this;
@@ -61,7 +54,7 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
 
         public void InOrden(List<T> elementos) {
             Menor?.InOrden(elementos);
-            elementos.Add(Elemento);
+            elementos.Add(Valor);
             Mayor?.InOrden(elementos);
         }
 
@@ -70,13 +63,10 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
             int cantidadIzquierda = CantidadEn(Menor);
             
             if (indice < cantidadIzquierda) {
-                // El elemento está en el subárbol izquierdo
                 return Menor.ObtenerPorIndice(indice);
             } else if (indice == cantidadIzquierda) {
-                // El elemento es este nodo
-                return Elemento;
+                return Valor;
             } else {
-                // El elemento está en el subárbol derecho
                 return Mayor.ObtenerPorIndice(indice - cantidadIzquierda - 1);
             }
         }
@@ -91,7 +81,7 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
             }
             
             // Luego devolvemos el elemento actual
-            yield return Elemento;
+            yield return Valor;
             
             // Finalmente recorremos el subárbol derecho
             if (Mayor != null) {
@@ -102,14 +92,10 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
         }
     }
 
-    Nodo raiz;
-    int cantidad;
-    public int Cantidad => cantidad;
+    Nodo raiz = null;
+    public int Cantidad { get; private set; } = 0;
 
-    public ListaOrdenada() {
-        raiz = null;
-        cantidad = 0;
-    }
+    public ListaOrdenada() {}
 
     public ListaOrdenada(IEnumerable<T> elementos) : this() {
         foreach (var elemento in elementos) {
@@ -125,18 +111,18 @@ class ListaOrdenada<T> : IEnumerable<T> where T : IComparable<T> {
         if (Contiene(elemento)) return;
 
         raiz = raiz?.Agregar(elemento) ?? new Nodo(elemento);
-        cantidad++;
+        Cantidad++;
     }
 
     public void Eliminar(T elemento) {
         if (!Contiene(elemento)) return;
         raiz = raiz?.Eliminar(elemento);
-        cantidad--;
+        Cantidad--;
     }
 
     public T this[int index] {
         get {
-            if (index < 0 || index >= cantidad) throw new IndexOutOfRangeException();
+            if (index < 0 || index >= Cantidad) throw new IndexOutOfRangeException();
             return raiz.ObtenerPorIndice(index);
         }
     }

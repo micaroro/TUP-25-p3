@@ -59,7 +59,7 @@ public class Alumno {
 
         if (practico == 3) {
             // TP3: Recupera si no está aprobado O si tiene errores (Resultado < 0)
-            return (estado != EstadoPractico.Aprobado) ? "Recuperar" : (Resultado < 0 ? "Corregir 🚩" : "");
+            return (estado != EstadoPractico.Aprobado) ? "Recuperar" : (Resultado < 0 ? "Corregir " : "");
         } else {
             return (estado != EstadoPractico.Aprobado) ? "Recuperar" : "";
         }
