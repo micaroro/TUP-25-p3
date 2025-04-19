@@ -94,6 +94,8 @@ class Contacto : IComparable<Contacto>
     }
 }
 
+
+
 /// --------------------------------------------------------///
 ///   Desde aca para abajo no se puede modificar el código  ///
 /// --------------------------------------------------------///
