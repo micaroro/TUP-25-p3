@@ -71,7 +71,7 @@ static int ObtenerParametro(int indice, int asumir = 0){
 }
 
 // Método auxiliar para obtener el path del archivo fuente
-string Ubicar(string nombre) {
+static string Ubicar(string nombre) {
     string GetSourceFilePath([System.Runtime.CompilerServices.CallerFilePath] string path = null) => path;
     string baseDir = Path.GetDirectoryName(GetSourceFilePath());
     string path = Path.Combine(baseDir, nombre);
@@ -126,7 +126,6 @@ public class Preguntas : IEnumerable<Pregunta>  {
 
     public void CargarPreguntas(string Origen){
         var lineas = File.ReadAllLines(Origen);
-
         var respuesta = -1;
         Pregunta pregunta = null;
         foreach (var linea in lineas) {
@@ -182,8 +181,6 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void CargarResultados(string origen) {
-        if (!File.Exists(origen)) return;
-
         var lineas = File.ReadAllLines(origen);
         foreach (var linea in lineas) {
             var match = Regex.Match(linea, @"^\s*(\d+)\s*\.?\s*([abc])\b");
@@ -227,6 +224,17 @@ public class Preguntas : IEnumerable<Pregunta>  {
             }
             n++;
         }
+    }
+
+    public static Preguntas Cargar(bool cargarRespuestas = false){
+        var preguntas = new Preguntas();
+        preguntas.CargarPreguntas(Ubicar("preguntas-examen.md"));
+        if(cargarRespuestas) 
+            preguntas.CargarRespuestas(Ubicar("respuestas-examen.md"));
+        preguntas.Renumerar();
+        preguntas.GuardarPreguntas(Ubicar("preguntas-examen.md"));
+        preguntas.GuardarRespuestas(Ubicar("respuestas-examen.md"));
+        return preguntas;
     }
 
     public bool Validar() {
@@ -288,11 +296,12 @@ class Examen {
     private Preguntas Base { get; set; }
 
     private DateTime HoraInicio; // Registrar hora de inicio
+    private int Legajo { get; set; } = 0;
 
-    public Examen(Preguntas preguntas, int cantidad){
+    public Examen(Preguntas preguntas, int cantidad, int legajo = 0) {
         Base = preguntas;
-        HoraInicio = DateTime.Now; // Guardar hora de inicio
-
+        Legajo = legajo;
+        HoraInicio = DateTime.Now;
         Preguntas = preguntas.GenerarExamen(cantidad);
         Preguntas.ForEach( p => p.Respuesta = 0);
     }
@@ -310,10 +319,7 @@ class Examen {
     public int Nota() =>
         Preguntas.Count(p => p.Respuesta == p.Correcta);
 
-    
-
-    // Cambiar firma para recibir legajo
-    public void Evaluar(int legajo){
+    public void Evaluar(){
 
         string FormatResponse(int respuesta) => 
                     MostrarNumeros ? respuesta.ToString() : ('a' + respuesta - 1).ToString();
@@ -344,7 +350,7 @@ class Examen {
                 int segRest = (int)restante.TotalSeconds;
                 if (lastSecond != segRest) {
                     Clear();
-                    WriteLine($"- Pregunta {actual + 1,2} de {Preguntas.Count} --- Legajo: {legajo} - Examen 1er Parcial - Tiempo restante: {restante.Minutes:D2}:{restante.Seconds:D2} -\n");
+                    WriteLine($"- Pregunta {actual + 1,2} de {Preguntas.Count} --- Legajo: {Legajo} - Examen 1er Parcial - Tiempo restante: {restante.Minutes:D2}:{restante.Seconds:D2} -\n");
                     preguntaActual.Mostrar(numerico: MostrarNumeros);
                     if (preguntaActual.Respuesta != 0) {
                         WriteLine($"\nRespuesta: {FormatResponse(preguntaActual.Respuesta)}\n");
@@ -425,11 +431,13 @@ class Examen {
         } else {
             WriteLine("¡Todas las respuestas fueron correctas! 🎉 Felicitaciones.");
         }
-        Informar(duracion);
+        Informar();
     }
 
     // Modificar para recibir duración
-    private void Informar(TimeSpan? duracion = null){
+    private void Informar(){
+        TimeSpan duracion = DateTime.Now - HoraInicio;
+
         // Nota y porcentaje de la sesión
         Clear();
         var cantidad = Preguntas.Count;
@@ -456,10 +464,11 @@ class Examen {
         """);
 
         // Mostrar duración y segundos por pregunta si corresponde
+        // Quitar .Value porque duracion es TimeSpan, no TimeSpan?
         if (duracion != null) {
-            double segundos = duracion.Value.TotalSeconds;
+            double segundos = duracion.TotalSeconds;
             double segPorPregunta = cantidad > 0 ? segundos / cantidad : 0;
-            WriteLine($"    Tiempo total: {duracion.Value.Minutes:D2}:{duracion.Value.Seconds:D2} ({segundos:F1} segundos)");
+            WriteLine($"    Tiempo total: {duracion.Minutes:D2}:{duracion.Seconds:D2} ({segundos:F1} segundos)");
             WriteLine($"    Segundos por pregunta: {segPorPregunta:F2}");
         }
     }
@@ -467,43 +476,22 @@ class Examen {
 
 // --- EJECUCIÓN DEL EXAMEN ---
 
-var preguntas = new Preguntas();
-preguntas.CargarPreguntas(Ubicar("preguntas-examen.md"));
-// preguntas.CargarRespuestas(Ubicar("respuestas-examen.md"));
-// preguntas.Validar();
-
-// foreach (var p in preguntas) {
-//     p.Respuesta = 0;
-// }
-preguntas.GuardarPreguntas(Ubicar("preguntas-examen.md"));
-preguntas.GuardarRespuestas(Ubicar("respuestas-examen.md"));
-return;
-// preguntas.GuardarRespuestas(Ubicar("respuestas-examen.md"));
-// preguntas.ValidarNumeracion();
-
-// if(!preguntas.Validar()) {
-//     WriteLine("Error en la numeración de preguntas o respuestas.");
-//     preguntas.Renumerar();
-//     preguntas.GuardarPreguntas(Ubicar("preguntas-examen.md"));
-//     preguntas.GuardarRespuestas(Ubicar("respuestas-examen.md"));
-//     return;
-// }
+var preguntas = Preguntas.Cargar();
 
 Clear();
 WriteLine("\n\n### Examen 1er Parcial ###\n\n");
 
 int legajo   = ObtenerParametro(0);
 int cantidad = ObtenerParametro(1, 10);
-
 while(legajo < 55000 || legajo > 65000) {
     legajo = LeerNumero("Ingrese número de legajo: ");
 } 
 
 preguntas.CargarResultados(Ubicar($"{legajo}.txt"));
 
-
 var examen = new Examen(preguntas, cantidad);
-examen.Evaluar(legajo);
+// Llamar a Evaluar sin argumentos
+examen.Evaluar();
 // preguntas.GuardarRespuestas(Ubicar($"{legajo}.txt"));
 
 // Fin del programa
