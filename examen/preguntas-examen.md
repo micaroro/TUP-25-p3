@@ -12,7 +12,7 @@ c) -255 a 255
 
 ### 002 6299
 
-¿Qué tipo entero utilizarías para almacenar un valor de 4.000 millones (4,000,000,000)?
+¿Qué tipo entero utilizarías para almacenar un valor de 4.000 millones (4.000.000.000)?
 
 a) `int`
 b) `short`
