@@ -53,13 +53,7 @@ static int ObtenerParametro(int indice, int asumir = 0){
 }
 
 // Método auxiliar para obtener el path del archivo fuente
-static string Ubicar(string nombre) {
-    string GetSourceFilePath([System.Runtime.CompilerServices.CallerFilePath] string path = null) => path;
-    string baseDir = Path.GetDirectoryName(GetSourceFilePath());
-    string path = Path.Combine(baseDir, nombre);
-    if (File.Exists(path)) return path;
-    return Path.Combine(Environment.CurrentDirectory, nombre);
-}
+
 
 // Clase Pregunta
 public class Pregunta {
@@ -176,6 +170,7 @@ public class Pregunta {
         }
         return 0;
     }
+
 }
 
 // Clase contenedora de Preguntas
@@ -184,15 +179,16 @@ public class Preguntas : IEnumerable<Pregunta>  {
 
     public static Preguntas Cargar(bool cargarRespuestas = false){
         var preguntas = new Preguntas();
-        preguntas.CargarPreguntas(Ubicar("preguntas-examen.md"));
-        if(cargarRespuestas) preguntas.CargarRespuestas(Ubicar("respuestas-examen.md"));
+        preguntas.CargarPreguntas("preguntas-examen.md");
+        if(cargarRespuestas) preguntas.CargarRespuestas("respuestas-examen.md");
         preguntas.Renumerar();
-        preguntas.GuardarPreguntas(Ubicar("preguntas-examen.md"));
-        preguntas.GuardarRespuestas(Ubicar("respuestas-examen.md"));
+        preguntas.GuardarPreguntas("preguntas-examen.md");
+        preguntas.GuardarRespuestas("respuestas-examen.md");
         return preguntas;
     }
 
     public void CargarPreguntas(string Origen){
+        Origen = Ubicar(Origen);
         if (!File.Exists(Origen)) return;
 
         var texto = File.ReadAllText(Origen);
@@ -203,6 +199,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }   
 
     public void CargarRespuestas(string origen){
+        origen = Ubicar(origen);
         if(!File.Exists(origen)) return;
         foreach (var pregunta in this) { pregunta.Correcta = 0; }
 
@@ -221,6 +218,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void CargarResultados(string origen) {
+        origen = Ubicar(origen);
         if(!File.Exists(origen)) return;
         foreach (var pregunta in this) { pregunta.Respuesta = 0; }
 
@@ -239,6 +237,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void GuardarPreguntas(string destino){
+        destino = Ubicar(destino);
         using (var sw = new StreamWriter(destino)) {
             sw.WriteLine("# Preguntas para el 1er Parcial");
             foreach (var pregunta in this.OrderBy(p => p.Numero)) {
@@ -249,6 +248,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void GuardarRespuestas(string destino){
+        destino = Ubicar(destino);
         using (var sw = new StreamWriter(destino)) {
             foreach (var pregunta in this.OrderBy(p => p.Numero)) {
                 sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + pregunta.Correcta - 1)}");
@@ -257,6 +257,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
     }
 
     public void GuardarResultados(string destino){
+        destino = Ubicar(destino);
         using (var sw = new StreamWriter(destino)) {
             foreach (var pregunta in this.Respondidas().OrderBy(p => p.Numero)) {
                 sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + pregunta.Respuesta - 1)} {(pregunta.EsIncorrecta ? "❌" : "✅")}");
@@ -330,6 +331,14 @@ public class Preguntas : IEnumerable<Pregunta>  {
         return origen.OrderBy(x => random.Next()).Take(cantidad).OrderBy(p => p.Numero).ToList();
     }
 
+    static string Ubicar(string nombre) {
+        string GetSourceFilePath([System.Runtime.CompilerServices.CallerFilePath] string path = null) => path;
+        string baseDir = Path.GetDirectoryName(GetSourceFilePath());
+        string path = Path.Combine(baseDir, nombre);
+        if (File.Exists(path)) return path;
+        return Path.Combine(Environment.CurrentDirectory, nombre);
+    }
+
     public IEnumerator<Pregunta> GetEnumerator() => Lista.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -376,6 +385,7 @@ class Examen {
         int cantidad = Preguntas.Count();
         int actual = 0;
         TimeSpan limite = TimeSpan.FromSeconds(30 * cantidad);
+        HoraFinal = DateTime.Now;
 
         if (cantidad == 0) {
             WriteLine("\n🎉 Felicitaciones. Respondiste todas las preguntas. 🎉\n\n");
@@ -491,7 +501,7 @@ class Examen {
             --- Resultado Examen ---
             
                      Nota: {Nota()} de {cantidad}
-               Porcentaje: {(Nota() * 100) / cantidad}%
+               Porcentaje: {(cantidad > 0 ? (Nota() * 100) / cantidad : 100)}%
             
             --- Evaluación Total ---
 
@@ -521,7 +531,7 @@ while(legajo < 55000 || legajo > 65000) {
     legajo = LeerNumero("Ingrese número de legajo: ");
 } 
 
-preguntas.CargarResultados(Ubicar($"{legajo}.txt"));
+preguntas.CargarResultados($"{legajo}.txt");
 // preguntas.InformarResultados();
 
 var examen = new Examen(preguntas, cantidad, legajo);
@@ -529,7 +539,7 @@ var examen = new Examen(preguntas, cantidad, legajo);
 if(examen.Evaluar()){
     examen.Enseñar();
     examen.Informar();
-    preguntas.GuardarResultados(Ubicar($"{legajo}.txt"));
+    preguntas.GuardarResultados($"{legajo}.txt");
 };
 
 

@@ -806,7 +806,7 @@ c) `"abc"`
 
 ¿Qué resultado tiene esta expresión?
 ```csharp
-"csharp"[2]
+"csharp"[1]
 ```
 
 a) `'s'`

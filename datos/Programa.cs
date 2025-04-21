@@ -17,7 +17,7 @@ class Program {
 
     static void OpcionListarAlumnos(Clase clase) {
         Consola.Escribir("=== Listado de alumnos ===", ConsoleColor.Cyan);
-        clase.DebenRecuperar().ListarAlumnos();
+        clase.ListarAlumnos();
         clase.ExportarDatos();
     }
 
@@ -56,6 +56,7 @@ class Program {
         Consola.Escribir("=== Generando reporte de recuperación ===", ConsoleColor.Cyan);
         clase.GenerarReporteRecuperacion();
         Consola.Escribir("Reporte 'recuperacion.md' generado.", ConsoleColor.Green);
+        clase.DebenRecuperar().ListarAlumnos();
     }
 
     static void Main(string[] args) {
