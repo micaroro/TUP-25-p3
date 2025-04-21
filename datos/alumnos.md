@@ -1,24 +1,24 @@
 # Listado de alumnos
 
 ## Comisión C3
-01.  61203  Acevedo Costello, Juan Ignacio            (381) 388-7804        10 + +              58
+01.  61203  Acevedo Costello, Juan Ignacio            (381) 388-7804        10 +++               0
 02.  61667  Acosta, Maira                             (381) 562-8162        12 +++              58
-03.  62055  Ahumada, Aiquén                           (381) 419-9202        12 +++              -2
-04.  61118  Barrios, Santiago Alexis                  (381) 526-8193        12 ++                0
-05.  61319  Carabajal, José Gabriel                   (381) 319-2680        10 +++              58
-06.  61214  Collazos Cortez, Máximo Alberto           (381) 350-5275        12 +                 0
-07.  61141  Di Clemente, María Antonela               (381) 398-3935        10                   0
+03.  62055  Ahumada, Aiquén                           (381) 419-9202        12 +++              58
+04.  61118  Barrios, Santiago Alexis                  (381) 526-8193        12 +++              58
+05.  61319  Carabajal, José Gabriel                   (381) 319-2680        10 +++               0
+06.  61214  Collazos Cortez, Máximo Alberto           (381) 350-5275        12 +++               0
+07.  61141  Di Clemente, María Antonela               (381) 398-3935        10 ++                0
 08.  61730  Diaz, Antonio                             (381) 392-6461         1                   0
 09.  61626  Diaz Londero, Sergio Gonzalo              (381) 604-6547        12 +++              58
 10.  61271  Donelli, Gerardo Exequiel                 (381) 514-3223        12 +++              58
-11.  61221  Duclós, Marcelo Ezequiel                  (381) 551-4353        12 +++              -1
+11.  61221  Duclós, Marcelo Ezequiel                  (381) 551-4353        12 +++              58
 12.  61720  Fernández, Luciano                        (381) 586-7891         0                   0
-13.  62093  Frías Silva, Juan Segundo                 (381) 415-8753         8 ++                0
+13.  62093  Frías Silva, Juan Segundo                 (381) 415-8753         8 +++              58
 14.  61139  Gallo, María Matilde                      (381) 333-4836        10 +++              -2
 15.  61352  García Moya, José Ignacio                 (381) 638-9006         9 +++               0
 16.  61200  Gauna Serrano, Martín Javier              (381) 389-2631        13 +++              58
 17.  61624  Godoy, Alan                               (381) 574-4877        12 + +              58
-18.  61595  González Patti, Valentín                  (381) 655-9195        12 +++              -2
+18.  61595  González Patti, Valentín                  (381) 655-9195        12 +++              58
 19.  61562  Helguera, Agustina Elizabeth              (381) 694-9619        12 +                 0
 20.  61318  Herrera, Dalma Luján                      (381) 341-4968         9                   0
 21.  62053  Herrera Palomino, Ivam Agustín            (381) 697-0643        12 +++              58
@@ -28,10 +28,10 @@
 25.  61956  Leglisé, Laureano                         (261) 468-9809        13 +++              58
 26.  61679  Lobo Barrera, Mia de los Angeles          (381) 677-0639        12 +++              58
 27.  61794  Lobo Campero, Hernán Ignacio              (381) 590-6461         8 +++              58
-28.  61818  Lopez Tisera, Gaston                      (381) 523-5887        11 ++                0
-29.  61579  Marti, Gonzalo                            (381) 418-6882        13 +                 0
+28.  61818  Lopez Tisera, Gaston                      (381) 523-5887        11 +++               0
+29.  61579  Marti, Gonzalo                            (381) 418-6882        13 +++              58
 30.  61445  Martínez Campero, Santiago                (381) 646-6685        12 +++              58
-31.  61676  Massey, Maximiliano                       (381) 359-9941        12  +                0
+31.  61676  Massey, Maximiliano                       (381) 359-9941        12 +++               0
 32.  61668  Molina, Santiago Nicolas                  (381) 582-0324         7                   0
 33.  61032  Moya, Mariano                             (381) 670-1164        13 +++              58
 34.  62263  Orellana, José Augusto                    (386) 534-2925        11 +++              58
@@ -49,9 +49,9 @@
 46.  61478  Soto, Antonella                           (387) 517-0010        12 +++              58
 47.  61096  Suarez Vece, Leandro Andres               (381) 512-6476        11 +++              58
 48.  61129  Tello, Abril María Agostina               (381) 447-2483        13 +++               0
-49.  61793  Trujillo, Facundo Nahuel                  (381) 206-2084        12 + +              58
+49.  61793  Trujillo, Facundo Nahuel                  (381) 206-2084        12 +++              58
 50.  62555  Verón, Matias Gabriel                     (381) 519-6654        11 +++              58
-51.  61596  Zamora, Gonzalo Alejandro                 (381) 354-0535         8 +                 0
+51.  61596  Zamora, Gonzalo Alejandro                 (381) 354-0535         8 +++              58
 52.  61862  Zerda, Thomas                             (381) 333-0962        11                   0
 
 ## Comisión C5
@@ -62,7 +62,7 @@
 05.  62612  Campos, Julieta Antonella                 (381) 605-0864         4 +                 0
 06.  61345  Caro, Tobias                              (297) 500-3076         9 +++              58
 07.  61072  Casavalle Castillo, Bruno                 (381) 353-4422         8 +++              45
-08.  61611  Coronel, Julieta Antonella                (381) 477-0368         6 +                 0
+08.  61611  Coronel, Julieta Antonella                (381) 477-0368         6 +++              58
 09.  61908  Costilla, Ignacio                         (381) 207-4525         9 +++              58
 10.  61673  Delgado, Augusto Emanuel                  (383) 860-2063         9 +++              58
 11.  61051  Diaz, Agustin Emanuel                     (296) 663-5548        10 +++              58
@@ -90,10 +90,10 @@
 33.  61314  Morales, Ignacion Agustin                 (381) 545-9105         8 +++              58
 34.  61328  Moussa Cancino, Mario Matias              (381) 546-0957         9 +++              58
 35.  62136  Muse, Alejandro                           (381) 650-4400         9 +++              58
-36.  61588  Mussa, Agustín                            (381) 394-9538        10 ++                0
-37.  61912  Nuñez, Arturo Valentin                    (381) 367-1656         6   +               0
+36.  61588  Mussa, Agustín                            (381) 394-9538        10 +++              58
+37.  61912  Nuñez, Arturo Valentin                    (381) 367-1656         6 +++               0
 38.  61985  Orqueda, Francisco Nicolás                (381) 633-8522        10 +++              58
-39.  61644  Ortega, Fernando Nicolas                  (381) 646-2643        10 ++                0
+39.  61644  Ortega, Fernando Nicolas                  (381) 646-2643        10 +++               0
 40.  61496  Parache, Ariana Agustina                  (381) 640-2374        10 +++              58
 41.  61732  Paz, Mikael                               (381) 542-2918         9 +++               0
 42.  61422  Pedraza, Estaban Daniel                   (381) 449-6148        10 +++              58
