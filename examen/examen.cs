@@ -324,10 +324,10 @@ public class Preguntas : IEnumerable<Pregunta>  {
         return valido;
     }
 
-    public List<Pregunta> GenerarExamen(int cantidad) {
+    public List<Pregunta> GenerarExamen(int cantidad, int semilla = 0) {
         var origen = cantidad < 0 ? Incorrectas() : Pendientes();
         cantidad = Math.Min(Math.Abs(cantidad), origen.Count());
-        Random random = new Random();
+        Random random = new Random(semilla);
         return origen.OrderBy(x => random.Next()).Take(cantidad).OrderBy(p => p.Numero).ToList();
     }
 
@@ -357,11 +357,11 @@ class Examen {
     private DateTime HoraInicio, HoraFinal; // Registrar hora de inicio
     private int Legajo { get; set; } = 0;
 
-    public Examen(Preguntas preguntas, int cantidad, int legajo = 0) {
+    public Examen(Preguntas preguntas, int cantidad, int legajo = 0, int semilla=0) {
         Base = preguntas;
         Legajo = legajo;
         HoraInicio = DateTime.Now;
-        Preguntas = preguntas.GenerarExamen(cantidad);
+        Preguntas = preguntas.GenerarExamen(cantidad, semilla);
         Preguntas.ForEach( p => p.Respuesta = 0);
     }
 
@@ -384,7 +384,7 @@ class Examen {
     public bool Evaluar(){
         int cantidad = Preguntas.Count();
         int actual = 0;
-        TimeSpan limite = TimeSpan.FromSeconds(30 * cantidad);
+        TimeSpan limite = TimeSpan.FromSeconds(600);
         HoraFinal = DateTime.Now;
 
         if (cantidad == 0) {
@@ -456,6 +456,16 @@ class Examen {
         return true;
     }
 
+    public bool ExamenPerfecto(){
+        return Preguntas.Where(p => p.EsIncorrecta).Count() == 0;
+    }
+
+    public void ReiniciarExamen(){
+        Preguntas.ForEach(p => p.Respuesta = 0);
+        HoraInicio = DateTime.Now;
+        HoraFinal = DateTime.Now;
+    }
+
     public void Enseñar(){
         var incorrectas = Preguntas.Where(p => p.EsIncorrecta).ToList();
         var cantidadIncorrectas = incorrectas.Count();
@@ -502,6 +512,8 @@ class Examen {
             
                      Nota: {Nota()} de {cantidad}
                Porcentaje: {(cantidad > 0 ? (Nota() * 100) / cantidad : 100)}%
+             Tiempo total: {duracion.Minutes:D2}:{duracion.Seconds:D2}
+             Por pregunta: {segundos:F0} segundos
             
             --- Evaluación Total ---
 
@@ -510,14 +522,39 @@ class Examen {
                 Correctas: {correctas, 3}
               Incorrectas: {incorrectas, 3} 
                Porcentaje: {(correctas * 100) / respondidas}%
-             Tiempo total: {duracion.Minutes:D2}:{duracion.Seconds:D2}
-             Por pregunta: {segundos:F0} segundos
              
         """);
     }
 }
 
 // --- EJECUCIÓN DEL EXAMEN ---
+int GenerarSemilla() {
+    // Usar GUID para obtener bytes aleatorios y generar una semilla entre 1000 y 9999
+    var guidBytes = Guid.NewGuid().ToByteArray();
+    int valor = BitConverter.ToInt32(guidBytes, 0);
+    valor = Math.Abs(valor % 9000) + 1000;
+    return valor;
+}
+
+// Genera un código de 6 dígitos hexadecimales a partir del legajo y la semilla
+string GenerarCodigo(int legajo, int semilla) {
+    // 4 dígitos para la semilla (hex), 2 para control (hex)
+    int semilla4 = semilla & 0xFFFF; // 16 bits
+    int control = ((legajo ^ semilla4) + 0xABCD) & 0xFF; // 8 bits de control simple
+    return $"{semilla4:X4}{control:X2}";
+}
+
+// Valida el código y retorna la semilla si es válido, o 0 si no lo es
+int ValidarCodigo(int legajo, string codigo) {
+    if (string.IsNullOrWhiteSpace(codigo) || codigo.Length != 6)
+        return 0;
+    if (!int.TryParse(codigo[..4], System.Globalization.NumberStyles.HexNumber, null, out int semilla4))
+        return 0;
+    if (!int.TryParse(codigo.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out int control))
+        return 0;
+    int esperado = ((legajo ^ semilla4) + 0xABCD) & 0xFF;
+    return control == esperado ? semilla4 : 0;
+}
 
 var preguntas = Preguntas.Cargar();
 
@@ -534,12 +571,30 @@ while(legajo < 55000 || legajo > 65000) {
 preguntas.CargarResultados($"{legajo}.txt");
 // preguntas.InformarResultados();
 
-var examen = new Examen(preguntas, cantidad, legajo);
+int semilla = GenerarSemilla();
+var examen = new Examen(preguntas, cantidad, legajo, semilla);
 
-if(examen.Evaluar()){
-    examen.Enseñar();
-    examen.Informar();
-    preguntas.GuardarResultados($"{legajo}.txt");
+while(true){
+    if(!examen.Evaluar()) break;
+
+    if(examen.ExamenPerfecto()) {
+        examen.Informar();
+        WriteLine("\n🎉 Felicitaciones. Respondiste todas las preguntas correctamente. 🎉\n");
+        if(cantidad == 10){
+            WriteLine($"Su código es: {GenerarCodigo(legajo, semilla)}\n\nCompartirlo en el grupo para conseguir los creditos\n");
+        }
+        break;
+    } else {
+        examen.Enseñar();
+        if(Confirmar("¿Desea repetir el examen para conseguir los creditos?")) {
+            preguntas.GuardarResultados($"{legajo}.txt");
+            examen.ReiniciarExamen();
+        } else {
+            examen.Informar();
+            preguntas.GuardarResultados($"{legajo}.txt");
+            break;
+        }
+    }
 };
 
 
