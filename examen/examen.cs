@@ -395,9 +395,12 @@ class Examen {
         while (actual < cantidad) {
             ConsoleKeyInfo? key = null;
 
+            // Validar que actual esté dentro del rango antes de acceder
+            if (actual < 0) actual = 0;
+            if (actual >= cantidad) break;
+
             Pregunta pregunta = Preguntas[actual];
-            
-            // Lee la respuesta actualizando el tiempo
+
             while (key == null) {
                 TimeSpan restante = limite - (DateTime.Now - HoraInicio);
 
@@ -418,7 +421,7 @@ class Examen {
                     System.Threading.Thread.Sleep(100);
                 }
             }
-            if (key == null) break; // por si se acabó el tiempo
+            if (key == null) break;
 
             var k = key.Value.Key;
 
@@ -430,22 +433,26 @@ class Examen {
                 ConsoleKey.C or ConsoleKey.D3 or ConsoleKey.NumPad3 => 3,
                 _ => 0
             };
-            
+
             if (respuesta > 0) {
                 Preguntas[actual].Respuesta = respuesta;
                 actual++;
+                // Validar después de incrementar
+                if (actual >= cantidad) break;
                 continue;
             }
-            
+
             switch (k) {
                 case ConsoleKey.Escape:
                 case ConsoleKey.X:
                     return false;
                 case ConsoleKey.LeftArrow:
-                    if (actual > 0) actual--;
+                    actual--;
+                    if (actual < 0) actual = 0;
                     break;
                 case ConsoleKey.RightArrow:
-                    if (actual < Preguntas.Count - 1) actual++;
+                    actual++;
+                    if (actual >= cantidad) actual = cantidad - 1;
                     break;
                 default:
                     break;
@@ -557,6 +564,7 @@ int ValidarCodigo(int legajo, string codigo) {
 }
 
 var preguntas = Preguntas.Cargar();
+preguntas.Validar();
 
 Clear();
 WriteLine("\n\n### Examen 1er Parcial ###\n\n");

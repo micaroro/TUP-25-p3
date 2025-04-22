@@ -20,7 +20,7 @@
 17.  61624  Godoy, Alan                               (381) 574-4877        15 + +              58
 18.  61595  González Patti, Valentín                  (381) 655-9195        16 +++              58
 19.  61562  Helguera, Agustina Elizabeth              (381) 694-9619        15 +                 0
-20.  61318  Herrera, Dalma Luján                      (381) 341-4968        13                   0
+20.  61318  Herrera, Dalma Luján                      (381) 341-4968        13 +                 0
 21.  62053  Herrera Palomino, Ivam Agustín            (381) 697-0643        16 +++              58
 22.  61450  Jiménez Paz, Patricio Agustín             (381) 388-2674        12 +++              58
 23.  61627  Juárez Fernández, Lourdes Abril           (381) 647-9914        16 +++              58
@@ -35,7 +35,7 @@
 32.  61668  Molina, Santiago Nicolas                  (381) 582-0324         9                   0
 33.  61032  Moya, Mariano                             (381) 670-1164        17 +++              58
 34.  62263  Orellana, José Augusto                    (386) 534-2925        15 +++              58
-35.  61113  Oriz Caballero, Juan José                 (381) 631-7223        16 ++                0
+35.  61113  Oriz Caballero, Juan José                 (381) 631-7223        16 +++              58
 36.  61059  Palavecino, Fabricio Gaston               (381) 666-6103        10 +++              58
 37.  61248  Palma Collado, Nahuel                     (381) 674-7012        15 +++              58
 38.  61572  Parrado Navarrete, Alex Daniel            (381) 409-5039        11 +++             -10
@@ -45,7 +45,7 @@
 42.  61028  Ponce, Rodrigo Exequiel                   (381) 569-0318        17 +++              58
 43.  61197  Romano, Alfredo Nicolás                   (381) 648-8513        13 +++              58
 44.  62172  Salcedo, Mariana Aylen                    (381) 466-9695         6                   0
-45.  61136  Sosa, Oscar Ignacio                       (381) 528-9145        14                   0
+45.  61136  Sosa, Oscar Ignacio                       (381) 528-9145        14 +++              58
 46.  61478  Soto, Antonella                           (387) 517-0010        16 +++              58
 47.  61096  Suarez Vece, Leandro Andres               (381) 512-6476        15 +++              58
 48.  61129  Tello, Abril María Agostina               (381) 447-2483        16 +++               0
@@ -77,7 +77,7 @@
 20.  61437  Holmquist, Ignacio Tobias                 (381) 516-9171        13                   0
 21.  61041  Iosa Molina, Nicolás                      (381) 624-2939        15 +++              58
 22.  61322  Juarez, Thiago                            (381) 418-2169         5                   0
-23.  61218  Liendo, Lautaro                           (381) 582-5319        13 +++              58
+23.  61218  Liendo, Lautaro                           (381) 213-0484        13 +++              58
 24.  61226  Luna, Andres Maximiliano                  (381) 412-2061        11 +++              58
 25.  61535  Mainardi, Facundo                         (381) 584-1265        15 +++              58
 26.  61905  Martinez, Augusto                         (381) 580-1228        13 + +             -11
