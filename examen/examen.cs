@@ -565,6 +565,7 @@ var examen = new Examen(preguntas, cantidad, legajo, semilla);
 while(true){
     if(!examen.Evaluar()) break;
 
+    preguntas.GuardarResultados($"{legajo}.txt");
     if(examen.ExamenPerfecto()) {
         examen.Informar();
         WriteLine("\n🎉 Felicitaciones. Respondiste todas las preguntas correctamente. 🎉\n");
@@ -575,11 +576,9 @@ while(true){
     } else {
         examen.Enseñar();
         if(Confirmar("¿Desea repetir el examen para conseguir los creditos?")) {
-            preguntas.GuardarResultados($"{legajo}.txt");
             examen.ReiniciarExamen();
         } else {
             examen.Informar();
-            preguntas.GuardarResultados($"{legajo}.txt");
             break;
         }
     }
