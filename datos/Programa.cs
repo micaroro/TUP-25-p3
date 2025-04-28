@@ -78,6 +78,7 @@ class Program {
                 // Console.WriteLine($"Alias: {alumno.NombreLimpio} -> {alumno.TelefonoLimpio}");
             }
         }
+        // Numero excepcionales 
         alias["Alejandro Di Battista"] = "3815343458";
         alias["gonzalo zamora"] = "3813540535";
         alias["~ Gabriel Carabajal"] = "3815627688";
@@ -108,11 +109,14 @@ class Program {
         foreach (var alumno in clase) {
             if (codigos.ContainsKey(alumno.TelefonoLimpio)) {
                 alumno.Creditos = codigos[alumno.TelefonoLimpio].Count;
+            } else {
+                Consola.Escribir($"No se encontró {alumno.NombreCompleto} Tel>: {alumno.TelefonoLimpio} en el archivo.", ConsoleColor.Red);
             }
         }
+
         foreach (var alumno in clase.OrderByDescending(a => a.Creditos)) {
             if (alumno.Creditos > 0) {
-                Consola.Escribir($"{alumno.NombreCompleto,-30} - {alumno.TelefonoLimpio} - {alumno.Creditos,2}");
+                Consola.Escribir($"{alumno.NombreCompleto,-40} - {alumno.TelefonoLimpio} - {alumno.Creditos,2}");
             }
         }
         clase.Guardar("alumos-normal.md");
@@ -153,8 +157,6 @@ class Program {
         var clase = Clase.Cargar();
         int practico = 3;
 
-        // Consola.EsperarTecla();
-
         Consola.Escribir("=== Bienvenido al sistema de gestión de alumnos ===", ConsoleColor.Cyan);
         while (true) {
             string opcion = ElegirOpcionMenu();
@@ -170,7 +172,9 @@ class Program {
                 "6" => () => OpcionMostrarRecuperacion(clase),
                 "7" => () => {
                     ConvertirNombreTelefono(clase, "./asistencias/historia-c3.txt");
+                    NormalizarCreditos(clase, "./asistencias/historia-c3.txt");
                     ConvertirNombreTelefono(clase, "./asistencias/historia-c5.txt");
+                    NormalizarCreditos(clase, "./asistencias/historia-c5.txt");
                 },
                 _   => () => {}
             };

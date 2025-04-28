@@ -23,10 +23,14 @@ public class Asistencia {
 }
 
 public static class Asistencias {
-    static Dictionary<string, string> CambiosTelefonos = new() {
-        { "3815825319", "3812130484" },
-        { "3813192680", "3815627688"}
-    };
+
+    public static string NormalizarCambioTelefono(string telefono) {
+        Dictionary<string, string> CambiosTelefonos = new() {
+            { "3815825319", "3812130484" },
+            { "3813192680", "3815627688" }
+        };
+        return CambiosTelefonos.TryGetValue(telefono, out var nuevo) ? nuevo : telefono;
+    }
 
     static bool ContieneEmoji(string texto){
         bool IsEmoji(Rune rune){
@@ -43,9 +47,6 @@ public static class Asistencias {
         }
         return false;
     }
-
-    public static string Normalizar(string telefono) =>
-        CambiosTelefonos.TryGetValue(telefono, out var nuevo) ? nuevo : telefono;
     
     public static List<Asistencia> CargarAsistenciasMd(string origen) {
         var camino = $"/Users/adibattista/Documents/GitHub/tup-25-p3/datos/{origen}";
@@ -81,7 +82,7 @@ public static class Asistencias {
                 if (telefono == "unknown")
                     continue;
                 
-                telefono = Normalizar(telefono);
+                telefono = NormalizarCambioTelefono(telefono);
 
 
                 if (ContieneEmoji(mensaje)) {
@@ -115,7 +116,7 @@ public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
         string mensaje = "";
         string telefono = "";
 
-        var patronFechaNumero = new Regex(@"^\[(\d{2}/\d{2}/\d{2}).*\]\s+(\d{10})\s*:(.*)$");
+        var patronFechaNumero = new Regex(@"^\[(\d+/\d*/\d+).*\]\s+(\d{10})\s*:(.*)$");
         
         foreach (var linea in lineas) {
             if (string.IsNullOrWhiteSpace(linea)) continue;
@@ -126,13 +127,12 @@ public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
                 string fecha = dateMatch.Groups[1].Value;
                 telefono = dateMatch.Groups[2].Value;
                 mensaje = dateMatch.Groups[3].Value;
-                fechaActual = DateTime.ParseExact(fecha, "dd/MM/yy", null);
-                Consola.Escribir($"Leyendo fecha {fecha} telefono {telefono} mensaje {mensaje}", ConsoleColor.Cyan);
+                fechaActual = DateTime.ParseExact(fecha, new[] { "d/M/yy", "dd/MM/yy", "d/MM/yy", "dd/M/yy" }, null, System.Globalization.DateTimeStyles.None);
             } else {
                 mensaje = linea.Trim();
             }
 
-            telefono = Normalizar(telefono); // Numeros que cambiaron 
+            telefono = NormalizarCambioTelefono(telefono);
 
             if (ContieneEmoji(mensaje)) {
                 if (!estudiantes.ContainsKey(telefono)) {
@@ -149,7 +149,18 @@ public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
     }
 
     public static List<Asistencia> Cargar(bool listar = false) {
+        List<string> eliminarFecha(Dictionary<string, List<DateTime>> salida) {
+            var contador = new Dictionary<DateTime, int>();
+            foreach (var (telefono, fechas) in salida){
+                foreach (var fecha in fechas.Distinct()) {
+                    contador[fecha.Date] = contador.GetValueOrDefault(fecha.Date) + 1;
+                }
+            }
+            return contador.Where(c => c.Value < 30).Select(c => c.Key.ToString()).ToList();
+        }
+
         var salida = new Dictionary<string, List<DateTime>>();
+
         Consola.Escribir("=== Cargando asistencias ===", ConsoleColor.Red);
         foreach (var origen in Directory.GetFiles("./asistencias/", "historia-*.txt")){   
             Consola.Escribir($"Cargando asistencias de {origen}", ConsoleColor.Cyan);
@@ -164,6 +175,9 @@ public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
         }   
 
         // Cuenta cuantas veces hay asistencias en la fecha
+
+        var eliminar = eliminarFecha(salida);
+        Consola.Escribir($"=== Eliminar >> {string.Join(";",eliminar)}", ConsoleColor.Cyan);
         List<Asistencia> asistencias = salida
             .Select(item => new Asistencia(item.Key) { Fechas = item.Value })
             .ToList();
@@ -173,16 +187,17 @@ public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
             var contador = new Dictionary<DateTime, int>();
             foreach (var (telefono, fechas) in salida){
                 foreach (var fecha in fechas.Distinct()) {
+                    if (eliminar.Contains(fecha.ToString())) continue;
                     contador[fecha.Date] = contador.GetValueOrDefault(fecha.Date) + 1;
                     antes++;
                 }
             }
             // Filtra las fechas que tienen más de 30 asistencias
             Consola.Escribir("=== Fechas y cantidad de asistencias ===", ConsoleColor.Green);
+            var i = 1;
             foreach (var entrada in contador.OrderBy(c => c.Key)){
-                Consola.Escribir($"{entrada.Key:dd/MM/yyyy}: {entrada.Value} veces");
+                Consola.Escribir($"{i++,2}) {entrada.Key:dd/MM/yyyy}: {entrada.Value} veces");
             }
-            Consola.Escribir("===\n");
         
             Consola.Escribir("=== Asistencias ===", ConsoleColor.Cyan);
             Consola.Escribir($"Hay {asistencias.Count} asistencias", ConsoleColor.Cyan);

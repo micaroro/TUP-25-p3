@@ -377,8 +377,15 @@ class Clase : IEnumerable<Alumno> {
     }
 
     public Alumno? Buscar(string telefono){
-        telefono = $"({telefono.Substring(0, 3)}) {telefono.Substring(3, 3)}-{telefono.Substring(6, 4)}";
-        return ConTelefono(true).FirstOrDefault(alumno => alumno.Telefono == telefono);
+        // Limpiar el teléfono para dejar solo dígitos
+        var soloNumeros = new string(telefono.Where(char.IsDigit).ToArray());
+        if (string.IsNullOrWhiteSpace(soloNumeros) || soloNumeros.Length != 10) {
+            Consola.Escribir($"Teléfono inválido para búsqueda: '{telefono}'", ConsoleColor.Red);
+            return null;
+        }
+        // Formatear como (XXX) XXX-XXXX
+        var telefonoFormateado = $"({soloNumeros.Substring(0, 3)}) {soloNumeros.Substring(3, 3)}-{soloNumeros.Substring(6, 4)}";
+        return ConTelefono(true).FirstOrDefault(alumno => alumno.Telefono == telefonoFormateado);
     }
 
     public Alumno? Buscar(int legajo) => alumnos.FirstOrDefault(a => a.Legajo == legajo);
