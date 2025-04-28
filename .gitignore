@@ -24,3 +24,5 @@ tempCodeRunnerFile.csharp
 /clases/tmp
 examen/respuestas-examen.md
 examen/respuestas-examen.md
+*.db-shm
+*.db-wal

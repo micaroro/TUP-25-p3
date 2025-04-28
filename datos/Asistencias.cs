@@ -24,7 +24,8 @@ public class Asistencia {
 
 public static class Asistencias {
     static Dictionary<string, string> CambiosTelefonos = new() {
-        { "3815825319", "3812130484" }
+        { "3815825319", "3812130484" },
+        { "3813192680", "3815627688"}
     };
 
     static bool ContieneEmoji(string texto){
@@ -46,7 +47,7 @@ public static class Asistencias {
     public static string Normalizar(string telefono) =>
         CambiosTelefonos.TryGetValue(telefono, out var nuevo) ? nuevo : telefono;
     
-    public static List<Asistencia> CargarAsistencias(string origen) {
+    public static List<Asistencia> CargarAsistenciasMd(string origen) {
         var camino = $"/Users/adibattista/Documents/GitHub/tup-25-p3/datos/{origen}";
         if (!File.Exists(camino)) {
             Console.WriteLine($"El archivo {camino} no existe.");
@@ -98,11 +99,62 @@ public static class Asistencias {
         return estudiantes.Values.ToList();
     }
 
+public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
+        var camino = $"/Users/adibattista/Documents/GitHub/tup-25-p3/datos/{origen}";
+
+        if (!File.Exists(camino)) {
+            Console.WriteLine($"El archivo {camino} no existe.");
+            return new List<Asistencia>();
+        }
+
+        var lineas = File.ReadAllLines(camino);
+        var estudiantes = new Dictionary<string, Asistencia>();
+        Consola.Escribir($"Leyendo asistencias de {origen} hay {lineas.Count()} Lineas a analizar", ConsoleColor.Green);
+
+        DateTime fechaActual = DateTime.MinValue;
+        string mensaje = "";
+        string telefono = "";
+
+        var patronFechaNumero = new Regex(@"^\[(\d{2}/\d{2}/\d{2}).*\]\s+(\d{10})\s*:(.*)$");
+        
+        foreach (var linea in lineas) {
+            if (string.IsNullOrWhiteSpace(linea)) continue;
+            if (linea.Trim()=="") continue;
+
+            var dateMatch = patronFechaNumero.Match(linea.Trim());
+            if (dateMatch.Success) {
+                string fecha = dateMatch.Groups[1].Value;
+                telefono = dateMatch.Groups[2].Value;
+                mensaje = dateMatch.Groups[3].Value;
+                fechaActual = DateTime.ParseExact(fecha, "dd/MM/yy", null);
+                Consola.Escribir($"Leyendo fecha {fecha} telefono {telefono} mensaje {mensaje}", ConsoleColor.Cyan);
+            } else {
+                mensaje = linea.Trim();
+            }
+
+            telefono = Normalizar(telefono); // Numeros que cambiaron 
+
+            if (ContieneEmoji(mensaje)) {
+                if (!estudiantes.ContainsKey(telefono)) {
+                    estudiantes[telefono] = new Asistencia(telefono);
+                }
+
+                if (!estudiantes[telefono].Fechas.Any(d => d.Date == fechaActual.Date)) {
+                    estudiantes[telefono].Fechas.Add(fechaActual);
+                }
+            }
+        }
+
+        return estudiantes.Values.ToList();
+    }
+
     public static List<Asistencia> Cargar(bool listar = false) {
         var salida = new Dictionary<string, List<DateTime>>();
-
-        foreach (var origen in Directory.GetFiles("./asistencias", "*.md")){   
-            List<Asistencia> estudiantes = CargarAsistencias(origen);
+        Consola.Escribir("=== Cargando asistencias ===", ConsoleColor.Red);
+        foreach (var origen in Directory.GetFiles("./asistencias/", "historia-*.txt")){   
+            Consola.Escribir($"Cargando asistencias de {origen}", ConsoleColor.Cyan);
+            List<Asistencia> estudiantes = CargarAsistenciasHistoria(origen);
+            Consola.Escribir($"Se cargaron {estudiantes.Count} asistencias", ConsoleColor.Cyan);
             foreach (var estudiante in estudiantes) {
                 if (!salida.ContainsKey(estudiante.Telefono)) {
                     salida[estudiante.Telefono] = new List<DateTime>();

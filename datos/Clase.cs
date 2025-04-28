@@ -103,7 +103,7 @@ class Clase : IEnumerable<Alumno> {
                     alumno.Orden = ++orden;
                     string linea = $"{alumno.Orden:D2}.  {alumno.Legajo}  {alumno.NombreCompleto,-40}  {alumno.Telefono,-15}";
                     linea = $"{linea,-75} {alumno.Asistencias,2} {alumno.PracticosToString(),-15}";
-                    linea = $"{linea,-87} {alumno.Resultado,3}";
+                    linea = $"{linea,-87} {alumno.Creditos,3}";
                     writer.WriteLine(linea);
                 }
             }

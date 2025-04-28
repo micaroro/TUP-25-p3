@@ -4,12 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using static System.Console;
-
 using System.Security.Cryptography;
 using System.Text;
-
 
 static void EsperarTecla(){
     Write("Presione una tecla para continuar...");
@@ -19,16 +16,16 @@ static void EsperarTecla(){
 
 static bool Confirmar(string mensaje = "¿Está seguro?") {
     Write($"{mensaje} (s/n) : ");
-    ConsoleKeyInfo key = ReadKey(true);
+    ConsoleKeyInfo key;
     while(true) {
-        if (key.Key == ConsoleKey.S || key.Key == ConsoleKey.Y || key.Key == ConsoleKey.NumPad1 || key.Key == ConsoleKey.D1) {
+        key = ReadKey(true);
+        if (key.Key == ConsoleKey.S) {
             WriteLine("Si\n");
             return true;
-        } else if (key.Key == ConsoleKey.N || key.Key == ConsoleKey.NumPad0 || key.Key == ConsoleKey.D0) {
+        } else if (key.Key == ConsoleKey.N) {
             WriteLine("No\n");
             return false;
         }
-        key = ReadKey(true);
     }
 }
 
@@ -36,129 +33,25 @@ static int LeerNumero(string prompt) {
     Write(prompt);
     string input = ReadLine()?.Trim() ?? "";
     
-    if (int.TryParse(input, out int result))
-        return result;
+    if (int.TryParse(input, out int result)) return result;
     return 0;
 }
 
-static int ObtenerParametro(int indice, int asumir = 0){
-    string[] args = Environment.GetCommandLineArgs().Skip(2).ToArray();
-    if (args == null || indice < 0 || indice >= args.Length)
-        return asumir;
-        
-    if (!int.TryParse(args[indice], out int valor))
-        return asumir;
-        
-    return valor;
-}
-
-// Método auxiliar para obtener el path del archivo fuente
-
+static char ToChar(int numero) => (char)('a' + numero - 1);                            // 1 => a, 2 => b, 3 => c
+static int  ToInt(char letra)  => (letra >= 'a' || letra <='c') ? letra - 'a' + 1 : 0; // a => 1, b => 2, c => 3
 
 // Clase Pregunta
 public class Pregunta {
-    public int Numero { get; set; } = 0;
+    public int Numero   { get; set; } = 0;
     public string Texto { get; set; } = "";
     public string[] Respuestas { get; set; } = new string[3];
-    public int Correcta { get; set; } = 0; 
+    public int Correcta  { get; set; } = 0; 
     public int Respuesta { get; set; } = 0;
-    public string Original { get; set; } = "";
     
-    public bool EsRespondida => Respuesta != 0;
+    public bool EsRespondida => Respuesta != 0;   
     public bool EsIncorrecta => Respuesta != Correcta;
     public bool EsCorrecta   => Respuesta == Correcta;
     
-    public char RespuestaLetra { 
-        get => (char)('a' + Respuesta - 1);
-        set => Respuesta = (value < 'a' || value > 'c') ? 0 : value - 'a' + 1;
-    }
-
-    public char CorrectaLetra { 
-        get => (char)('a' + Correcta - 1);
-        set => Correcta = (value < 'a' || value > 'c') ? 0 : value - 'a' + 1;
-    }
-
-    public override string ToString() =>        
-        $"""
-    
-        ### {Numero:D3} {codificar(Numero, Correcta)}
-        {Texto}
-        
-        a) {Respuestas[0]}
-        b) {Respuestas[1]}
-        c) {Respuestas[2]}
-        
-        """;
-
-    static public Pregunta Cargar(string texto){
-        var respuesta = -1;
-        var pregunta = new Pregunta();
-        var lineas = texto.Split("\n");
-        pregunta.Original = texto;
-        WriteLine($"Cargando {texto}");
-        foreach(var linea in lineas){
-            if(linea.StartsWith("# ") || linea.Trim() == "" || linea.Trim() == "---") continue;
-            WriteLine($"Cargando {linea}");
-
-            // Comienza la pregunta
-            if (Regex.Match(linea, @"^###\s*(\d+)(?:\s+(\d{1,4}))?") is var preg && preg.Success) {
-                int numero = int.Parse(preg.Groups[1].Value);
-                string codigo = preg.Groups[2].Success ? preg.Groups[2].Value : "";
-
-                pregunta.Numero   = numero;
-                pregunta.Correcta = decodificar(pregunta.Numero, codigo);
-                respuesta = -1;
-                continue;
-            };
-
-            // Comienza la respuesta
-            if (Regex.Match(linea, @"^([abc])[\)\.]\s*(.*)") is var resp && resp.Success) {
-                respuesta = resp.Groups[1].Value[0] - 'a';
-                // Si hay texto, lo asigna; si no, deja la respuesta vacía
-                pregunta.Respuestas[respuesta] = resp.Groups[2].Success ? resp.Groups[2].Value.Trim() : "";
-                continue;
-            }
-
-            // Agrega texto a la pregunta o respuesta
-            if (respuesta < 0) {
-                pregunta.Texto += $"\n{linea}";
-            } else {
-                pregunta.Respuestas[respuesta] += $"\n{linea}";
-            }
-        }
-
-        return pregunta;
-    }
-
-    public void Mostrar(bool numerico = false, bool solucion = false) {
-        string f(string texto) => texto?.Replace("```csharp", "").Replace("```", "") ?? "";
-
-        string opciones = numerico ? "123" : "abc";
-        int[] respuestas = solucion ? [Correcta - 1] : [0, 1, 2];
-
-        WriteLine($"""
-    
-        ### {Numero:D3} 
-        {f(Texto)}
-
-        """);
-
-        foreach(var r in respuestas) {
-            // Validar que r esté dentro del rango válido para opciones y Respuestas
-            if (r >= 0 && r < opciones.Length && r < Respuestas.Length) {
-                WriteLine($"{opciones[r]}) {f(Respuestas[r])}");
-            }
-        }
-
-        if(!solucion) {
-            if (Respuesta > 0 && Respuesta <= opciones.Length) {
-                WriteLine($"\nRespuesta: {opciones[Respuesta-1]})\n");
-            } else {
-                WriteLine("\n\n\n");
-            }
-        }
-    }
-
     static string codificar(int pregunta, int respuesta) {
         if (respuesta < 1 || respuesta > 3) return "";
         string input = $"{pregunta}-{respuesta}";
@@ -175,12 +68,93 @@ public class Pregunta {
         return 0;
     }
 
+    public override string ToString() =>        
+        $"""
+    
+        ### {Numero:D3} {codificar(Numero, Correcta)}
+        {Texto}
+        
+        a) {Respuestas[0]}
+        b) {Respuestas[1]}
+        c) {Respuestas[2]}
+        
+        """;
+    
+    static public Pregunta Cargar(string texto) {
+        var modo = 0;
+        var respuesta = 0;
+
+        var lineas   = texto.Split("\n");
+        var pregunta = new Pregunta();
+
+        foreach(var linea in lineas) {
+            
+            // Ignorar comentarios y líneas vacías
+            if(linea.StartsWith("# ") || linea.Trim() == "" || linea.Trim() == "---") continue;
+
+            // Comienza la pregunta
+            if (Regex.Match(linea, @"^###\s*(\d+)(?:\s+(\d{1,4}))?") is var preg && preg.Success) {
+                modo = 1;
+            
+                int numero = int.Parse(preg.Groups[1].Value);
+                string codigo = preg.Groups[2].Success ? preg.Groups[2].Value : "";
+
+                pregunta.Numero   = numero;
+                pregunta.Correcta = decodificar(pregunta.Numero, codigo);
+                continue;
+            };
+
+            // Comienza la respuesta
+            if (Regex.Match(linea, @"^([abc])[\)\.]\s*(.*)") is var resp && resp.Success) {
+                modo = 2;
+            
+                respuesta = ToInt(resp.Groups[1].Value[0]) - 1;
+                pregunta.Respuestas[respuesta] = resp.Groups[2].Success ? resp.Groups[2].Value.Trim() : "";
+                continue;
+            }
+
+            // Agrega texto a la pregunta o respuesta
+            if (modo == 1) { // Pregunta
+                pregunta.Texto += $"\n{linea}";
+            } else if( modo == 2 ) { // Verificación de rango
+                pregunta.Respuestas[respuesta] += $"\n{linea}";
+            }
+        }
+
+        return pregunta;
+    }
+    
+    public void Mostrar(bool solucion = false) {
+        string f(string texto) => texto?.Replace("```csharp", "").Replace("```", "") ?? "";
+
+        int[] respuestas = solucion ? [Correcta-1] : [0, 1, 2];
+
+        WriteLine($"""
+    
+        ### {Numero:D3} 
+        {f(Texto)}
+
+        """);
+
+        foreach(var r in respuestas) {
+            WriteLine($"{ToChar(r+1)}) {f(Respuestas[r])}");
+        }
+
+        if(!solucion) {
+            if (EsRespondida) {
+                WriteLine($"\nRespuesta: {ToChar(Respuesta)})\n");
+            } else {
+                WriteLine("\n\n");
+            }
+        }
+    }
 }
 
 // Clase contenedora de Preguntas
 public class Preguntas : IEnumerable<Pregunta>  {
     List<Pregunta> Lista { get; set; } = new();
 
+    // Agregar estos métodos para convertir entre números y letras
     public static Preguntas Cargar(bool cargarRespuestas = false){
         var preguntas = new Preguntas();
         preguntas.CargarPreguntas("preguntas-examen.md");
@@ -205,7 +179,10 @@ public class Preguntas : IEnumerable<Pregunta>  {
     public void CargarRespuestas(string origen){
         origen = Ubicar(origen);
         if(!File.Exists(origen)) return;
-        foreach (var pregunta in this) { pregunta.Correcta = 0; }
+
+        foreach (var pregunta in this) { 
+            pregunta.Correcta = 0; 
+        }
 
         var lineas = File.ReadAllLines(origen);
         foreach (var linea in lineas) {
@@ -216,7 +193,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
             char letra = char.ToLower(match.Groups[2].Value[0]);
 
             if (this.FirstOrDefault(p => p.Numero == numero) is Pregunta pregunta) {
-                pregunta.Correcta = letra - 'a' + 1;
+                pregunta.Correcta = ToInt(letra);
             }
         }
     }
@@ -235,7 +212,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
             char letra = char.ToLower(match.Groups[2].Value[0]);
 
             if (this.FirstOrDefault(p => p.Numero == numero) is Pregunta pregunta) {
-                pregunta.Respuesta = letra - 'a' + 1;
+                pregunta.Respuesta = ToInt(letra);
             }
         }
     }
@@ -255,7 +232,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
         destino = Ubicar(destino);
         using (var sw = new StreamWriter(destino)) {
             foreach (var pregunta in this.OrderBy(p => p.Numero)) {
-                sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + pregunta.Correcta - 1)}");
+                sw.WriteLine($"{pregunta.Numero:D3}. {ToChar(pregunta.Correcta)}");
             }
         }
     }
@@ -264,7 +241,7 @@ public class Preguntas : IEnumerable<Pregunta>  {
         destino = Ubicar(destino);
         using (var sw = new StreamWriter(destino)) {
             foreach (var pregunta in this.Respondidas().OrderBy(p => p.Numero)) {
-                sw.WriteLine($"{pregunta.Numero:D3}. {(char)('a' + pregunta.Respuesta - 1)} {(pregunta.EsIncorrecta ? "❌" : "✅")}");
+                sw.WriteLine($"{pregunta.Numero:D3}. {ToChar(pregunta.Respuesta)} {(pregunta.EsIncorrecta ? "❌" : "✅")}");
             }
         }
     }
@@ -274,11 +251,15 @@ public class Preguntas : IEnumerable<Pregunta>  {
         int respondidas = this.Respondidas().Count();
         int correctas = this.Correctas().Count();
         int incorrectas = this.Incorrectas().Count();
-        WriteLine($"\nResumen de resultados cargados:");
-        WriteLine($"  Total de preguntas: {total,3}");
-        WriteLine($"         Respondidas: {respondidas,3}");
-        WriteLine($"           Correctas: {correctas,3}");
-        WriteLine($"         Incorrectas: {incorrectas,3}\n");
+        WriteLine($"""
+        
+        Resumen de resultados cargados:
+          Total de preguntas: {total,3}
+             Respondidas: {respondidas,3}
+               Correctas: {correctas,3}
+             Incorrectas: {incorrectas,3}
+        
+        """);
         EsperarTecla();
     }
 
@@ -294,40 +275,6 @@ public class Preguntas : IEnumerable<Pregunta>  {
         }
     }
 
-    public bool Validar() {
-        bool valido = true;
-        // Verificar numeración consecutiva
-        int esperado = 1;
-        foreach (var q in Lista.OrderBy(p => p.Numero)) {
-            if (q.Numero != esperado) {
-                WriteLine($"Error en {nameof(Validar)}: Falta la pregunta número {esperado}.");
-                valido = false;
-                esperado = q.Numero;
-            }
-            esperado++;
-        }
-        // Verificar que haya exactamente 3 respuestas y estén definidas
-        foreach (var q in Lista) {
-            if (q.Respuestas == null || q.Respuestas.Length != 3) {
-                WriteLine($"Error en {nameof(Validar)}: La pregunta {q.Numero} no tiene exactamente 3 respuestas.");
-                valido = false;
-            } else {
-                for (int i = 0; i < 3; i++) {
-                    if (string.IsNullOrWhiteSpace(q.Respuestas[i])) {
-                        WriteLine($"Error en {nameof(Validar)}: La pregunta {q.Numero} tiene la respuesta {i+1} vacía.");
-                        valido = false;
-                    }
-                }
-            }
-            // Verificar que la respuesta correcta esté en 1..3
-            if (q.Correcta < 1 || q.Correcta > 3) {
-                WriteLine($"Error en {nameof(Validar)}: La pregunta {q.Numero} tiene un índice de respuesta correcta inválido ({q.Correcta}).");
-                valido = false;
-            }
-        }
-        return valido;
-    }
-
     public List<Pregunta> GenerarExamen(int cantidad, int semilla = 0) {
         var origen = cantidad < 0 ? Incorrectas() : Pendientes();
         cantidad = Math.Min(Math.Abs(cantidad), origen.Count());
@@ -337,8 +284,10 @@ public class Preguntas : IEnumerable<Pregunta>  {
 
     static string Ubicar(string nombre) {
         string GetSourceFilePath([System.Runtime.CompilerServices.CallerFilePath] string path = null) => path;
+
         string baseDir = Path.GetDirectoryName(GetSourceFilePath());
         string path = Path.Combine(baseDir, nombre);
+
         if (File.Exists(path)) return path;
         return Path.Combine(Environment.CurrentDirectory, nombre);
     }
@@ -358,37 +307,23 @@ class Examen {
     public bool MostrarNumeros { get; set; } = false;
     private Preguntas Base { get; set; }
 
-    private DateTime HoraInicio, HoraFinal; // Registrar hora de inicio
     private int Legajo { get; set; } = 0;
 
     public Examen(Preguntas preguntas, int cantidad, int legajo = 0, int semilla=0) {
         Base = preguntas;
         Legajo = legajo;
-        HoraInicio = DateTime.Now;
         Preguntas = preguntas.GenerarExamen(cantidad, semilla);
-        Preguntas.ForEach( p => p.Respuesta = 0);
-    }
-
-    static bool EsNumerico(ConsoleKey key) {
-        return key == ConsoleKey.D1 || key == ConsoleKey.NumPad1 ||
-               key == ConsoleKey.D2 || key == ConsoleKey.NumPad2 ||
-               key == ConsoleKey.D3 || key == ConsoleKey.NumPad3;
-    }
-    
-    static bool EsAlfabetico(ConsoleKey key) {
-        return key == ConsoleKey.A || key == ConsoleKey.B || key == ConsoleKey.C;
+        ReiniciarExamen();
     }
     
     public int Nota() =>
         Preguntas.Count(p => p.Respuesta == p.Correcta);
 
-    string FormatResponse(int respuesta) => 
-                MostrarNumeros ? respuesta.ToString() : ((char)('a' + respuesta - 1)).ToString();
+    string FormatResponse(int respuesta) => ((char)('a' + respuesta - 1)).ToString();
     
     public bool Evaluar() {
         int cantidad = Preguntas.Count();
         int actual = 0;
-        HoraFinal = DateTime.Now;
 
         if (cantidad == 0) {
             WriteLine("\n🎉 Felicitaciones. Respondiste todas las preguntas. 🎉\n\n");
@@ -407,20 +342,18 @@ class Examen {
             Clear();
             WriteLine($"- Pregunta {actual + 1,2} de {cantidad} --- Legajo: {Legajo} - Examen 1er Parcial -");
             WriteLine();
-            pregunta.Mostrar(numerico: MostrarNumeros);
-            Write("Respuesta (←/→ navegar, a/b/c o 1/2/3 para responder): ");
+            pregunta.Mostrar();
+            Write("Respuesta (←/→ navegar, a/b/c para responder): ");
 
             // Esperar una tecla sin temporizador
             key = ReadKey(true);
 
             var k = key.Value.Key;
 
-            if (EsNumerico(k) || EsAlfabetico(k)) { MostrarNumeros = EsNumerico(k); }
-
             int respuesta = k switch {
-                ConsoleKey.A or ConsoleKey.D1 or ConsoleKey.NumPad1 => 1,
-                ConsoleKey.B or ConsoleKey.D2 or ConsoleKey.NumPad2 => 2,
-                ConsoleKey.C or ConsoleKey.D3 or ConsoleKey.NumPad3 => 3,
+                ConsoleKey.A => 1,
+                ConsoleKey.B => 2,
+                ConsoleKey.C => 3,
                 _ => 0
             };
 
@@ -444,7 +377,6 @@ class Examen {
             }
         }
 
-        HoraFinal = DateTime.Now;
         return true;
     }
 
@@ -454,8 +386,6 @@ class Examen {
 
     public void ReiniciarExamen(){
         Preguntas.ForEach(p => p.Respuesta = 0);
-        HoraInicio = DateTime.Now;
-        HoraFinal = DateTime.Now;
     }
 
     public void Enseñar() {
@@ -467,15 +397,14 @@ class Examen {
         WriteLine($"\nHay {(cantidadIncorrectas == 1 ? "una respuesta incorrecta" : $"{cantidadIncorrectas} respuestas incorrectas")}.\n");
         if(!Confirmar("¿Desea ver las respuestas incorrectas?")) return;
 
-        MostrarNumeros = false;
         if (incorrectas.Any()) {
             int i = 1;
             foreach(var p in incorrectas) {
                 Clear();
                 WriteLine($"Hay {cantidadIncorrectas} {(cantidadIncorrectas == 1 ? "respuesta incorrecta" : "respuestas incorrectas")}\n");
-                WriteLine($"{i++} de {cantidadIncorrectas} --- Tu respuesta fue {FormatResponse(p.Respuesta)}) la correcta era {FormatResponse(p.Correcta)}) ---\n");
+                WriteLine($"{i++} de {cantidadIncorrectas} --- Tu respuesta fue {ToChar(p.Respuesta)}) la correcta era {ToChar(p.Correcta)}) ---\n");
                 WriteLine("\n-----------------------------------------------------------");
-                p.Mostrar(solucion: true, numerico: MostrarNumeros);
+                p.Mostrar(solucion: true);
                 WriteLine("\n-----------------------------------------------------------\n");
                 EsperarTecla();
             }
@@ -484,7 +413,6 @@ class Examen {
         }
     }
 
-    // Modificar para recibir duración
     public void Informar() {
         Clear();
         var cantidad = Preguntas.Count;
@@ -531,49 +459,44 @@ string GenerarCodigo(int legajo, int semilla) {
     return $"{semilla4:X4}{control:X2}";
 }
 
-// Valida el código y retorna la semilla si es válido, o 0 si no lo es
 int ValidarCodigo(int legajo, string codigo) {
-    if (string.IsNullOrWhiteSpace(codigo) || codigo.Length != 6)
-        return 0;
-    if (!int.TryParse(codigo[..4], System.Globalization.NumberStyles.HexNumber, null, out int semilla4))
-        return 0;
-    if (!int.TryParse(codigo.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out int control))
-        return 0;
-    int esperado = ((legajo ^ semilla4) + 0xABCD) & 0xFF;
-    return control == esperado ? semilla4 : 0;
+    if (string.IsNullOrWhiteSpace(codigo) || codigo.Length != 4) return 0;
+    return int.TryParse(codigo, out int semilla) ? semilla : 0;
 }
 
 var preguntas = Preguntas.Cargar();
-preguntas.Validar();
 
 Clear();
 WriteLine("\n\n### Examen 1er Parcial ###\n\n");
 
 // Configuración del examen
-int legajo   = ObtenerParametro(0);
-int cantidad = ObtenerParametro(1, 10);
+int legajo = 0;
 while(legajo < 55000 || legajo > 65000) {
     legajo = LeerNumero("Ingrese número de legajo: ");
 } 
-
 preguntas.CargarResultados($"{legajo}.txt");
-// preguntas.InformarResultados();
+
+// Solicitar la cantidad de preguntas al usuario
+int cantidadPreguntas = 0; // Valor por defecto
+while(cantidadPreguntas == 0){
+    cantidadPreguntas = LeerNumero("Ingrese cantidad de preguntas:");
+}
 
 int semilla = GenerarSemilla();
-var examen = new Examen(preguntas, cantidad, legajo, semilla);
+var examen = new Examen(preguntas, cantidadPreguntas, legajo, semilla);
 
-while(true){
+while(true) {
     if(!examen.Evaluar()) break;
 
+    preguntas.GuardarResultados($"{legajo}.txt");
     if(examen.ExamenPerfecto()) {
         examen.Informar();
         WriteLine("\n🎉 Felicitaciones. Respondiste todas las preguntas correctamente. 🎉\n");
-        if(preguntas.Count() == 10){
+        if(preguntas.Count() == 10) {
             WriteLine($"Su código es: {GenerarCodigo(legajo, semilla)}\n\nCompartirlo en el grupo para conseguir los creditos\n");
         }
         break;
     } else {
-        preguntas.GuardarResultados($"{legajo}.txt");
         examen.Enseñar();
         if(Confirmar("¿Desea repetir el examen para conseguir los creditos?")) {
             examen.ReiniciarExamen();
@@ -583,6 +506,5 @@ while(true){
         }
     }
 };
-
 
 // Fin del programa
