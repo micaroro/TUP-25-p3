@@ -25,7 +25,7 @@ class Program {
 
     static void OpcionCopiarPractico(Clase clase) {
         Consola.Escribir("=== Copiar trabajo práctico ===", ConsoleColor.Cyan);
-        string tp   = Consola.LeerCadena("Ingrese el número del trabajo práctico a copiar (ej: 1): ", new[] { "1", "2", "3" });
+        string tp   = Consola.LeerCadena("Ingrese el número del trabajo práctico a copiar (ej: 1): ", new[] { "1", "2", "3", "4", "5", "6" });
         bool forzar = Consola.Confirmar("¿Forzar copia incluso si ya existe?");
 
         clase.NormalizarCarpetas();
@@ -156,7 +156,7 @@ class Program {
 
     static void Main(string[] args) {
         var clase = Clase.Cargar();
-        int practico = 3;
+        int practico = 4;
 
         Consola.Escribir("=== Bienvenido al sistema de gestión de alumnos ===", ConsoleColor.Cyan);
         while (true) {
