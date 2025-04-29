@@ -106,11 +106,12 @@ class Program {
         }
 
         var codigos = LeerCodigos(origen);
+        var contar = 1;
         foreach (var alumno in clase) {
             if (codigos.ContainsKey(alumno.TelefonoLimpio)) {
                 alumno.Creditos = codigos[alumno.TelefonoLimpio].Count;
             } else {
-                Consola.Escribir($"No se encontró {alumno.NombreCompleto} Tel>: {alumno.TelefonoLimpio} en el archivo.", ConsoleColor.Red);
+                Consola.Escribir($"{contar++,2}) No se encontró {alumno.NombreCompleto} Tel>: {alumno.TelefonoLimpio} en el archivo.", ConsoleColor.Red);
             }
         }
 
