@@ -100,7 +100,7 @@ public static class Asistencias {
         return estudiantes.Values.ToList();
     }
 
-public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
+    public static List<Asistencia> CargarAsistenciasHistoria(string origen) {
         var camino = $"/Users/adibattista/Documents/GitHub/tup-25-p3/datos/{origen}";
 
         if (!File.Exists(camino)) {
