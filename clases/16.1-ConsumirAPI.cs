@@ -23,13 +23,13 @@ static async Task ObtenerClima() {
 
     WriteLine(url);
     WriteLine($"""
+    
+    === Clima Actual ===    
         
-        === Clima Actual ===    
-         
-         Ciudad     : {ciudad}
-         Temperatura: {temp} °C
-         Condición  : {clima}
+        Ciudad     : {ciudad}
+        Temperatura: {temp} °C
+        Condición  : {clima}
 
-    """);
+""");
 }
 await ObtenerClima();

@@ -1,7 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using TUP;
-using System.Threading.Tasks;
-    // using System.Collections.Generic;
 
 class Program {
     static string ElegirOpcionMenu() {
@@ -69,10 +67,11 @@ class Program {
         }
         alias["Alejandro Di Battista"]     = "3815343458";
         alias["gonzalo zamora"]            = "3813540535";
-        alias["~ Gabriel Carabajal"]       = "3815627688";
+        alias["~ Gabriel Carabajal"]       = "3815627688";
         alias["Cristian Ivan Soraire"]     = "";
         alias["Abigail * Medina Costilla"] = "3816557818";
-        alias["~ lauu🥶"]                  = "3812130484";
+        alias["~ Agustín Morales"]         = "3815459105";
+        alias["~ lauu🥶"]                  = "3812130484";
 
         var contar   = 0;
         var archivos = Directory.GetFiles("./asistencias", "historia*.txt");
@@ -91,10 +90,12 @@ class Program {
                 }
                 salida.Add(texto);
             }
-            File.WriteAllLines(origen, lineas);
+            Consola.Escribir($"Se encontraron {contar} coincidencias en el archivo {origen}.");
+            File.WriteAllLines(origen, salida);
         }
 
         Consola.Escribir($"Se encontraron {contar} coincidencias.", ConsoleColor.Cyan);
+        Consola.EsperarTecla();
     }
 
     static void RegistrarCreditos(Clase clase) {
@@ -200,7 +201,7 @@ class Program {
     }
     
 
-    static async Task Main(string[] args) {
+    static void Main(string[] args) {
         var clase = Clase.Cargar();
         ConvertirNombreATelefono(clase);
 
