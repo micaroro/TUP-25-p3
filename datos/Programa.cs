@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using TUP;
+using System.Threading.Tasks;
     // using System.Collections.Generic;
 
 class Program {
@@ -199,7 +200,7 @@ class Program {
     }
     
 
-    static void Main(string[] args) {
+    static async Task Main(string[] args) {
         var clase = Clase.Cargar();
         ConvertirNombreATelefono(clase);
 
