@@ -67,11 +67,11 @@ class Program {
         }
         alias["Alejandro Di Battista"]     = "3815343458";
         alias["gonzalo zamora"]            = "3813540535";
-        alias["~ Gabriel Carabajal"]       = "3815627688";
-        alias["Cristian Ivan Soraire"]     = "";
+        alias["~ Gabriel Carabajal"]        = "3815627688";
+        alias["Cristian Ivan Soraire"]     = "X";
         alias["Abigail * Medina Costilla"] = "3816557818";
-        alias["~ Agustín Morales"]         = "3815459105";
-        alias["~ lauu🥶"]                  = "3812130484";
+        alias["~ Agustín Morales"]          = "3815459105";
+        alias["~ lauu🥶"]                   = "3812130484";
 
         var contar   = 0;
         var archivos = Directory.GetFiles("./asistencias", "historia*.txt");
