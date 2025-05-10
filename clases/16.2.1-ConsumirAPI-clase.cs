@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+// Creo la estructura de datos para el clima
+// con los campos que nos interesan para el clima
 class ClimaInfo {
     public MainInfo Main { get; set; }
     public WeatherInfo[] Weather { get; set; }
@@ -20,6 +22,12 @@ class ClimaInfo {
         public double Speed { get; set; }
     }
 }
+
+// Tambien lo podemos hacer con records para ser mucho mas sucinto
+// record ClimaInfo(MainInfo Main, WeatherInfo[] Weather, WindInfo Wind);
+// record MainInfo(double Temp);
+// record WeatherInfo(string Description);
+// record WindInfo(double Speed);
 
 #region Ejemplo de respuesta de la API (En JSON)
 // {
@@ -110,28 +118,27 @@ var ejemploRespuesta = new {
 #endregion
 
 static async Task ObtenerClima() {
-    Console.Write("Ingrese una ciudad: ");
-    string ciudad = Console.ReadLine();
+    Write("Ingrese una ciudad: ");
+    string ciudad = ReadLine();
     string apiKey = "30d38b26954359266708f92e1317dac0";
-
-    string url = $"https://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid={apiKey}&units=metric&lang=es";
+    string url    = $"https://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid={apiKey}&units=metric&lang=es";
 
     using var clienteHttp = new HttpClient();
     var respuesta = await clienteHttp.GetStringAsync(url);
 
     var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-    var datos = JsonSerializer.Deserialize<ClimaInfo>(respuesta, opciones);
+    var datos    = JsonSerializer.Deserialize<ClimaInfo>(respuesta, opciones);
 
-    Console.Clear();
+    Clear();
     var infoClima = $"""
         === Clima Actual en {ciudad.ToUpper()} ===
-        
+
          Temperatura: {datos.Main.Temp} °C
          Condición  : {datos.Weather[0].Description}
          Viento     : {datos.Wind.Speed} m/s
 
         """;
-    Console.WriteLine(infoClima);
+    WriteLine(infoClima);
 }
 
 await ObtenerClima();
