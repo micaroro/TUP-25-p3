@@ -98,13 +98,11 @@ class Clase : IEnumerable<Alumno> {
         using (StreamWriter writer = new(destino)) {
             writer.WriteLine("# Listado de alumnos");
             foreach(var comision in Comisiones) {
-                var orden = 0;
+                var orden = 1;
                 writer.WriteLine($"\n## Comisión {comision}");
-                foreach(var alumno in EnComision(comision).OrdenandoPorNombre()) {
-                    alumno.Orden = ++orden;
-                    string linea = $"{alumno.Orden:D2}.  {alumno.Legajo}  {alumno.NombreCompleto, -40}  {alumno.Telefono, -15}";
-                    linea = $"{linea,-75} {alumno.Asistencias, 2} {alumno.PracticosToString(), -15}";
-                    linea = $"{linea,-87} {alumno.Creditos, 3}  {alumno.Nota1erParcial, 3}  {10 * alumno.Nota / 60.0,3:0}";
+                foreach(var a in EnComision(comision).OrdenandoPorNombre()) {
+                    a.Orden = orden++;
+                    var linea = $"{a.Orden:D2}.  {a.Legajo,5}  {a.NombreCompleto,-35}  {a.Telefono,-14}  {a.Asistencias,2}  {a.PracticosStr,-10}  {a.Creditos,2}  {a.Parcial,2}  {a.Nota,3:0.1}";
                     writer.WriteLine(linea);
                 }
             }
@@ -175,8 +173,11 @@ class Clase : IEnumerable<Alumno> {
 
     public void VerificaPresentacionPractico(int practico) {
         const string Base = "../TP";
-        Consola.Escribir($"=== Verificación de presentación del trabajo práctico TP{practico} ===", ConsoleColor.Cyan);
-        var enunciado = Path.Combine("../enunciados", $"tp{practico}", "ejercicio.cs");
+        
+        var fuente = practico == 4 ? "Program.cs" : "ejercicio.cs";
+
+        Consola.Escribir($"\n=== Verificación de presentación del trabajo práctico TP{practico} ===", ConsoleColor.Blue);
+        var enunciado = Path.Combine("../enunciados", $"tp{practico}", fuente);
         int lineas = ContarLineasEfectivas(enunciado);
         Consola.Escribir($" - Enunciado tiene {lineas} líneas efectivas", ConsoleColor.Cyan);
         foreach(var comision in Comisiones) {
@@ -184,7 +185,7 @@ class Clase : IEnumerable<Alumno> {
             var ausentes = 0;
             var errores = 0;
             foreach(var alumno in EnComision(comision)){
-                var archivo = Path.Combine(Base, alumno.Carpeta, $"tp{practico}", "ejercicio.cs");
+                var archivo = Path.Combine(Base, alumno.Carpeta, $"tp{practico}", fuente);
                 EstadoPractico estado = EstadoPractico.Error;
                 if (File.Exists(archivo)) {
                     int lineasEfectivas = ContarLineasEfectivas(archivo) - lineas;
@@ -197,9 +198,11 @@ class Clase : IEnumerable<Alumno> {
                         ausentes++;
                     }
                     alumno.PonerPractico(practico, estado);
-                    if(practico == 3 && lineasEfectivas > 20) {
+                    
+                    if(practico == 3 && lineasEfectivas > 20) { // Si es TP3, ejecutar el programa y verificar el resultado
                         alumno.Resultado = ResultadoEjecutar(archivo);
                     }
+                    
                     var color = lineasEfectivas < 20 ? ConsoleColor.Yellow : ConsoleColor.White;
                     if(alumno.Resultado < 0){
                         errores++;
@@ -292,7 +295,7 @@ class Clase : IEnumerable<Alumno> {
                 }
                 var asistencia = string.Join(" ", emojis);
                 string linea = $"{alumno.Legajo} - {alumno.NombreCompleto, -40} {$"{alumno.Telefono}", -15}";
-                linea = $" {linea,-65} {alumno.Asistencias, 2}  {asistencia}   ";
+                linea = $" {linea,-65} {alumno.Asistencias, 2}  {asistencia}  {alumno.Nota, 4:0.0}";
 
                 Consola.Escribir(linea);
             }

@@ -30,21 +30,11 @@ public class Menu {
                 Consola.Escribir($"{i + 1}. {Opciones[i].Descripcion}");
             }
             Consola.Escribir("0. Salir");
+            var eleccion = Consola.ElegirOpcion($"\nElija una opción (0-{Opciones.Count}): ", Opciones.Count);
 
-            string[] opcionesValidas = Enumerable.Range(0, Opciones.Count + 1)
-                                                .Select(n => n.ToString())
-                                                .ToArray();
-            
-            string prompt = $"\nElija una opción (0-{Opciones.Count}): ";
-            string eleccionStr = Consola.ElegirOpcion(prompt, String.Join("",opcionesValidas));
+            if (eleccion == 0) break; 
 
-            int eleccionInt = int.Parse(eleccionStr); // Consola.ElegirOpcion ya valida
-
-            if (eleccionInt == 0){
-                break; 
-            }
-
-            Action accionSeleccionada = Opciones[eleccionInt - 1].Accion;
+            Action accionSeleccionada = Opciones[eleccion - 1].Accion;
             Console.Clear(); 
             accionSeleccionada();
             Consola.EsperarTecla(); 

@@ -217,6 +217,6 @@ namespace TP4App
                 Console.WriteLine($"Respondida: {total} veces");
                 Console.WriteLine($"Correctas: {porcentaje:0.0}%");
             }
-        }
+        }
     }
 }

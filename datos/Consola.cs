@@ -44,13 +44,20 @@ public static class Consola {
     
     // Helper method to get a valid option from a range
     // Método para elegir una opción de un conjunto de valores posibles
-    public static string ElegirOpcion(string mensaje, string valoresPosibles) {
-        string[] opciones = new string[valoresPosibles.Length];
-        for (int i = 0; i < valoresPosibles.Length; i++) {
-            opciones[i] = valoresPosibles[i].ToString();
-        }
+    public static int ElegirOpcion(string mensaje, int maximo) {
+        int resultado = -1;
+        Console.Write(mensaje);
+        do {
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            if (keyInfo.Key == ConsoleKey.Escape) {
+                resultado = 0;
+            } else if (char.IsDigit(keyInfo.KeyChar))  {
+                resultado = int.Parse(keyInfo.KeyChar.ToString());
+            }
+        } while(resultado < 0 || resultado > maximo);
         
-        return LeerCadena(mensaje, opciones);
+        Console.WriteLine(resultado);
+        return resultado;
     }
     
     public static bool Confirmar(string mensaje) {

@@ -12,8 +12,10 @@ public class Alumno {
     public int Asistencias { get; set; } = 0;
     public int Resultado { get; set; } = 0; 
     public int Creditos { get; set; } = 0;
-    public int Nota1erParcial { get; set; } = 0;
-    public int Nota => Math.Min(Nota1erParcial + Math.Min(Creditos, 20), 60);
+    public int Parcial { get; set; } = 0;
+    public double Nota => Math.Round((Math.Min(Parcial + Math.Min(Creditos, 20), 60) / 6.0), 1);
+    public string PracticosStr => string.Join("", Practicos.Select(p => p.ToString()));
+
     public List<EstadoPractico> Practicos { get; set; } = new(); // Almacena el estado de los trabajos prácticos como una lista
 
     public Alumno(int orden, int legajo, string apellido, string nombre, string telefono, string comision, string practicos, int asistencias = 0, int resultado=0, int notas=0) {
@@ -26,7 +28,7 @@ public class Alumno {
         Practicos = ConvertirStringAPracticos(practicos);
         Asistencias = asistencias;
         Resultado = resultado;
-        Nota1erParcial = notas;
+        Parcial = notas;
     }
 
     private List<EstadoPractico> ConvertirStringAPracticos(string practicosStr) {
@@ -39,10 +41,6 @@ public class Alumno {
         return lista;
     }
 
-    public string PracticosToString() {
-        return string.Join("", Practicos.Select(p => p.ToString()));
-    }
-
     public void Reiniciar(){
         Practicos.Clear();
         Asistencias = 0;
@@ -50,7 +48,6 @@ public class Alumno {
 
     public string TelefonoLimpio => Telefono.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "").Trim();
     public string NombreLimpio   => $"{Nombre} {Apellido}".Replace("-", "").Replace("*", "").Trim();
-
 
     public bool TieneTelefono      => Telefono != "";
     public string NombreCompleto   => $"{Apellido}, {Nombre}".Replace("-", "").Replace("*", "").Trim();
@@ -95,7 +92,7 @@ public class Alumno {
     }
 
     public override string ToString() {
-        return $"{Legajo} - {NombreCompleto} - {Telefono} - {Comision} - {PracticosToString()}";
+        return $"{Legajo} - {NombreCompleto} - {Telefono} - {Comision} - {PracticosStr}";
     }
 
     public override int GetHashCode() {
