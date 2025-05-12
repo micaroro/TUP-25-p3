@@ -44,13 +44,6 @@ class Program {
         Asistencias.Cargar(true);
     }
 
-    static void MostrarRecuperacion(Clase clase) {
-        Consola.Escribir("=== Generando reporte de recuperación ===", ConsoleColor.Cyan);
-        clase.GenerarReporteRecuperacion();
-        Consola.Escribir("Reporte 'recuperacion.md' generado.", ConsoleColor.Green);
-        clase.DebenRecuperar().ListarAlumnos();
-    }
-
     static void ConvertirNombreATelefono(Clase clase) {
         var alias = new Dictionary<string, string>();
         foreach (var alumno in clase.ConTelefono()) {
@@ -258,7 +251,6 @@ class Program {
         menu.Agregar("Publicar trabajo práctico",       () => CopiarPractico(clase));
         menu.Agregar("Registrar Asistencia & Notas",    () => RegistrarTodo(clase, practico));
         menu.Agregar("Faltan presentar TP",             () => ListarNoPresentaron(clase, practico));
-        menu.Agregar("Mostrar recuperación",            () => MostrarRecuperacion(clase));
     
         menu.Ejecutar();
 
