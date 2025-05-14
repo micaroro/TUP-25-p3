@@ -1,7 +1,7 @@
 # Listado de alumnos
 
 ## Comisión C3
-01.  61203  Acevedo Costello, Juan Ignacio       (381) 388-7804   17  +++·        25  58  10.0
+01.  61203  Acevedo Costello, Juan Ignacio       (381) 388-7804   17  ++++        25  58  10.0
 02.  61667  Acosta, Maira                        (381) 562-8162   20  ++++        23  60  10.0
 03.  62055  Ahumada, Aiquén                      (381) 419-9202   19  ++++        24  60  10.0
 04.  61118  Barrios, Santiago Alexis             (381) 526-8193   19  +++·        22  58  10.0
@@ -82,7 +82,7 @@
 25.  61905  Martinez, Augusto                    (381) 580-1228   14  +·++        21  43  10.0
 26.  61053  Matas Molina, Agustín                (381) 689-6591   17  ++++        25  56  10.0
 27.  61848  Mazza Leon, Fabrizio Lautaro         (381) 598-7961   19  ++++        25  58  10.0
-28.  61247  Medici Assaf, Abril                  (381) 352-5720   19  +++·        17  51  10.0
+28.  61247  Medici Assaf, Abril                  (381) 352-5720   19  ++++        17  51  10.0
 29.  61048  Medina, Luciano                      (381) 576-7469   16  ++++        23  59  10.0
 30.  61566  Medina Costilla, Abigail             (381) 655-7818    2  ····         0   0   0.0
 31.  61122  Molina Hernando, Nahuel              (381) 619-4179   19  ++++        24  58  10.0
