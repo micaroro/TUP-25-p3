@@ -77,7 +77,6 @@ async Task Probar() {
     foreach (var c in todos) {
         WriteLine($"- {c._id}: {c.Nombre,-10} {c.Apellido, 10} ({c.Telefono})");
     }
-    
 }
 
 async Task<string> CrearContacto(string nombre, string apellido, string telefono) {

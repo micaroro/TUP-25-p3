@@ -1,14 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.IO;
 
-const string ApiKey = "AIzaSyDNb3IWwI5tjnGXj4EFAsih0HJww1HgN7M";
-// const string Modelo = "gemini-2.5-pro-preview-05-06";
-const string Modelo = "gemini-2.0-flash";
+string ApiKey   = "AIzaSyDNb3IWwI5tjnGXj4EFAsih0HJww1HgN7M";
+string Modelo   = "gemini-2.5-flash-preview-04-17";
+string endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/{Modelo}:generateContent?key={ApiKey}";
 
 // Clases para manejar la comunicación con la API de Gemini
 public record MessageResponse(List<Candidate> Candidates);
@@ -27,22 +28,19 @@ var opciones = new JsonSerializerOptions {
 
 // Función que envía el historial completo y obtiene la respuesta de Gemini
 async Task<string> CompletarChat(List<Content> historial) {
-    const string apiKey = "AIzaSyDNb3IWwI5tjnGXj4EFAsih0HJww1HgN7M";
-    string endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/{Modelo}:generateContent?key={ApiKey}";
 
     // El payload incluye todo el historial de la conversación
     var payload = new ContentRequest(historial);
-
     using var httpClient = new HttpClient();
-    var json = JsonSerializer.Serialize(payload, opciones);
-    using var content = new StringContent(json, Encoding.UTF8, "application/json");
-
+    
     try {
-        var respuesta = await httpClient.PostAsync(endpoint, content);
-        var texto = await respuesta.Content.ReadAsStringAsync();
+        // Usando PostAsJsonAsync para simplificar el envío de datos JSON
+        var respuesta = await httpClient.PostAsJsonAsync(endpoint, payload, opciones);
         respuesta.EnsureSuccessStatusCode();
-        var r = JsonSerializer.Deserialize<MessageResponse>(texto, opciones);
-        return r.Candidates[0].Content.Parts[0].Text;
+        
+        // Deserializar directamente la respuesta JSON
+        var resultado = await respuesta.Content.ReadFromJsonAsync<MessageResponse>(opciones);
+        return resultado.Candidates[0].Content.Parts[0].Text;
     } catch (Exception e) {
         return $"Error: {e.Message}";
     }
@@ -60,10 +58,8 @@ void AgregarRespuestaIA(string respuesta) {
 
 // Establecer un mensaje inicial para dar contexto a la conversación
 AgregarMensajeUsuario("""
-    Actua como una secretaria que me ayuda a organizar mis tareas, 
-    puede majerar una agenda de contactos y organizar mis tareas.
-
-    Eres muy amable y eficas, siempre respondes a mis preguntas de manera clara y concisa.
+    Actua como una secretaria de que ayuda a llevar la agenda de contactos y citas.
+    Eres muy cortes y eficas, siempre respondes a mis preguntas de manera clara y concisa.
     
     # Contactos 
         ID   Legajo Nombre y Apellido                    Teléfono        Asistencias
@@ -88,7 +84,7 @@ AgregarMensajeUsuario("""
         19.  61562  Helguera, Agustina Elizabeth         (381) 694-9619   19  
         20.  61318  Herrera, Dalma Luján                 (381) 341-4968   11  
         21.  62053  Herrera Palomino, Ivam Agustín       (381) 697-0643   21  
-        22.  61450  Jiménez Paz, Patricio Agustín        (381) 388-2674   19  
+        22.  61450  Jiménez Paz, Patricio Agustín        (387) 388-2674   19  
         23.  61627  Juárez Fernández, Lourdes Abril      (381) 647-9914   21  
         24.  61473  Lagoria García, Tomás Gustavo        (381) 357-7724   20  
         25.  61956  Leglisé, Laureano                    (261) 468-9809   19  
@@ -107,21 +103,21 @@ var respuestaInicial = await CompletarChat(historialChat);
 AgregarRespuestaIA(respuestaInicial);
 
 // Mostrar información inicial para el usuario
-Console.WriteLine("=== Chat con Gemini ===");
-Console.WriteLine("(Escribe 'salir' para terminar la conversación)");
-Console.WriteLine();
-Console.WriteLine($"IA: {respuestaInicial}");
+WriteLine("=== Chat con Gemini ===");
+WriteLine("(Escribe 'salir' para terminar la conversación)");
+WriteLine();
+WriteLine($"IA: {respuestaInicial}");
 
 // Bucle principal del chat
 while (true) {
-    Console.WriteLine();
-    Console.Write("Tú: ");
-    string entradaUsuario = Console.ReadLine();
+    WriteLine();
+    Write("Tú: ");
+    string entradaUsuario = ReadLine();
     
     // Verificar si el usuario quiere salir
     if (string.IsNullOrWhiteSpace(entradaUsuario) || 
         entradaUsuario.Trim().Equals("salir", StringComparison.OrdinalIgnoreCase)) {
-        Console.WriteLine("Finalizando el chat. ¡Hasta pronto!");
+        WriteLine("Finalizando el chat. ¡Hasta pronto!");
         break;
     }
     
@@ -130,15 +126,16 @@ while (true) {
     
     // Obtener la respuesta de la IA
     var respuestaIA = await CompletarChat(historialChat);
-    if(respuestaIA.StartsWith("```")) respuestaIA = "\n" + respuestaIA;
+    if (respuestaIA.Trim().StartsWith("```")) respuestaIA = "\n" + respuestaIA.Trim();
+    
     // Agregar la respuesta al historial
     AgregarRespuestaIA(respuestaIA);
     
     // Mostrar la respuesta
-    Console.WriteLine($"\nIA: {respuestaIA}");
+    WriteLine($"\nIA: {respuestaIA}");
 
     // Opcional: guardar toda la conversación en un archivo después de cada interacción
-    File.WriteAllText("agenda.md", ConvertirHistorialAMarkdown(historialChat));
+    File.WriteAllText("17.3.respuesta.md", ConvertirHistorialAMarkdown(historialChat));
 }
 
 // Función para convertir el historial a formato Markdown para guardar

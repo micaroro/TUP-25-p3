@@ -11,8 +11,7 @@ using static System.Console;
 // Nota: crudcrud.com rechaza los payloads cuyos keys comienzan con mayúscula,
 // por eso serializamos con camelCase en todas las peticiones JSON.
 
-public static class CrudContactos
-{
+public static class CrudContactos {
     private const string ApiKey = "4d458ffac5c64bfc927a43e911628f26";
     private const string recurso = "contactos2025";
     private static readonly string baseUrl = $"https://crudcrud.com/api/{ApiKey}/{recurso}";
@@ -108,8 +107,8 @@ public class ContactoResponse : ContactoRequest {
 // Ejemplo de uso directo para dotnet script
 // Crear un nuevo contacto
 var nuevoContacto = new ContactoRequest {
-    Nombre = "Juan Perez",
-    Email = "juan.perez@email.com",
+    Nombre   = "Juan Perez",
+    Email    = "juan.perez@email.com",
     Telefono = "123456789"
 };
 
