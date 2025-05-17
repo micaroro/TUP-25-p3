@@ -58,7 +58,7 @@ void AgregarRespuestaIA(string respuesta) {
 
 // Establecer un mensaje inicial para dar contexto a la conversación
 AgregarMensajeUsuario("""
-    Actua como una secretaria de que ayuda a llevar la agenda de contactos y citas.
+    Actua como una secretaria que ayuda a llevar la agenda de contactos y citas.
     Eres muy cortes y eficas, siempre respondes a mis preguntas de manera clara y concisa.
     
     # Contactos 
@@ -95,7 +95,7 @@ AgregarMensajeUsuario("""
         Martes a Jueves de 8:00 a 10:00 hs tengo clases en la Comision 3
         Lunes y Miércoles de 8:00 a 10:00 hs tengo clases en la Comision 2
         Lunes y Martes de 10:00 a 12:00 hs tengo clases en la Comision 1
-        El miercoles por la tarde tengo que asistir a la conferencia sobre IA de la UTN, es de 17:00 a 19:00 hs
+        El miercoles por la tarde tengo que asistir a la conferencia sobre IA de la UTN, es de 18:00 a 20:00 hs
 """);
 
 // Obtener y guardar la respuesta inicial

@@ -28,7 +28,9 @@ async Task<string> Completar(string indicacion) {
     // El carga debe tener la estructura esperada por la API
     var cargaUtil = new ContentRequest(
         new List<Content> {
-            new Content( new List<Part> { new Part(indicacion) }, "user")
+            new Content( new List<Part> { 
+                new Part(indicacion) }, 
+                "user")
         }
     );
 
@@ -47,7 +49,21 @@ async Task<string> Completar(string indicacion) {
     }
 }
 
-var respuesta = await Completar("Como calculo si un año es bisiesto? Mostrame el algoritmo en C#");
+var respuesta = await Completar("""
+Creme una plantilla con el siguiente documento  
+
+---
+    Por la presente se certifica que el 
+    Sr. Alejandro Di Battista ha realizado 
+    un pago de $300.000 (trescientos mil pesos) 
+    para cancelar su deuda correspondiente 
+    a la compra de un televisor. 
+    
+    Fecha: 17 de abril de 2024. 
+
+    --- 
+    EN la platilla remplaza los datos por varieble entre <>
+""");
 
 Console.WriteLine(respuesta);
 File.WriteAllText("17.1.respuesta.md", respuesta);
