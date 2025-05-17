@@ -42,7 +42,7 @@
 39.  61581  Paz, Naim Federico                   (381) 353-0060    0  ····         0   0   0.0
 40.  61037  Paz, Rodrigo Federico                (381) 637-6461   18  ++++        24  60  10.0
 41.  61312  Paz Berrondo, Lucas David            (381) 341-4321   19  ++++        23  60  10.0
-42.  61028  Ponce, Rodrigo Exequiel              (381) 569-0318   20  +++·        30  60  10.0
+42.  61028  Ponce, Rodrigo Exequiel              (381) 569-0318   20  ++++        30  60  10.0
 43.  61197  Romano, Alfredo Nicolás              (381) 648-8513   18  ++++        24  60  10.0
 44.  62172  Salcedo, Mariana Aylen               (381) 466-9695   10  ···+        30  44  10.0
 45.  61136  Sosa, Oscar Ignacio                  (381) 528-9145   19  ++++         0  24   4.0
