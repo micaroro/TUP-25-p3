@@ -1,13 +1,14 @@
+// ATENCION -> Correr con `dotnet script 18.1-minimal-api.csx`
+// Instalar el SDK de .NET 6.0 o superior
 #r "sdk:Microsoft.NET.Sdk.Web"
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 
-var builder = WebApplication.CreateBuilder(args);
-
+// Construye un objeto de aplicación web (WebApplication) usando los argumentos de línea de comandos.
+var builder = WebApplication.CreateBuilder();
 var app = builder.Build();
-
 
 // La ruta esta definida por el metodos HTTP y la URL
 // En este caso la ruta es la misma para todos los metodos HTTP
@@ -70,16 +71,53 @@ app.MapPost("/persona", (Persona persona) =>
 );
 
 
-// Devuelvo un json en forma manual (Observar que se usa `$$` y luego `{{ }}` para interpolar)
-// (Pero no lo señala como json sino como texto plano)
-app.MapGet("/persona/{nombre}/{edad}", (string nombre, int edad) => 
-    $$"""
-    {
-        "Nombre": "{{nombre}}",
-        "Edad": {{edad}}
-    }
-    """
-);
+// Recibir servicios
+// Cuando se pone como parametro una clase que ha sido
+// registrada como un servicio, la misma es automaticamente inicializa
+// y pasada como parametro.
+// HttpRequest -> Toda la informacion del pedido realizado por el cliente
+app.MapGet("/solicitud", (HttpRequest req) => {
+    return $"""
+        Metodo : {req.Method}
+        Camino : {req.Path}
+        Heads  : {req.Headers["Content-Type"]}
+        Query  : {req.Query["q"]}
+    """;
+});
+
+
+// HttpResponse -> Controla la respuesta al cliente
+// En este caso implementa manualmente esta funcion ->`Results.Ok(new {nombre="Juan", edad=30})`
+app.MapGet("/respuesta", (HttpResponse res) => {
+    res.StatusCode = 200;
+    res.ContentType = "application/json";
+    return res.WriteAsync($$"""
+        { 
+            "nombre" : "juan",
+            "edad" : 30
+        }
+    """);
+});
+
+// HttpContext -> Toda la información (Especialmente util en middlerware)
+app.MapGet("/contexto", (HttpContext ctx) => {
+    var metodo  = ctx.Request.Method;
+    var ruta    = ctx.Request.Path;
+    var headers = ctx.Request.Headers.Select(h => $"{h.Key}: {h.Value}").ToList();
+    var usuario = ctx.User?.Identity?.IsAuthenticated == true ? ctx.User.Identity.Name : "Anónimo";
+    var ip      = ctx.Connection.RemoteIpAddress?.ToString() ?? "Desconocida";
+    var query   = ctx.Request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
+
+    return Results.Ok(new {
+        Metodo = metodo,
+        Ruta = ruta,
+        Headers = headers,
+        Usuario = usuario,
+        IP = ip,
+        Query = query
+    });
+});
+
 // Si devuelvo un objeto lo convierte a json automaticamente
 // (Y lo señala como json)
 app.MapGet("/persona/generica", () => 
@@ -90,7 +128,7 @@ app.MapGet("/persona/generica", () =>
 // Devolver un json de forma automatica (Cuando se devuelve un objeto convierte a json automaticamente)
 app.MapGet("/persona", () => {
     var id = Guid.NewGuid();
-    var persona = new{
+    var persona = new {
         Id = id,
         Nombre = "Juan",
         Edad = 30

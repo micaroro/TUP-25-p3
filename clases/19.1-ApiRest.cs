@@ -4,10 +4,10 @@
 
 // ATENCION -> Correr con `dotnet script 19.1-ApiRest.csx --restore`
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore; 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore; 
 
 // Crea un constructor de aplicaciones web (WebApplication) usando los argumentos de línea de comandos.
 // Este objeto builder se utiliza para configurar servicios y la aplicación antes de ejecutarla.
