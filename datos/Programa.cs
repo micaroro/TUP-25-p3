@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.IO.Compression;
 using TUP;
-using System.Collections.Generic; // Asegúrate que esté presente para List<T>
-using System.Linq; // Asegúrate que esté presente para Enumerable
+using System.Globalization; 
 
 // Clase auxiliar para el Menú
 
@@ -242,6 +241,9 @@ class Program {
     }
 
     static void Main(string[] args) {
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
         var clase = Clase.Cargar();
 
         int practico = 4;
