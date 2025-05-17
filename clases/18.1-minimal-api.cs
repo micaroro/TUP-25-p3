@@ -57,9 +57,21 @@ app.MapGet("/noticias/{año}/{mes}/{dia}", (int año, int mes, int dia, int pagi
     $"La fecha es {new DateTime(año, mes, dia):dd/MM/yyyy} en la pagina {pagina}"
 );
 
+// Para recibir datos complejos se puede usar una clase como paramertros.
+// En esta caso asume que recibe un json en el cuerpo de la peticion y lo carga automaticamente
+//
+// POST /persona
+// Content-Type: application/json
+// 
+// { "nombre": "Juan","edad": 30 }
+// 
+app.MapPost("/persona", (Persona persona) => 
+    $"La persona es {persona.Nombre} y tiene {persona.Edad} años"
+);
 
 
 // Devuelvo un json en forma manual (Observar que se usa `$$` y luego `{{ }}` para interpolar)
+// (Pero no lo señala como json sino como texto plano)
 app.MapGet("/persona/{nombre}/{edad}", (string nombre, int edad) => 
     $$"""
     {
@@ -68,6 +80,12 @@ app.MapGet("/persona/{nombre}/{edad}", (string nombre, int edad) =>
     }
     """
 );
+// Si devuelvo un objeto lo convierte a json automaticamente
+// (Y lo señala como json)
+app.MapGet("/persona/generica", () => 
+    new Persona("Juan Perez", 30)
+);
+
 
 // Devolver un json de forma automatica (Cuando se devuelve un objeto convierte a json automaticamente)
 app.MapGet("/persona", () => {
@@ -89,3 +107,5 @@ app.MapGet("/persona/{nombre}/{apellido}/{telefono}", (string nombre, string ape
 
 app.Run();
 
+
+record Persona(string Nombre, int Edad);
