@@ -1,7 +1,3 @@
-#!/usr/bin/env dotnet script
-#r "nuget: System.Text.Json, 9.0.4"
-
-#nullable enable                 // evita warnings de nullable
 using System;                     // Console, etc.
 using System.Linq;                // OrderBy
 using System.Net.Http;            // HttpClient, StringContent ✔
@@ -9,15 +5,14 @@ using System.Text.Json;           // JsonSerializer, JsonNamingPolicy
 using System.Threading.Tasks;     // Task
 
 var baseUrl = "http://localhost:5000";
+
 var http    = new HttpClient();
-var jsonOpt = new JsonSerializerOptions
-{
+var jsonOpt = new JsonSerializerOptions {
     PropertyNamingPolicy        = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
 };
 
-async Task<List<Contacto>> ObtenerAsync(string? q = null)
-{
+async Task<List<Contacto>> ObtenerAsync(string q = null) {
     var url = string.IsNullOrWhiteSpace(q)
         ? $"{baseUrl}/contactos"
         : $"{baseUrl}/contactos?q={Uri.EscapeDataString(q)}";
@@ -25,8 +20,7 @@ async Task<List<Contacto>> ObtenerAsync(string? q = null)
     return JsonSerializer.Deserialize<List<Contacto>>(json, jsonOpt)!;
 }
 
-Contacto PedirDatos()
-{
+Contacto PedirDatos() {
     Console.Write("Nombre: ");   var nombre   = Console.ReadLine()!;
     Console.Write("Apellido: "); var apellido = Console.ReadLine()!;
     Console.Write("Teléfono: "); var telefono = Console.ReadLine()!;
@@ -35,8 +29,7 @@ Contacto PedirDatos()
     return new Contacto { Nombre = nombre, Apellido = apellido, Telefono = telefono, Email = email, Edad = edad };
 }
 
-async Task MostrarAsync(IEnumerable<Contacto> lista)
-{
+async Task MostrarAsync(IEnumerable<Contacto> lista) {
     // Encabezados de columna
     Console.WriteLine(
         $"{"ID",-4} {"Apellido",-15} {"Nombre",-15} {"Teléfono",-15} {"Email",-25} {"Edad",-4}"
@@ -49,8 +42,7 @@ async Task MostrarAsync(IEnumerable<Contacto> lista)
     }
 }
 
-while (true)
-{
+while (true) {
     Console.WriteLine("\nMenú: \n 1 Agregar \n 2 Borrar \n 3 Editar \n 4 Listar \n 5 Buscar \n 0 Salir");
     var op = Console.ReadLine();
     if (op == "0") break;
@@ -92,12 +84,11 @@ while (true)
     }
 }
 
-class Contacto
-{
+class Contacto {
     public int    Id       { get; set; }
-    public string Nombre   { get; set; } = "";
-    public string Apellido { get; set; } = "";
-    public string Telefono { get; set; } = "";
-    public string Email    { get; set; } = "";
+    public string Nombre   { get; set; }
+    public string Apellido { get; set; }
+    public string Telefono { get; set; }
+    public string Email    { get; set; }
     public int    Edad     { get; set; }
 }
