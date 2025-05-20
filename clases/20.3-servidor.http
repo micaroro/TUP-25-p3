@@ -5,7 +5,7 @@ GET {{host}}/contactos
 Accept: application/json
 
 ### 1.1 Filtrar contactos por query (q)
-GET {{host}}/contactos?q=Juan
+GET {{host}}/contactos?q=maira
 Accept: application/json
 
 ### 2. Obtener contacto por ID (existente)
@@ -21,10 +21,10 @@ POST {{host}}/contactos
 Content-Type: application/json
 
 {
-  "nombre": "Luis",
-  "apellido": "Gómez",
-  "telefono": "555123456",
-  "email": "luis.gomez@example.com",
+  "nombre": "Mario",
+  "apellido": "Perez",
+  "telefono": "555987654",
+  "email": "mario.perez@example.com",
   "edad": 28
 }
 
@@ -34,10 +34,8 @@ Content-Type: application/json
 
 {
   "id": 1,
-  "nombre": "Luis Alberto",
-  "apellido": "Gómez",
-  "telefono": "555000111",
-  "email": "luis.alberto@example.com",
+  "nombre": "Luis",
+  "email": "luis.perez@example.com",
   "edad": 29
 }
 

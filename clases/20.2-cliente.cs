@@ -21,65 +21,78 @@ async Task<List<Contacto>> ObtenerAsync(string q = null) {
 }
 
 Contacto PedirDatos() {
-    Console.Write("Nombre: ");   var nombre   = Console.ReadLine()!;
-    Console.Write("Apellido: "); var apellido = Console.ReadLine()!;
-    Console.Write("Teléfono: "); var telefono = Console.ReadLine()!;
-    Console.Write("Email: ");    var email    = Console.ReadLine()!;
-    Console.Write("Edad: ");     var edad     = int.Parse(Console.ReadLine()!);
+    Console.Write("- Nombre  : "); var nombre   = Console.ReadLine()!;
+    Console.Write("- Apellido: "); var apellido = Console.ReadLine()!;
+    Console.Write("- Teléfono: "); var telefono = Console.ReadLine()!;
+    Console.Write("- Email   : "); var email    = Console.ReadLine()!;
+    Console.Write("- Edad    : "); var edad     = int.Parse("0"+Console.ReadLine()!);
+    
     return new Contacto { Nombre = nombre, Apellido = apellido, Telefono = telefono, Email = email, Edad = edad };
 }
 
 async Task MostrarAsync(IEnumerable<Contacto> lista) {
     // Encabezados de columna
     Console.WriteLine(
-        $"{"ID",-4} {"Apellido",-15} {"Nombre",-15} {"Teléfono",-15} {"Email",-25} {"Edad",-4}"
+        $" {"ID",2} {"Apellido",-15} {"Nombre",-15} {"Teléfono",-15} {"Email",-25} {"Edad",-4}"
     );
     Console.WriteLine(new string('-', 80));
     foreach (var c in lista.OrderBy(c => c.Apellido).ThenBy(c => c.Nombre)){
         Console.WriteLine(
-        $"{c.Id,-4} {c.Apellido,-15} {c.Nombre,-15} {c.Telefono,-15} {c.Email,-25} {c.Edad,-4}"
+        $" {c.Id,2} {c.Apellido,-15} {c.Nombre,-15} {c.Telefono,-15} {c.Email,-25} {c.Edad,-4}"
         );
     }
 }
 
 while (true) {
-    Console.WriteLine("\nMenú: \n 1 Agregar \n 2 Borrar \n 3 Editar \n 4 Listar \n 5 Buscar \n 0 Salir");
+    Console.Write("""
+
+    Menú:
+
+     1. Listar 
+     2. Buscar 
+     3. Agregar 
+     4. Editar 
+     5. Borrar 
+     0. Salir
+
+    > 
+    """);
     var op = Console.ReadLine();
     if (op == "0") break;
 
     switch (op)
     {
-        case "1":
+        case "1": // Listar
+            await MostrarAsync(await ObtenerAsync());
+            break;
+
+        case "2": // Buscar
+            Console.Write("Texto a buscar: ");
+            var texto = Console.ReadLine();
+            await MostrarAsync(await ObtenerAsync(texto));
+            break;
+
+        case "3": // Agregar
             var nuevo = PedirDatos();
-            await http.PostAsync($"{baseUrl}/contactos",
-                new StringContent(JsonSerializer.Serialize(nuevo, jsonOpt), System.Text.Encoding.UTF8, "application/json"));
+            await http.PostAsync($"{baseUrl}/contactos", new StringContent(
+                JsonSerializer.Serialize(nuevo, jsonOpt), System.Text.Encoding.UTF8, "application/json"));
             Console.WriteLine("Contacto agregado.");
             break;
 
-        case "2":
+        case "4": // Editar
+            Console.Write("Id a editar: ");
+            var idEdit = Console.ReadLine();
+            var datos  = PedirDatos();
+            await http.PutAsync($"{baseUrl}/contactos/{idEdit}", new StringContent(
+                JsonSerializer.Serialize(datos, jsonOpt), System.Text.Encoding.UTF8, "application/json"));
+            Console.WriteLine("Contacto actualizado.");
+            break;
+
+        case "5": // Borrar
             Console.Write("Id a borrar: ");
             var idBorrar = Console.ReadLine();
             await http.DeleteAsync($"{baseUrl}/contactos/{idBorrar}");
             Console.WriteLine("Contacto borrado.");
-            break;
-
-        case "3":
-            Console.Write("Id a editar: ");
-            var idEdit = Console.ReadLine();
-            var datos  = PedirDatos();
-            await http.PutAsync($"{baseUrl}/contactos/{idEdit}",
-                new StringContent(JsonSerializer.Serialize(datos, jsonOpt), System.Text.Encoding.UTF8, "application/json"));
-            Console.WriteLine("Contacto actualizado.");
-            break;
-
-        case "4":
-            await MostrarAsync(await ObtenerAsync());
-            break;
-
-        case "5":
-            Console.Write("Texto a buscar: ");
-            var texto = Console.ReadLine();
-            await MostrarAsync(await ObtenerAsync(texto));
             break;
     }
 }
