@@ -1,5 +1,5 @@
 #!/usr/bin/env dotnet script
-#r "sdk:Microsoft.NET.Sdk.Web"                       // incluye Hosting/DI, etc.
+#r "sdk:Microsoft.NET.Sdk.Web"                          // incluye Hosting/DI, etc.
 #r "nuget: ModelContextProtocol, 0.2.0-preview.1"       // (o la versión que uses)
 
 using System.ComponentModel;
@@ -12,21 +12,14 @@ var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithToolsFromAssembly();            // escanea este ensamblado (.csx)
+    .WithToolsFromAssembly();
 
-// Arranca (top-level await permitido en dotnet-script)
-await builder.Build().RunAsync();
+var server = builder.Build();
+await server.RunAsync();
 
 
 [McpServerToolType]
 public static class CalculoTool {
-    [McpServerTool, Description("Devuelve el texto invertido al cliente.")]
-    public static string InvertirTexto(string texto) {
-        var reversed = new char[texto.Length];
-        for (int i = 0; i < texto.Length; i++)
-            reversed[i] = texto[texto.Length - 1 - i];
-        return $": {new string(reversed)} :";
-    }
 
     [McpServerTool, Description("Calcula el factorial de un número entero no negativo.")]
     public static long Factorial(int numero) {
