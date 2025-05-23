@@ -64,7 +64,7 @@ using (var scope = app.Services.CreateScope())
             new Producto { Nombre = "Tijeras", Precio = 100, Stock = 10 },
             new Producto { Nombre = "Pegamento en barra", Precio = 60, Stock = 10 },
             new Producto { Nombre = "Juego de reglas", Precio = 120, Stock = 10 },
-            new Producto { Nombre = "Lapicera (azul)", Precio = 50, Stock = 10 }
+            new Producto { Nombre = "Bolígrafo (azul)", Precio = 50, Stock = 10 }
         );
         db.SaveChanges();
     }
