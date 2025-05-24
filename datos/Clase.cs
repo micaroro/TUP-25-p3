@@ -25,7 +25,6 @@ class Clase : IEnumerable<Alumno>
         string comision = "C0";
         Clase clase = new();
 
-        Console.Clear();
         foreach (var linea in File.ReadLines(origen))
         {
             var texto = linea.Trim();
@@ -39,7 +38,6 @@ class Clase : IEnumerable<Alumno>
             var matchAlumno = Regex.Match(texto, LineaAlumno);
             if (matchAlumno.Success)
             {
-                Console.WriteLine(texto);
                 var partes = Regex.Split(linea, @"\s{2,}"); // Split on 2 or more spaces
                 var index = int.Parse(partes[0].TrimEnd('.'));
                 var legajo = int.Parse(partes[1]);
@@ -49,7 +47,8 @@ class Clase : IEnumerable<Alumno>
                 var practicos = partes[5].Trim();
                 var creditos = int.Parse(partes[6]);
                 var parcial = int.Parse(partes[7]);
-                var github = partes?[8].Trim() ?? "";
+                var github = partes.Length > 9 ? partes[9].Trim() : "";
+                Console.WriteLine($"Legajo: {legajo} - Nombre: {nombre} - Teléfono: {telefono} - Asistencias: {asistencias} - Practicos: {practicos} - Créditos: {creditos} - Parcial: {parcial} - GitHub: {github}");
                 // Alumno(int orden, int legajo, string apellido, string nombre, string telefono, string comision, string practicos, int asistencias = 0, int resultado=0, int notas=0) {
 
                 Alumno alumno = new Alumno(
@@ -84,6 +83,7 @@ class Clase : IEnumerable<Alumno>
     public Clase ConAprobados(int cantidad) => new(Alumnos.Where(a => a.Practicos.Count(p => p == EstadoPractico.Aprobado) >= cantidad));
     public Clase OrdenandoPorNombre() => new(alumnos.OrderBy(a => a.Apellido).ThenBy(a => a.Nombre));
     public Clase OrdenandoPorLegajo() => new(alumnos.OrderBy(a => a.Legajo));
+    public Clase SinGithub() => new(alumnos.Where(a => a.GitHub == ""));
 
     // Métodos de modificación
     public void Agregar(Alumno alumno)
@@ -114,7 +114,7 @@ class Clase : IEnumerable<Alumno>
                 foreach (var a in EnComision(comision).OrdenandoPorNombre())
                 {
                     a.Orden = orden++;
-                    var linea = $"{a.Orden:D2}.  {a.Legajo,5}  {a.NombreCompleto,-35}  {a.Telefono,-14}   {a.Asistencias,2}  {a.PracticosStr,-10}  {a.Creditos,2}  {a.Parcial,2}  {a.Nota,4:F1}  @{a.GitHub}";
+                    var linea = $"{a.Orden:D2}.  {a.Legajo,5}  {a.NombreCompleto,-35}  {a.Telefono,-14}   {a.Asistencias,2}  {a.PracticosStr,-10}  {a.Creditos,2}  {a.Parcial,2}  {a.Nota,4:F1}  {a.GitHub}";
                     writer.WriteLine(linea);
                 }
             }
@@ -441,14 +441,48 @@ class Clase : IEnumerable<Alumno>
     
     public IList<int> Legajos => alumnos.Select(a => a.Legajo).ToList();
 
-    public Dictionary<int, string> MapearLegajosAUsuarios(int maximo = 10) {
-        var cliente = new HttpClient();
+    private string ObtenerTokenGithub() {
+        try
+        {
+            // Buscar solo en el archivo de configuración local
+            string configPath = Path.Combine("..", "github-config.json");
+            if (File.Exists(configPath))
+            {
+                var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(configPath));
+                if (config != null && config.TryGetValue("GitHubToken", out string token) && !string.IsNullOrEmpty(token))
+                {
+                    return token;
+                }
+            }
 
-        var githubToken = "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";
+            // Mensaje de advertencia si no se encuentra el token
+            Console.WriteLine($"ADVERTENCIA: No se encontró el archivo de configuración '{configPath}'");
+            Console.WriteLine("Cree este archivo con el siguiente formato:");
+            Console.WriteLine(@"{""GitHubToken"": ""su_token_github_aquí""}");
+            Console.ReadLine();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener token: {ex.Message}");
+            Console.ReadLine();
+        }
+        
+        return string.Empty;
+    }
+
+    public Dictionary<int, string> AveriguarUsuarioGithub(int maximo = 1000) {
+        var cliente = new HttpClient();
+        
+        // Manejo seguro del token de GitHub
+        string githubToken = ObtenerTokenGithub();
         var repo = "AlejandroDiBattista/TUP-25-p3";
 
         cliente.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("DotnetScript", "1.0"));
-        cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", githubToken);
+        
+        // Solo usar autorización si tenemos un token válido
+        if (!string.IsNullOrEmpty(githubToken)) {
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", githubToken);
+        }
 
         var mapeo = new Dictionary<int, string>();
         int page = 1;
@@ -458,8 +492,30 @@ class Clase : IEnumerable<Alumno>
             var url = $"https://api.github.com/repos/{repo}/pulls?state=all&per_page=100&page={page}";
             var response = cliente.GetAsync(url).Result;
             if (!response.IsSuccessStatusCode) {
-                Console.WriteLine($"Error: {response.StatusCode}");
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || 
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
+                    Console.WriteLine($"Error de autorización: {response.StatusCode}. Verifique el token de GitHub.");
+                } else if ((int)response.StatusCode == 429) { // Too Many Requests
+                    Console.WriteLine("Se ha alcanzado el límite de tasa de la API de GitHub. Espere unos minutos antes de intentar de nuevo.");
+                    if (response.Headers.Contains("X-RateLimit-Reset")) {
+                        var resetTime = response.Headers.GetValues("X-RateLimit-Reset").FirstOrDefault();
+                        if (!string.IsNullOrEmpty(resetTime) && long.TryParse(resetTime, out long epochTime)) {
+                            var resetDateTime = DateTimeOffset.FromUnixTimeSeconds(epochTime).LocalDateTime;
+                            Console.WriteLine($"Puede intentar nuevamente después de: {resetDateTime}");
+                        }
+                    }
+                } else {
+                    Console.WriteLine($"Error en la API de GitHub: {response.StatusCode}");
+                }
                 break;
+            }
+            
+            // Verificar los límites de tasa de la API
+            if (response.Headers.Contains("X-RateLimit-Remaining")) {
+                var remaining = response.Headers.GetValues("X-RateLimit-Remaining").FirstOrDefault();
+                if (remaining == "1") {
+                    Console.WriteLine("¡Advertencia! Está a punto de alcanzar el límite de tasa de la API de GitHub.");
+                }
             }
 
             using var stream = response.Content.ReadAsStreamAsync().Result;
@@ -472,8 +528,8 @@ class Clase : IEnumerable<Alumno>
                 var titulo = pr.GetProperty("title").GetString() ?? "";
                 var usuario = pr.GetProperty("user").GetProperty("login").GetString() ?? "";
 
-                foreach (var a in Alumnos) {
-                    if (Regex.IsMatch(titulo, $@"\b{a.Legajo}\b"))
+                foreach (var a in SinGithub()) {
+                    if (titulo.Contains(a.Legajo.ToString()))
                     {
                         mapeo[a.Legajo] = usuario;
                         a.GitHub = usuario;

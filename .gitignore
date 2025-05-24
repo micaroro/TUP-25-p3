@@ -1,32 +1,37 @@
-# Archivos de Visual Studio
+# Configuración de IDEs
 .vs/
 .vscode/
 *.user
 *.suo
+**/tempCodeRunnerFile.cs
+tempCodeRunnerFile.csharp
 
-# Binarios y objetos compilados
+# Archivos generados por compilación
 **/bin/
 **/obj/
+datos/obj/
 
-# Archivos del sistema
+# Archivos del sistema operativo
 **/.DS_Store
+Enunciados/.DS_Store
 Thumbs.db
 
-# Carpetas del proyecto que no queres subir
+# Archivos temporales y carpetas auxiliares del proyecto
+/clases/tmp/
+datos/asistencias/tmp/
 fechas/
-/datos/Soluciones
+/datos/Soluciones/
 
-**/tempCodeRunnerFile.cs
-
-tempCodeRunnerFile.csharp
-/datos/obj
-/datos/obj
-/clases/tmp
+# Archivos específicos del proyecto
 examen/respuestas-examen.md
+
+# Archivos de bases de datos SQLite
 *.db-shm
 *.db-wal
-/datos/asistencias/tmp
 
+# Archivos de configuración sensibles
+github-config.json
+*.secret.json
+
+# Otros
 .fake
-Enunciados/.DS_Store
-Enunciados/.DS_Store

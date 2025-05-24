@@ -241,9 +241,21 @@ class Program {
     }
 
     static void ListarUsuariosGithub(Clase clase) {
-        var usuarios = clase.MapearLegajosAUsuarios(10);
-        foreach (var par in usuarios) {
-            Consola.Escribir($"Legajo: {par.Key} -> Usuario: {par.Value}");
+        Consola.Limpiar();
+        Consola.Escribir("=== Listar usuarios sin GitHub ===", ConsoleColor.Cyan);
+        clase.SinGithub().ListarAlumnos();
+        if(Consola.Confirmar("¿Desea continuar y verificar los usuarios de GitHub?")) {
+            Consola.Escribir("Revisando Github...", ConsoleColor.Cyan);
+            var usuarios = clase.AveriguarUsuarioGithub(100);
+            clase.Guardar("alumnos.md");
+            if (usuarios.Count > 0)
+            {
+                Consola.Escribir("=== Usuarios encontrados ===", ConsoleColor.Green);
+                foreach (var par in usuarios)
+                {
+                    Consola.Escribir($"Legajo: {par.Key} -> Usuario: {par.Value}");
+                }
+            }
         }
     }
 
@@ -254,10 +266,6 @@ class Program {
 
         var clase = Clase.Cargar();
 
-
-        ListarUsuariosGithub(clase);
-        Consola.EsperarTecla("Presione una tecla para continuar...");
-
         int practico = 4;
 
         var menu = new TUP.Menu("Bienvenido al sistema de gestión de alumnos");
@@ -265,6 +273,7 @@ class Program {
         menu.Agregar("Publicar trabajo práctico", () => CopiarPractico(clase));
         menu.Agregar("Registrar Asistencia & Notas", () => RegistrarTodo(clase, practico));
         menu.Agregar("Faltan presentar TP", () => ListarNoPresentaron(clase, practico));
+        menu.Agregar("Faltan Github", () => ListarUsuariosGithub(clase));
 
         menu.Ejecutar();
 
