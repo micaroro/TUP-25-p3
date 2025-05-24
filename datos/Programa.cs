@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.IO.Compression;
 using TUP;
-using System.Globalization; 
+using System.Globalization;
 
 // Clase auxiliar para el Menú
 
@@ -240,20 +240,32 @@ class Program {
         RegistrarNotas(clase);
     }
 
-    static void Main(string[] args) {
+    static void ListarUsuariosGithub(Clase clase) {
+        var usuarios = clase.MapearLegajosAUsuarios(10);
+        foreach (var par in usuarios) {
+            Consola.Escribir($"Legajo: {par.Key} -> Usuario: {par.Value}");
+        }
+    }
+
+    static void Main(string[] args)
+    {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
         var clase = Clase.Cargar();
 
+
+        ListarUsuariosGithub(clase);
+        Consola.EsperarTecla("Presione una tecla para continuar...");
+
         int practico = 4;
 
         var menu = new TUP.Menu("Bienvenido al sistema de gestión de alumnos");
-        menu.Agregar("Listar alumnos",                  () => ListarAlumnos(clase));
-        menu.Agregar("Publicar trabajo práctico",       () => CopiarPractico(clase));
-        menu.Agregar("Registrar Asistencia & Notas",    () => RegistrarTodo(clase, practico));
-        menu.Agregar("Faltan presentar TP",             () => ListarNoPresentaron(clase, practico));
-    
+        menu.Agregar("Listar alumnos", () => ListarAlumnos(clase));
+        menu.Agregar("Publicar trabajo práctico", () => CopiarPractico(clase));
+        menu.Agregar("Registrar Asistencia & Notas", () => RegistrarTodo(clase, practico));
+        menu.Agregar("Faltan presentar TP", () => ListarNoPresentaron(clase, practico));
+
         menu.Ejecutar();
 
         Consola.Escribir("Saliendo del programa...", ConsoleColor.DarkGray);
