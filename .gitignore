@@ -9,7 +9,7 @@ tempCodeRunnerFile.csharp
 # Archivos generados por compilación
 **/bin/
 **/obj/
-datos/obj/
+**/publish
 
 # Archivos del sistema operativo
 **/.DS_Store
@@ -35,3 +35,5 @@ github-config.json
 
 # Otros
 .fake
+
+
