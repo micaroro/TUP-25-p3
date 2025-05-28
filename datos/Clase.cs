@@ -197,7 +197,11 @@ class Clase : IEnumerable<Alumno>
     {
         const string Base = "../TP";
 
-        var fuente = practico == 4 ? "Program.cs" : "ejercicio.cs";
+        var fuente = practico switch {
+            4 => "Program.cs",
+            5 => "Servidor.cs",
+            _ => "ejercicio.cs"
+        };
 
         Consola.Escribir($"\n=== Verificación de presentación del trabajo práctico TP{practico} ===", ConsoleColor.Blue);
         var enunciado = Path.Combine("../enunciados", $"tp{practico}", fuente);
