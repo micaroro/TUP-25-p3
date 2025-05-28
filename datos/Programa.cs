@@ -266,7 +266,7 @@ class Program {
 
         var clase = Clase.Cargar();
 
-        int practico = 4;
+        int practico = 5;
 
         var menu = new TUP.Menu("Bienvenido al sistema de gestión de alumnos");
         menu.Agregar("Listar alumnos", () => ListarAlumnos(clase));
