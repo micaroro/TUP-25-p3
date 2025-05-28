@@ -449,7 +449,7 @@ class Clase : IEnumerable<Alumno>
         try
         {
             // Buscar solo en el archivo de configuración local
-            string configPath = Path.Combine("..", "github-config.json");
+            string configPath = Path.Combine(".", "github-config.json");
             if (File.Exists(configPath))
             {
                 var config = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(configPath));

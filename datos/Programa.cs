@@ -203,34 +203,46 @@ class Program {
         string capetaOrigen   = "/Users/adibattista/Downloads";
         string carpetaDestino = "/Users/adibattista/Documents/GitHub/tup-25-p3/datos/asistencias";
 
-        var origen  = Path.Combine(capetaOrigen,  comision);
-        var destino = Path.Combine(carpetaDestino, comision);
-
-        try {
-            var archivos = Directory.GetFiles(origen, $"WhatsApp*-{comision}*.zip");
+        var origen  = Path.Combine(capetaOrigen);
+        var destino = Path.Combine(carpetaDestino);
+        Consola.EsperarTecla( $"Procesando comisión WhatsApp en {comision}...");
+        try
+        {
+            var archivos = Directory.GetFiles(origen, $"WhatsApp*{comision}*.zip");
+            Consola.Escribir($"Se encontraron {archivos.Length} archivos zip para la comisión {comision}.", ConsoleColor.Cyan);
+            Consola.EsperarTecla();
             var ultimo = archivos.Select(f => new FileInfo(f)).OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
             if (ultimo == null) return; // No hay archivos zip para esta comision, salimos sin hacer nien
-                
+
             string targetFileName = $"historia-{comision}.txt";
             string destinationFilePath = Path.Combine(destino, targetFileName);
 
-            using (ZipArchive archive = ZipFile.OpenRead(ultimo.FullName)) {
-                ZipArchiveEntry? chatEntry = archive.Entries.FirstOrDefault(entry => 
+            using (ZipArchive archive = ZipFile.OpenRead(ultimo.FullName))
+            {
+                ZipArchiveEntry? chatEntry = archive.Entries.FirstOrDefault(entry =>
                     entry.Name.Equals("_chat.txt") || entry.FullName.Equals("_chat.txt")
                 );
-                if (chatEntry != null) {
-                    using (StreamReader reader = new StreamReader(chatEntry.Open())) {
+                if (chatEntry != null)
+                {
+                    using (StreamReader reader = new StreamReader(chatEntry.Open()))
+                    {
                         string chatContent = reader.ReadToEnd();
                         File.WriteAllText(destinationFilePath, chatContent);
                     }
                 }
             }
             // Delete all previous WhatsApp zip files for this commission
-            foreach (var file in archivos) {
+            foreach (var file in archivos)
+            {
                 File.Delete(file);
             }
-        } 
-        catch (Exception) {}
+        }
+        catch (Exception ex)
+        {
+            Consola.Escribir($"Error al procesar el archivo zip de la comisión {comision}.", ConsoleColor.Red);
+            Consola.Escribir($"El error es {ex.Message}", ConsoleColor.Red);
+            return; // Si hay un error, salimos sin hacer nada más
+        }
     }
 
     static void RegistrarTodo(Clase clase, int practico) {
