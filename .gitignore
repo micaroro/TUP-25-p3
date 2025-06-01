@@ -36,8 +36,7 @@ Thumbs.db
 # Archivos temporales y caches
 # -----------------------------
 # Carpetas temporales del proyecto
-/clases/tmp/
-/datos/asistencias/tmp/
+**/tmp/
 
 # Nombres genéricos
 *.tmp
@@ -51,7 +50,7 @@ fechas/
 # Contenido web estático
 # -----------------------------
 # Ignorar librerías bajo wwwroot/lib
-/wwwroot/lib/**
+**/wwwroot/lib/**
 
 # -----------------------------
 # Bases de datos locales
