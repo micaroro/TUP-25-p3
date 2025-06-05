@@ -287,42 +287,53 @@ class Clase : IEnumerable<Alumno>
         }
     }
 
-    public void CopiarPractico(int practico, bool forzar = false)
-    {
+    public void CopiarPractico(int practico, bool forzar = false) {
         const string Base = "../TP";
         const string Enunciados = "../enunciados";
         Consola.Escribir($" ▶︎ Copiando trabajo práctico de TP{practico}", ConsoleColor.Cyan);
         var carpetaOrigen = Path.Combine(Enunciados, $"tp{practico}");
 
-        if (!Directory.Exists(carpetaOrigen))
-        {
+        if (!Directory.Exists(carpetaOrigen)) {
             Consola.Escribir($"Error: No se encontró el enunciado del trabajo práctico '{practico}' en {carpetaOrigen}", ConsoleColor.Red);
             return;
         }
 
-        foreach (var alumno in Alumnos.OrderBy(a => a.Legajo))
-        {
+        foreach (var alumno in Alumnos.OrderBy(a => a.Legajo)) {
             var carpetaDestino = Path.Combine(Base, alumno.Carpeta, $"tp{practico}");
-            if (forzar && Directory.Exists(carpetaDestino))
-            {
+            if (forzar && Directory.Exists(carpetaDestino)) {
                 Directory.Delete(carpetaDestino, true);
             }
             Directory.CreateDirectory(carpetaDestino);
 
             Consola.Escribir($" - Copiando a {carpetaDestino}", ConsoleColor.Yellow);
-            foreach (var archivo in Directory.GetFiles(carpetaOrigen))
-            {
-                var nombreArchivo = Path.GetFileName(archivo);
-                if (nombreArchivo == "enunciado.md") continue;
-
-                var destinoArchivo = Path.Combine(carpetaDestino, nombreArchivo);
-                if (!File.Exists(destinoArchivo))
-                {
-                    File.Copy(archivo, destinoArchivo);
-                }
-            }
+            CopiarDirectorioRecursivamente(carpetaOrigen, carpetaDestino, forzar);
         }
         Consola.Escribir($" ● Copia de trabajo práctico completa", ConsoleColor.Green);
+    }
+
+    private void CopiarDirectorioRecursivamente(string origen, string destino, bool forzar) {
+        // Copiar todos los archivos del directorio
+        foreach (var archivo in Directory.GetFiles(origen)) {
+            var nombreArchivo = Path.GetFileName(archivo);
+            if (nombreArchivo == "enunciado.md") continue;
+
+            var destinoArchivo = Path.Combine(destino, nombreArchivo);
+            if (!File.Exists(destinoArchivo) || forzar) {
+                File.Copy(archivo, destinoArchivo, forzar);
+            }
+        }
+
+        // Copiar recursivamente todos los subdirectorios
+        foreach (var directorio in Directory.GetDirectories(origen)) {
+            var nombreDirectorio = Path.GetFileName(directorio);
+            var destinoDirectorio = Path.Combine(destino, nombreDirectorio);
+            
+            if (!Directory.Exists(destinoDirectorio)) {
+                Directory.CreateDirectory(destinoDirectorio);
+            }
+            
+            CopiarDirectorioRecursivamente(directorio, destinoDirectorio, forzar);
+        }
     }
 
     public void ExportarDatos()
