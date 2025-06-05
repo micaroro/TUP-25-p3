@@ -22,6 +22,7 @@ tempCodeRunnerFile.csharp
 
 # Publicaciones y despliegues
 **/publish/
+**/node_modules/
 
 # -----------------------------
 # Sistema operativo
@@ -52,6 +53,7 @@ fechas/
 # Ignorar librerías bajo wwwroot/lib
 **/wwwroot/lib/**
 
+
 # -----------------------------
 # Bases de datos locales
 # -----------------------------
@@ -70,3 +72,4 @@ github-config.json
 
 # Archivos falsos de prueba
 .fake
+*/node_modules
