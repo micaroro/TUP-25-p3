@@ -1,31 +1,47 @@
+using Microsoft.EntityFrameworkCore;
+using Servidor.Data;
+using Servidor.Endpoints;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregar servicios CORS para permitir solicitudes desde el cliente
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowClientApp", policy => {
-        policy.WithOrigins("http://localhost:5177", "https://localhost:7221")
+// Base de datos
+builder.Services.AddDbContext<TiendaContext>(opt =>
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// CORS para Blazor
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClientApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5177") // Blazor WebAssembly
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
-// Agregar controladores si es necesario
-builder.Services.AddControllers();
-
 var app = builder.Build();
 
-// Configurar el pipeline de solicitudes HTTP
-if (app.Environment.IsDevelopment()) {
-    app.UseDeveloperExceptionPage();
+app.UseCors("AllowClientApp");
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Crear BD 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TiendaContext>();
+    db.Database.EnsureCreated();
 }
 
-// Usar CORS con la política definida
-app.UseCors("AllowClientApp");
+// Endpoints
+app.MapGet("/", () => "Servidor API está funcionando");
+app.MapProductos();
+app.MapCarrito();
+ app.MapCompras(); 
 
-// Mapear rutas básicas
-app.MapGet("/", () => "Servidor API está en funcionamiento");
 
-// Ejemplo de endpoint de API
-app.MapGet("/api/datos", () => new { Mensaje = "Datos desde el servidor", Fecha = DateTime.Now });
 
 app.Run();
