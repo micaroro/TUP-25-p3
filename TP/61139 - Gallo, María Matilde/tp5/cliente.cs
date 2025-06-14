@@ -6,6 +6,7 @@ using System.Threading.Tasks;     // Task
 
 var baseUrl = "http://localhost:5000";
 var http = new HttpClient();
+
 var jsonOpt = new JsonSerializerOptions {
     PropertyNamingPolicy        = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true

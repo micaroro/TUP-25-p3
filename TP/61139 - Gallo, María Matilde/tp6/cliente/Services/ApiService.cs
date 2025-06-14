@@ -18,6 +18,21 @@ public class ApiService {
             return new DatosRespuesta { Mensaje = $"Error: {ex.Message}", Fecha = DateTime.Now };
         }
     }
+
+    // Nuevo método para obtener productos
+    public async Task<List<cliente.Modelos.Producto>> GetProductosAsync()
+    {
+        try
+        {
+            var productos = await _httpClient.GetFromJsonAsync<List<cliente.Modelos.Producto>>("api/productos");
+            return productos ?? new List<cliente.Modelos.Producto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener productos: {ex.Message}");
+            return new List<cliente.Modelos.Producto>();
+        }
+    }
 }
 
 public class DatosRespuesta {

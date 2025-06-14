@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using cliente.Services
+@using cliente.Modelos
 @inject ApiService ApiService
 
 <PageTitle>Inicio</PageTitle>
@@ -11,17 +12,19 @@
         </div>
     </div>
     
+    <!-- Sección para obtener datos simples -->
     <div class="row mb-4">
         <div class="col-12">
             <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor">Obtener datos del servidor</button>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">            
-            @if (cargando) {
+            @if (cargandoDatos) {
                 <div class="alert alert-info">Cargando datos...</div>
-            } else if (datos != null) {                <div class="card" style="width: 300px;">
+            } else if (datos != null) {
+                <div class="card" style="width: 300px;">
                     <div class="card-header">
                         Respuesta del servidor
                     </div>
@@ -30,30 +33,92 @@
                         <p class="card-text">Fecha: @datos.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
                     </div>
                 </div>
-            } else if (error != null) {
+            } else if (errorDatos != null) {
                 <div class="alert alert-danger">
-                    Error: @error
+                    Error: @errorDatos
                 </div>
+            }
+        </div>
+    </div>
+
+    <!-- Nueva sección para productos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <button class="btn btn-success" @onclick="ObtenerProductos">Cargar Productos</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            @if (cargandoProductos) {
+                <div class="alert alert-info">Cargando productos...</div>
+            } else if (productos?.Count > 0) {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in productos)
+                        {
+                            <tr>
+                                <td>@producto.Id</td>
+                                <td>@producto.Nombre</td>
+                                <td>@producto.Precio.ToString("C")</td>
+                                <td>@producto.Descripcion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            } else if (errorProductos != null) {
+                <div class="alert alert-danger">
+                    Error: @errorProductos
+                </div>
+            } else {
+                <div>No hay productos cargados.</div>
             }
         </div>
     </div>
 </div>
 
 @code {
+    // Para datos simples
     private DatosRespuesta datos;
-    private string error;
-    private bool cargando = false;
+    private string errorDatos;
+    private bool cargandoDatos = false;
+
+    // Para productos
+    private List<Producto> productos;
+    private string errorProductos;
+    private bool cargandoProductos = false;
 
     private async Task ObtenerDatosDelServidor() {
         try {
-            cargando = true;
-            error = null;
+            cargandoDatos = true;
+            errorDatos = null;
             datos = await ApiService.ObtenerDatosAsync();
         } catch (Exception ex) {
-            error = ex.Message;
+            errorDatos = ex.Message;
             datos = null;
         } finally {
-            cargando = false;
+            cargandoDatos = false;
+        }
+    }
+
+    private async Task ObtenerProductos() {
+        try {
+            cargandoProductos = true;
+            errorProductos = null;
+            productos = await ApiService.GetProductosAsync();
+        } catch (Exception ex) {
+            errorProductos = ex.Message;
+            productos = null;
+        } finally {
+            cargandoProductos = false;
         }
     }
 }
