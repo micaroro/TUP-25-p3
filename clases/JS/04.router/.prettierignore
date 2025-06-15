@@ -1,6 +1,0 @@
-node_modules
-dist
-build
-.git
-*.min.css
-*.min.js
