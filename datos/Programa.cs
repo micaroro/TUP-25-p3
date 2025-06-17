@@ -267,23 +267,48 @@ class Program {
         }
     }
 
+    static void AgregarResultado(int legajo, string resultado) {
+        string archivo = "resultados-p2.md";
+        string lineaNueva = $"- {legajo} : {resultado}";
+        List<string> lineas = new();
+        bool encontrado = false;
+
+        if (File.Exists(archivo)) {
+            lineas = File.ReadAllLines(archivo).ToList();
+            for (int i = 0; i < lineas.Count; i++) {
+                if (lineas[i].TrimStart().StartsWith($"- {legajo} ")) {
+                    lineas[i] = lineaNueva;
+                    encontrado = true;
+                    break;
+                }
+            }
+        }
+        if (!encontrado) {
+            lineas.Add(lineaNueva);
+        }
+        File.WriteAllLines(archivo, lineas);
+    }
+
     static void ProbarTP6(Clase clase)
     {
         Consola.Limpiar();
         Consola.Escribir("=== Probar TP6 ===", ConsoleColor.Cyan);
         int error = 0;
-        foreach (var alumno in clase.EnProgreso(6))
+        foreach (var alumno in clase.Presentaron(6))
         {
             var resultado = clase.EjecutarSistema(alumno.Legajo);
-            Consola.Escribir($"Alumno: {alumno.NombreCompleto} ({alumno.Telefono}) - Resultado: {resultado}", ConsoleColor.Cyan);
+            Consola.Escribir($"\n\n{alumno.Legajo} - {alumno.NombreCompleto}", ConsoleColor.Cyan);
             var estado = resultado ? EstadoPractico.EnProgreso : EstadoPractico.Error;
 
-            if (Consola.Confirmar($"¿Aprueba {alumno.NombreCompleto}?")){
+            var evaluacion = Consola.LeerCadena("Resultado:") ?? "";
+            if (evaluacion.Trim() == "fin")
+                return;
+            if (evaluacion.Contains("ok"))
                 estado = EstadoPractico.Aprobado;
-            }
+            AgregarResultado(alumno.Legajo, evaluacion);
             alumno.PonerPractico(6, estado);
-            if (!resultado) error++;
             clase.Guardar();
+            if (!resultado) error++;
         }
         Consola.Escribir($"Se encontraron {error} errores al correr el TP6.", ConsoleColor.Red);
     }
