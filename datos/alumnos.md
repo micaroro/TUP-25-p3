@@ -105,7 +105,7 @@
 48.  61962  Robledo, Rocio Micaela               (381) 475-8990   15  +++·+*      24  60  10.0  micaroro
 49.  61914  Robles, Leandro Gonzalo              (381) 611-5577   17  +++++·      21  57  10.0  GonzaloRobles209
 50.  61125  Rocha, Luca                          (381) 386-0020   31  +++++~      23  44  10.0  LucaRocha04
-51.  61128  Satle Barreñera, Johana              (381) 340-2187   24  +++·++      33  57  10.0  Joosatle
+51.  61128  Satle Barreñada, Johana              (381) 340-2187   24  +++·++      33  57  10.0  Joosatle
 52.  61340  Tognalli, Mateo Fabrizio             (381) 506-6621   33  ++++++      23  60  10.0  mateo-tognalli
 53.  61227  Valdiglesias Martel, Federico        (381) 642-7386   34  ++++++      25  55  10.0  FedericoVM
 54.  61061  Velardez, Leandro Ivan               (381) 397-5576    6  ++····       0   0   0.0  ivito01
