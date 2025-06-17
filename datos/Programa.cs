@@ -271,11 +271,32 @@ class Program {
     {
         Consola.Limpiar();
         Consola.Escribir("=== Probar TP6 ===", ConsoleColor.Cyan);
-
-        int legajo = Consola.LeerEntero("Ingrese el legajo a controlar: ");
-        clase.EjecutarSistema(legajo);
+        int error = 0;
+        foreach (var alumno in clase.EnProgreso(6))
+        {
+            var resultado = clase.EjecutarSistema(alumno.Legajo);
+            Consola.Escribir($"Alumno: {alumno.NombreCompleto} ({alumno.Telefono}) - Resultado: {resultado}", ConsoleColor.Cyan);
+            alumno.PonerPractico(6, resultado ? EstadoPractico.Aprobado : EstadoPractico.Error);
+            if (!resultado) error++;
+            clase.Guardar();
+        }
+        Consola.Escribir($"Se encontraron {error} errores al correr el TP6.", ConsoleColor.Red);
     }
 
+    static void ProbarPorLegajo(Clase clase)
+    {
+        Consola.Limpiar();
+        Consola.Escribir("=== Probar por Legajo ===", ConsoleColor.Cyan);
+        int legajo = Consola.LeerEntero("Ingrese el legajo del alumno a probar: ");
+        var alumno = clase.Buscar(legajo);
+        if (alumno == null)
+        {
+            Consola.Escribir($"No se encontró un alumno con el legajo {legajo}.", ConsoleColor.Red);
+            return;
+        }
+        var resultado = clase.EjecutarSistema(alumno.Legajo);
+        Consola.Escribir($"Alumno: {alumno.NombreCompleto} ({alumno.Telefono}) - Resultado: {resultado}", ConsoleColor.Cyan);
+    }
     static void Main(string[] args)
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
@@ -283,15 +304,18 @@ class Program {
 
         var clase = Clase.Cargar();
 
-        int practico = 5;
+        int practico = 6;
 
         var menu = new TUP.Menu("Bienvenido al sistema de gestión de alumnos");
         menu.Agregar("Listar alumnos", () => ListarAlumnos(clase));
         menu.Agregar("Publicar trabajo práctico", () => CopiarPractico(clase));
         menu.Agregar("Registrar Asistencia & Notas", () => RegistrarTodo(clase, practico));
         menu.Agregar("Faltan presentar TP", () => ListarNoPresentaron(clase, practico));
-        menu.Agregar("Faltan Github", () => ListarUsuariosGithub(clase));
+        // menu.Agregar("Faltan Github", () => ListarUsuariosGithub(clase));
         menu.Agregar("Correr TP6", () => ProbarTP6(clase));
+        menu.Agregar("Con error TP6", () => clase.ConError(6).ListarAlumnos());
+        menu.Agregar("No presentaron TP6", () => clase.NoPresentaron(6).Continuan().ListarAlumnos());
+        menu.Agregar("Probar por Legajo", () => ProbarPorLegajo(clase));
 
         menu.Ejecutar();
 

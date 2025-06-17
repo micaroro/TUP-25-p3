@@ -10,12 +10,13 @@ public enum ResultadoEjecucion {
     Ok,
     FallaServidor,
     FallaCliente,
+    FallaNavegador,
     NoPresentado
 }
 
 public class Corredor
 {
-    public static async Task CorrerSistema(string carpetaBase)
+    public static async Task<ResultadoEjecucion> CorrerSistema(string carpetaBase)
     {
         Console.WriteLine($"Iniciando prueba de sistema en: {carpetaBase}");
         string servidorPath = Path.Combine(carpetaBase, "servidor");
@@ -26,7 +27,7 @@ public class Corredor
         if (!servidorOk || string.IsNullOrEmpty(direccionServidor))
         {
             Console.WriteLine("No se pudo iniciar el servidor correctamente.");
-            return;
+            return ResultadoEjecucion.FallaServidor;
         }
 
         Console.WriteLine($"=== Lanzando cliente en: {clientePath} ===");
@@ -34,7 +35,7 @@ public class Corredor
         if (!clienteOk || string.IsNullOrEmpty(direccionCliente))
         {
             Console.WriteLine("No se pudo iniciar el cliente correctamente.");
-            return;
+            return ResultadoEjecucion.FallaCliente;
         }
 
         if (!string.IsNullOrEmpty(direccionCliente))
@@ -47,15 +48,18 @@ public class Corredor
                     UseShellExecute = false
                 };
                 Process.Start(openInfo);
+                return ResultadoEjecucion.Ok;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"No se pudo abrir el navegador automáticamente: {ex.Message}");
+                return ResultadoEjecucion.FallaNavegador;
             }
         }
         else
         {
             Console.WriteLine("No se pudo abrir el navegador porque no se detectó la dirección del cliente.");
+            return ResultadoEjecucion.FallaNavegador;
         }
     }
 

@@ -85,7 +85,12 @@ class Clase : IEnumerable<Alumno>
     public Clase OrdenandoPorNombre() => new(alumnos.OrderBy(a => a.Apellido).ThenBy(a => a.Nombre));
     public Clase OrdenandoPorLegajo() => new(alumnos.OrderBy(a => a.Legajo));
     public Clase SinGithub() => new(alumnos.Where(a => a.GitHub == ""));
-
+    public Clase EnProgreso(int practico=6) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.EnProgreso));
+    public Clase ConError(int practico=6) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.Error));
+    public Clase NoPresentaron(int practico = 1) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.NoPresentado));
+    public Clase C3() => this.EnComision("C3");
+    public Clase C5() => this.EnComision("C5");
+    public Clase Continuan() => new(alumnos.Where(a => a.Continuan));
     // Métodos de modificación
     public void Agregar(Alumno alumno)
     {
@@ -201,6 +206,7 @@ class Clase : IEnumerable<Alumno>
         var fuente = practico switch {
             4 => "Program.cs",
             5 => "Servidor.cs",
+            6 => "servidor/Program.cs",
             _ => "ejercicio.cs"
         };
 
@@ -235,6 +241,20 @@ class Clase : IEnumerable<Alumno>
                     if (practico == 3 && lineasEfectivas > 20)
                     { // Si es TP3, ejecutar el programa y verificar el resultado
                         alumno.Resultado = ResultadoEjecutar(archivo);
+                    }
+
+                    if (practico == 6)
+                    { // Si es TP4, ejecutar el programa y verificar el resultado
+
+                        if (lineasEfectivas >= 0)
+                        {
+                            estado = EstadoPractico.EnProgreso;
+                        }
+                        else
+                        {
+                            estado = EstadoPractico.NoPresentado;
+                        }
+                        alumno.PonerPractico(practico, estado);
                     }
 
                     var color = lineasEfectivas < 20 ? ConsoleColor.Yellow : ConsoleColor.White;
@@ -288,16 +308,16 @@ class Clase : IEnumerable<Alumno>
         }
     }
 
-    public void EjecutarSistema(int legajo)
+    public bool EjecutarSistema(int legajo)
     {
         string? carpeta = CarpetaDeAlumnoPorLegajo(legajo);
         if (carpeta is null) {
             Console.WriteLine("No se encontró la carpeta del alumno.");
-            return;
+            return false;
         }
         string Base = Path.Combine("../TP",carpeta, "tp6");
         Consola.Escribir($"▶︎ Ejecutando sistema para el alumno {legajo} en {Base}", ConsoleColor.Cyan);
-        Corredor.CorrerSistema(Base).GetAwaiter().GetResult();
+        return Corredor.CorrerSistema(Base).GetAwaiter().GetResult() == ResultadoEjecucion.Ok;
     }
 
     public void CopiarPractico(int practico, bool forzar = false)
