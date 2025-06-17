@@ -276,7 +276,12 @@ class Program {
         {
             var resultado = clase.EjecutarSistema(alumno.Legajo);
             Consola.Escribir($"Alumno: {alumno.NombreCompleto} ({alumno.Telefono}) - Resultado: {resultado}", ConsoleColor.Cyan);
-            alumno.PonerPractico(6, resultado ? EstadoPractico.Aprobado : EstadoPractico.Error);
+            var estado = resultado ? EstadoPractico.EnProgreso : EstadoPractico.Error;
+
+            if (Consola.Confirmar($"¿Aprueba {alumno.NombreCompleto}?")){
+                estado = EstadoPractico.Aprobado;
+            }
+            alumno.PonerPractico(6, estado);
             if (!resultado) error++;
             clase.Guardar();
         }
@@ -312,9 +317,10 @@ class Program {
         menu.Agregar("Registrar Asistencia & Notas", () => RegistrarTodo(clase, practico));
         menu.Agregar("Faltan presentar TP", () => ListarNoPresentaron(clase, practico));
         // menu.Agregar("Faltan Github", () => ListarUsuariosGithub(clase));
-        menu.Agregar("Correr TP6", () => ProbarTP6(clase));
-        menu.Agregar("Con error TP6", () => clase.ConError(6).ListarAlumnos());
-        menu.Agregar("No presentaron TP6", () => clase.NoPresentaron(6).Continuan().ListarAlumnos());
+        menu.Agregar("  P2: Ejecutar", () => ProbarTP6(clase));
+        menu.Agregar("  P2: Presentaron", () => clase.Presentaron(6).ListarAlumnos());
+        menu.Agregar("  P2: No presentaron", () => clase.NoPresentaron(6).Continuan().ListarAlumnos());
+        menu.Agregar("  P2: Con error ", () => clase.ConError(6).ListarAlumnos());
         menu.Agregar("Probar por Legajo", () => ProbarPorLegajo(clase));
 
         menu.Ejecutar();

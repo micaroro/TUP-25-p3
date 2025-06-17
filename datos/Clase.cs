@@ -88,6 +88,7 @@ class Clase : IEnumerable<Alumno>
     public Clase EnProgreso(int practico=6) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.EnProgreso));
     public Clase ConError(int practico=6) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.Error));
     public Clase NoPresentaron(int practico = 1) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.NoPresentado));
+    public Clase Presentaron(int practico = 6) => new(alumnos.Where(a => a.ObtenerPractico(practico) == EstadoPractico.Aprobado || a.ObtenerPractico(practico) == EstadoPractico.EnProgreso));
     public Clase C3() => this.EnComision("C3");
     public Clase C5() => this.EnComision("C5");
     public Clase Continuan() => new(alumnos.Where(a => a.Continuan));
