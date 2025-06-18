@@ -1,0 +1,29 @@
+@using Cliente.Services
+
+@inject CarritoService CarritoSrv 
+<!-- Inyecta el servicio del carrito para acceder a la cantidad total de productos -->
+
+<!-- Importa el espacio de nombres donde está el servicio del carrito -->
+
+<span>
+    Carrito (@CarritoSrv.CantidadTotal)  <!-- Muestra en pantalla la cantidad total de productos en el carrito -->
+</span>
+
+@code {
+    // Se ejecuta al iniciar el componente
+    protected override async Task OnInitializedAsync()
+    {
+        // Se suscribe al evento OnChange del servicio para actualizar la UI cuando cambie la cantidad
+        CarritoSrv.OnChange += StateHasChanged;
+
+        // Actualiza la cantidad total de productos en el carrito al cargar el componente
+        await CarritoSrv.ActualizarCantidadAsync();
+    }
+
+    // Se ejecuta al destruir el componente para evitar fugas de memoria
+    public void Dispose()
+    {
+        // Se desuscribe del evento para no mantener referencias innecesarias
+        CarritoSrv.OnChange -= StateHasChanged;
+    }
+}

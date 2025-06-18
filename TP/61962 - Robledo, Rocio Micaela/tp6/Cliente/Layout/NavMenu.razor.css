@@ -1,0 +1,75 @@
+/* Estilo general del menú */
+.nav-item {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+.nav-item:first-of-type {
+    padding-top: 1rem;
+}
+
+.nav-item:last-of-type {
+    padding-bottom: 1rem;
+}
+
+.nav-item ::deep a {
+    color: #d7d7d7;
+    border-radius: 4px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 3rem;
+}
+
+.nav-item ::deep a.active {
+    background-color: rgba(255,255,255,0.37);
+    color: white;
+}
+
+.nav-item ::deep a:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Estilo para carrito */
+.carrito-link {
+    font-size: 1.3rem;  /* texto más grande */
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: black !important;
+}
+
+.carrito-icon-sidebar {
+    font-size: 2rem;  /* icono más grande */
+    color: black;
+    vertical-align: middle;
+}
+
+.carrito-link:hover,
+.carrito-link.active {
+    color: #007bff !important; /* Cambia color en hover/activo */
+}
+
+.carrito-link:hover .carrito-icon-sidebar,
+.carrito-link.active .carrito-icon-sidebar {
+    color: #007bff;
+}
+
+/* Responsive y demás estilos previos */
+
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        display: block;
+    }
+
+    .nav-scrollable {
+        height: calc(100vh - 3.5rem);
+        overflow-y: auto;
+    }
+}
