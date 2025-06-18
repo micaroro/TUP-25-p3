@@ -16,10 +16,12 @@ Las personas que falten presentar el segundo parcial no podrán promocionar pero
 
 Las personas que les falte presentar prácticos lo pueden presentar y recuperar la posibilidad de promocionar.
 
+> [!IMPORTANT]
 > La fecha límite para presentar los trabajos es el 
 > **Viernes 20 a las 23:59 hs.**
 ---
 
+> [!NOTE]
 > Ver al final como presentar el trabajo y corregir errores al subir el trabajo.
 
 # Informe de la comisión C3
@@ -264,6 +266,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61914 Robles, Leandro Gonzalo        17   ✅✅🟢✅✅❓
 ```
 
+> [!IMPORTANT]
 > Nota 1: **Consultar si no figura en el listado**.
 
 > Nota 2: **Algunos alumnos han tenido problemas al subir el trabajo**.
