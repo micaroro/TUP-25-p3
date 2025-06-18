@@ -5,7 +5,7 @@
 02.  61667  Acosta, Maira                        (381) 562-8162   34  +++++~      30  60  10.0  maira-acostaa
 03.  62055  Ahumada, Aiquén                      (381) 419-9202   34  +++++~      25  60  10.0  aiquen7
 04.  61118  Barrios, Santiago Alexis             (381) 526-8193   28  +++···      22  58  10.0  SantiBarriox
-05.  61319  Carabajal, José Gabriel              (381) 562-7688   10  ++++··       0  60  10.0  7GabrielC
+05.  61319  Carabajal, José Gabriel              (381) 562-7688   10  ++++··      30  60  10.0  7GabrielC
 06.  61214  Collazos Cortez, Máximo Alberto      (381) 350-5275   28  +++···      13  60  10.0  maximocollazos
 07.  61141  Di Clemente, María Antonela          (381) 398-3935   25  +++++~      37  60  10.0  antodiclemente
 08.  61730  Diaz, Antonio                        (381) 392-6461    8  ······       0  24   4.0  
@@ -15,7 +15,7 @@
 12.  61720  Fernández, Luciano                   (381) 586-7891    0  ······       0   0   0.0  
 13.  62093  Frías Silva, Juan Segundo            (381) 415-8753   29  ++++·~      24  60  10.0  juansefriass
 14.  61139  Gallo, María Matilde                 (381) 333-4836   20  +++···      12  56  10.0  matildegallom
-15.  61352  García Moya, José Ignacio            (381) 638-9006   29  +++++·       2  59  10.0  
+15.  61352  García Moya, José Ignacio            (381) 638-9006   29  +++++·       2  59  10.0  Jose-I-Garcia-Moya
 16.  61200  Gauna Serrano, Martín Javier         (381) 389-2631   32  +++··~      22  60  10.0  MartinGS8
 17.  61624  Godoy, Alan                          (381) 574-4877   30  +++++·      23  60  10.0  AlanG46
 18.  61595  González Patti, Valentín             (381) 655-9195   29  ++++··      31  60  10.0  ValentinPatti
@@ -24,7 +24,7 @@
 21.  62053  Herrera Palomino, Ivam Agustín       (381) 697-0643   35  +++++·      23  60  10.0  ivanagustinherrera
 22.  61450  Jiménez Paz, Patricio Agustín        (381) 388-2674   33  +++++~      28  60  10.0  patricio-jp
 23.  61627  Juárez Fernández, Lourdes Abril      (381) 647-9914   35  +++++~      24  60  10.0  LourdesFernandez1
-24.  61473  Lagoria García, Tomás Gustavo        (381) 357-7724    0  +++++~      30  60  10.0  tomaslago27
+24.  61473  Lagoria García, Tomás Gustavo        (381) 357-7724   35  +++++~      30  60  10.0  tomaslago27
 25.  61956  Leglisé, Laureano                    (261) 468-9809   28  ++++·~      42  60  10.0  74Lauxii
 26.  61679  Lobo Barrera, Mia de los Angeles     (381) 677-0639   35  +++++~      29  60  10.0  miaslobo
 27.  61794  Lobo Campero, Hernán Ignacio         (381) 590-6461   23  +++++~       8  60  10.0  lobohhernan

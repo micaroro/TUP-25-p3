@@ -52,6 +52,9 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61627 Juárez Fernández, Lourdes Abril35   ✅✅🟢✅✅🟡
       no descuenta stock, no controla stock, no permite volver al catalogo
 
+61473 Lagoria García, Tomás Gustavo  30   ✅✅🟢✅✅🟡
+      no inicia en home, muestra alert, el subtotal dice '3100.0.ToString("C")'
+
 61794 Lobo Campero, Hernán Ignacio   23   ✅✅🟢✅✅🟡
       No descuenta stock, al agregar al carrito comienza de 1.
 
@@ -97,6 +100,9 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61579 Marti, Gonzalo                 27   ✅✅🟢✅❓🔴
       no muestra productos, IGUAL que 61572
 
+61113 Oriz Caballero, Juan José      31   ✅✅🟢✅✅🔴
+      Archivos corruptos
+
 61312 Paz Berrondo, Lucas David      25   ✅✅🟢✅✅🔴
       no funciona
 
@@ -111,18 +117,17 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 ```
 61203 Acevedo Costello, Juan Ignacio 31   ✅✅🟢✅❓❓
 61118 Barrios, Santiago Alexis       28   ✅✅🟢❓❓❓
+61319 Carabajal, José Gabriel        30   ✅✅🟢✅❓❓
 61214 Collazos Cortez, Máximo Albert 28   ✅✅🟢❓❓❓
 61141 Di Clemente, María Antonela    25   ✅✅🟢✅✅❓
 61139 Gallo, María Matilde           20   ✅✅🟢❓❓❓
-61352 García Moya, José Ignacio      29   ✅✅🟢✅✅❓
+61352 García Moya, José Ignacio      29   ✅✅🟢✅✅❓      
 61624 Godoy, Alan                    30   ✅✅🟢✅✅❓
 61595 González Patti, Valentín       29   ✅✅🟢✅❓❓
 61562 Helguera, Agustina Elizabeth   30   ✅✅🟢❓❓❓
 62053 Herrera Palomino, Ivam Agustín 35   ✅✅🟢✅✅❓
-61113 Oriz Caballero, Juan José      31   ✅✅🟢✅✅❓
 61059 Palavecino, Fabricio Gaston    27   ✅✅🟢❓❓❓
 61248 Palma Collado, Nahuel          34   ✅✅🟢✅✅❓
-61136 Sosa, Oscar Ignacio            34   ✅✅🟢✅✅❓
 61596 Zamora, Gonzalo Alejandro      30   ✅✅🟢❓❓❓
 61862 Zerda, Thomas                  29   ✅✅🟢❓❓❓
 ```
