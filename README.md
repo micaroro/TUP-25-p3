@@ -279,6 +279,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 > 7. Confirmá los cambios (Commit).
 > 8. Publicá los cambios a tu repositorio.
 > 9. Realizá el Pull Request.
+> 10. Revisa que tu Pull Request figure en la solapa "Pull Request" del repositorio en Github.
+
 
 
 
