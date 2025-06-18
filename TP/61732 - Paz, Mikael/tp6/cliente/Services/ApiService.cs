@@ -32,8 +32,19 @@ public class ApiService {
     public async Task<CarritoDto?> QuitarProductoAsync(Guid carritoId, int productoId) =>
         await _httpClient.DeleteAsync($"/carritos/{carritoId}/{productoId}").ContinueWith(t => t.Result.Content.ReadFromJsonAsync<CarritoDto>()).Unwrap();
 
-    public async Task<CompraDto?> ConfirmarCompraAsync(Guid carritoId, CompraDto compra) =>
-        await _httpClient.PutAsJsonAsync($"/carritos/{carritoId}/confirmar", compra).ContinueWith(t => t.Result.Content.ReadFromJsonAsync<CompraDto>()).Unwrap();
+    public async Task<CompraDto?> ConfirmarCompraAsync(Guid carritoId, CompraDto compra) {
+        try {
+            var response = await _httpClient.PutAsJsonAsync($"/carritos/{carritoId}/confirmar", compra);
+            if (response.IsSuccessStatusCode) {
+                return await response.Content.ReadFromJsonAsync<CompraDto>();
+            }
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Error al confirmar la compra: {error}");
+        } catch (Exception ex) {
+            Console.WriteLine($"Error en ConfirmarCompraAsync: {ex.Message}");
+            throw;
+        }
+    }
 
     // ...método de ejemplo existente...
     public async Task<DatosRespuesta> ObtenerDatosAsync() {

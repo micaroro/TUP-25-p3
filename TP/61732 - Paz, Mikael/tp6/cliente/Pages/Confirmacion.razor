@@ -2,8 +2,11 @@
 @using cliente.Services
 @using cliente.Models
 @using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@implements IDisposable
 @inject ApiService ApiService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <div class="container">
     <div class="row mb-4">
@@ -19,7 +22,8 @@
     {
         <div class="alert alert-success">
             ¡Compra realizada con éxito!<br />
-            <b>Total:</b> $@compra?.Total
+            <b>Total:</b> $@compra?.Total<br />
+            Redirigiendo al catálogo en @tiempoRestante segundos...
         </div>
         <button class="btn btn-primary" @onclick="VolverAlCatalogo">Volver al catálogo</button>
     }
@@ -82,6 +86,8 @@
     private CompraDto form = new();
     private CompraDto compra;
     private bool compraRealizada = false;
+    private int tiempoRestante = 3;
+    private System.Threading.Timer timer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,6 +122,29 @@
             compra = resultado;
             compraRealizada = true;
         }
+
+        // Iniciar temporizador para la redirección
+        timer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                tiempoRestante--;
+                if (tiempoRestante <= 0)
+                {
+                    timer?.Dispose();
+                    Navigation.NavigateTo("/");
+                }
+                else
+                {
+                    StateHasChanged();
+                }
+            });
+        }, null, 0, 1000);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
     }
     private void VolverAlCatalogo()
     {

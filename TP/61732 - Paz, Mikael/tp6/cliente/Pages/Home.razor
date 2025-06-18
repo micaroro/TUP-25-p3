@@ -4,6 +4,7 @@
 @inject ApiService ApiService
 @inject NavigationManager Navigation
 @inject CarritoState CarritoState
+@inject LocalStorageService LocalStorage
 
 <div class="container">
     <div class="row mb-4 align-items-center">
@@ -41,7 +42,7 @@
                             <p class="card-text">@p.Descripcion</p>
                             <p class="card-text"><b>Precio:</b> $@p.Precio</p>
                             <p class="card-text"><b>Stock:</b> @p.Stock</p>
-                            <button class="btn btn-success w-100" @onclick="() => AgregarAlCarrito(p)" [disabled]="p.Stock == 0">Agregar al carrito</button>
+                            <button class="btn btn-success w-100" @onclick="() => AgregarAlCarrito(p)" disabled="@(p.Stock == 0)">Agregar al carrito</button>
                         </div>
                     </div>
                 </div>
@@ -60,9 +61,7 @@
     private bool cargando = false;
     private int cantidadCarrito = 0;
     private Guid carritoId;
-    private string? errorMsg;
-
-    protected override async Task OnInitializedAsync()
+    private string? errorMsg;    protected override async Task OnInitializedAsync()
     {
         await InicializarCarrito();
         await CargarProductos();
@@ -81,14 +80,50 @@
             errorMsg = "No se pudieron cargar los productos. Intente más tarde.";
         }
         cargando = false;
+    }    private async Task InicializarCarrito()
+    {
+        try
+        {
+            // Obtener carritoId de localStorage
+            var idStr = await LocalStorage.GetItemAsync("carritoId");
+            
+            // Si no hay carrito guardado o no se puede obtener, crear uno nuevo
+            if (!Guid.TryParse(idStr, out carritoId) || carritoId == Guid.Empty)
+            {
+                await CrearNuevoCarrito();
+                return;
+            }
+
+            // Intentar obtener el carrito existente
+            try
+            {
+                var carrito = await ApiService.ObtenerCarritoAsync(carritoId);
+                if (carrito != null)
+                {
+                    cantidadCarrito = carrito.Items?.Sum(i => i.Cantidad) ?? 0;
+                    CarritoState.Cantidad = cantidadCarrito;
+                    return;
+                }
+            }
+            catch
+            {
+                // Si falla al obtener el carrito, crear uno nuevo
+                await CrearNuevoCarrito();
+            }
+        }
+        catch
+        {
+            await CrearNuevoCarrito();
+        }
     }
 
-    private async Task InicializarCarrito()
+    private async Task CrearNuevoCarrito()
     {
-        // Guardar el carrito en memoria local (puedes usar localStorage para persistir)
-        var carrito = await ApiService.CrearCarritoAsync();
-        if (carrito != null)
-            carritoId = carrito.Id;
+        var nuevo = await ApiService.CrearCarritoAsync();
+        carritoId = nuevo?.Id ?? Guid.NewGuid();
+        await LocalStorage.SetItemAsync("carritoId", carritoId.ToString());
+        cantidadCarrito = 0;
+        CarritoState.Cantidad = 0;
     }
 
     private async Task AgregarAlCarrito(ProductoDto producto)

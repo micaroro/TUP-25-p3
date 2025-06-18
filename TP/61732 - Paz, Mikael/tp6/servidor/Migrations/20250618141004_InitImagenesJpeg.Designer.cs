@@ -11,8 +11,8 @@ using servidor;
 namespace servidor.Migrations
 {
     [DbContext(typeof(TiendaDbContext))]
-    [Migration("20250614052723_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250618141004_InitImagenesJpeg")]
+    partial class InitImagenesJpeg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,7 +103,7 @@ namespace servidor.Migrations
                         {
                             Id = 1,
                             Descripcion = "Smartphone 6.5''",
-                            ImagenUrl = "/img/celularx.jpg",
+                            ImagenUrl = "/img/celularx.jpeg",
                             Nombre = "Celular X",
                             Precio = 150000m,
                             Stock = 10
@@ -112,7 +112,7 @@ namespace servidor.Migrations
                         {
                             Id = 2,
                             Descripcion = "Bluetooth, cancelación de ruido",
-                            ImagenUrl = "/img/auricularespro.jpg",
+                            ImagenUrl = "/img/auricularespro.jpeg",
                             Nombre = "Auriculares Pro",
                             Precio = 35000m,
                             Stock = 15
@@ -121,7 +121,7 @@ namespace servidor.Migrations
                         {
                             Id = 3,
                             Descripcion = "Intel i7, 16GB RAM",
-                            ImagenUrl = "/img/notebookultra.jpg",
+                            ImagenUrl = "/img/notebookultra.jpeg",
                             Nombre = "Notebook Ultra",
                             Precio = 420000m,
                             Stock = 5
@@ -130,7 +130,7 @@ namespace servidor.Migrations
                         {
                             Id = 4,
                             Descripcion = "RGB, 12000 DPI",
-                            ImagenUrl = "/img/mousegamer.jpg",
+                            ImagenUrl = "/img/mousegamer.jpeg",
                             Nombre = "Mouse Gamer",
                             Precio = 12000m,
                             Stock = 20
@@ -139,7 +139,7 @@ namespace servidor.Migrations
                         {
                             Id = 5,
                             Descripcion = "Switch Blue, retroiluminado",
-                            ImagenUrl = "/img/tecladomecanico.jpg",
+                            ImagenUrl = "/img/tecladomecanico.jpeg",
                             Nombre = "Teclado Mecánico",
                             Precio = 18000m,
                             Stock = 12
@@ -148,7 +148,7 @@ namespace servidor.Migrations
                         {
                             Id = 6,
                             Descripcion = "Full HD, IPS",
-                            ImagenUrl = "/img/monitor24.jpg",
+                            ImagenUrl = "/img/monitor24.jpeg",
                             Nombre = "Monitor 24''",
                             Precio = 65000m,
                             Stock = 8
@@ -157,7 +157,7 @@ namespace servidor.Migrations
                         {
                             Id = 7,
                             Descripcion = "USB-C, 30W",
-                            ImagenUrl = "/img/cargador.jpg",
+                            ImagenUrl = "/img/cargador.jpeg",
                             Nombre = "Cargador Rápido",
                             Precio = 7000m,
                             Stock = 25
@@ -166,7 +166,7 @@ namespace servidor.Migrations
                         {
                             Id = 8,
                             Descripcion = "Tipo C, 1m",
-                            ImagenUrl = "/img/cableusb.jpg",
+                            ImagenUrl = "/img/cableusb.jpeg",
                             Nombre = "Cable USB",
                             Precio = 2500m,
                             Stock = 30
@@ -175,7 +175,7 @@ namespace servidor.Migrations
                         {
                             Id = 9,
                             Descripcion = "Bebida cola",
-                            ImagenUrl = "/img/gaseosa.jpg",
+                            ImagenUrl = "/img/gaseosa.jpeg",
                             Nombre = "Gaseosa 1.5L",
                             Precio = 1200m,
                             Stock = 50
@@ -184,7 +184,7 @@ namespace servidor.Migrations
                         {
                             Id = 10,
                             Descripcion = "Cableados, 3.5mm",
-                            ImagenUrl = "/img/auricularesinear.jpg",
+                            ImagenUrl = "/img/auricularesinear.jpeg",
                             Nombre = "Auriculares In-ear",
                             Precio = 4000m,
                             Stock = 18

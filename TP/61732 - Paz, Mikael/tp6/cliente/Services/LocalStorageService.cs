@@ -20,5 +20,10 @@ namespace cliente.Services
         {
             return await _js.InvokeAsync<string>("localStorage.getItem", key);
         }
+
+        public async Task RemoveItemAsync(string key)
+        {
+            await _js.InvokeVoidAsync("localStorage.removeItem", key);
+        }
     }
 }

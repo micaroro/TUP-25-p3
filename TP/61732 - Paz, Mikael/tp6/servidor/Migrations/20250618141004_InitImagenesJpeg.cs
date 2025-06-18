@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace servidor.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitImagenesJpeg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,16 +80,16 @@ namespace servidor.Migrations
                 columns: new[] { "Id", "Descripcion", "ImagenUrl", "Nombre", "Precio", "Stock" },
                 values: new object[,]
                 {
-                    { 1, "Smartphone 6.5''", "/img/celularx.jpg", "Celular X", 150000m, 10 },
-                    { 2, "Bluetooth, cancelación de ruido", "/img/auricularespro.jpg", "Auriculares Pro", 35000m, 15 },
-                    { 3, "Intel i7, 16GB RAM", "/img/notebookultra.jpg", "Notebook Ultra", 420000m, 5 },
-                    { 4, "RGB, 12000 DPI", "/img/mousegamer.jpg", "Mouse Gamer", 12000m, 20 },
-                    { 5, "Switch Blue, retroiluminado", "/img/tecladomecanico.jpg", "Teclado Mecánico", 18000m, 12 },
-                    { 6, "Full HD, IPS", "/img/monitor24.jpg", "Monitor 24''", 65000m, 8 },
-                    { 7, "USB-C, 30W", "/img/cargador.jpg", "Cargador Rápido", 7000m, 25 },
-                    { 8, "Tipo C, 1m", "/img/cableusb.jpg", "Cable USB", 2500m, 30 },
-                    { 9, "Bebida cola", "/img/gaseosa.jpg", "Gaseosa 1.5L", 1200m, 50 },
-                    { 10, "Cableados, 3.5mm", "/img/auricularesinear.jpg", "Auriculares In-ear", 4000m, 18 }
+                    { 1, "Smartphone 6.5''", "/img/celularx.jpeg", "Celular X", 150000m, 10 },
+                    { 2, "Bluetooth, cancelación de ruido", "/img/auricularespro.jpeg", "Auriculares Pro", 35000m, 15 },
+                    { 3, "Intel i7, 16GB RAM", "/img/notebookultra.jpeg", "Notebook Ultra", 420000m, 5 },
+                    { 4, "RGB, 12000 DPI", "/img/mousegamer.jpeg", "Mouse Gamer", 12000m, 20 },
+                    { 5, "Switch Blue, retroiluminado", "/img/tecladomecanico.jpeg", "Teclado Mecánico", 18000m, 12 },
+                    { 6, "Full HD, IPS", "/img/monitor24.jpeg", "Monitor 24''", 65000m, 8 },
+                    { 7, "USB-C, 30W", "/img/cargador.jpeg", "Cargador Rápido", 7000m, 25 },
+                    { 8, "Tipo C, 1m", "/img/cableusb.jpeg", "Cable USB", 2500m, 30 },
+                    { 9, "Bebida cola", "/img/gaseosa.jpeg", "Gaseosa 1.5L", 1200m, 50 },
+                    { 10, "Cableados, 3.5mm", "/img/auricularesinear.jpeg", "Auriculares In-ear", 4000m, 18 }
                 });
 
             migrationBuilder.CreateIndex(
