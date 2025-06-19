@@ -229,12 +229,14 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61496 Parache, Ariana Agustina       30   ✅✅🟢❓❓🔴
       The entity type 'ItemCarrito' requires a primary key to be defined
 
+61226 Luna, Andres Maximiliano       30   ✅✅🟢✅✅🟡
+      Se rompe la presentacion esta mal bootstrap.min.css, no poner la posibilidad de elegiar cuanto agrega el carrito, al contola el stock a agregar.
+
 ```
 
 ## Alumnos que no presentaron
 ```
 61252 Aguirre Rojas, Lourdes Valenti 24   ✅✅🟢❓❓❓
-61226 Luna, Andres Maximiliano       30   ✅✅🟢✅✅❓
 61140 Perez, Fernando Alberto        23   ✅✅🟢❓✅❓
 61052 Reynoso, Braian Nicolás        34   ✅✅🟢✅✅❓
 61914 Robles, Leandro Gonzalo        17   ✅✅🟢✅✅❓
