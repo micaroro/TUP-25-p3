@@ -18,15 +18,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Configuración de CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                            policy =>
-                            {
-                                policy.AllowAnyOrigin()
-                                    .AllowAnyHeader()
-                                    .AllowAnyMethod();
-                            });
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowClientApp", policy => {
+        policy.WithOrigins("http://localhost:5177", "https://localhost:7221")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 

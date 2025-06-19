@@ -156,6 +156,9 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61053 Matas Molina, Agustín          32   ✅✅🟢✅✅🟢
 61122 Molina Hernando, Nahuel        32   ✅✅🟢✅✅🟢
 62136 Muse, Alejandro                30   ✅✅🟢✅✅🟢
+61050 Diaz Sánchez, Nelson Santiago  34   ✅✅🟢✅✅🟢
+61328 Moussa Cancino, Mario Matias   29   ✅✅🟢✅✅🟢
+61051 Diaz, Agustin Emanuel          26   ✅✅🟢✅✅🟢
 
 ```
 
@@ -177,13 +180,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 61673 Delgado, Augusto Emanuel       21   ✅✅🟢✅❓🟡
       no funciona, no muestra productos
-
-61051 Diaz, Agustin Emanuel          26   ✅✅🟢✅✅🟡
-      no actualiza stock,
-
-61050 Diaz Sánchez, Nelson Santiago  34   ✅✅🟢✅✅🟡
-      no tiene forma de volver al catalogo, no actualiza stock
-
 
 
 61540 Garcia Mc Guiness, Gonzalo     31   ✅✅🟢✅✅🟡
@@ -232,8 +228,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 ## Alumnos que deben corregir 
 ```
-61328 Moussa Cancino, Mario Matias   29   ✅✅🟢✅✅🔴
-      internal server error
 
 61496 Parache, Ariana Agustina       30   ✅✅🟢❓❓🔴
       The entity type 'ItemCarrito' requires a primary key to be defined
