@@ -147,6 +147,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 62104 Robledo, Juan Gerardo          31   ✅✅🟢✅✅🟢
 61340 Tognalli, Mateo Fabrizio       33   ✅✅🟢✅✅🟢
 61988 Villada, Guillermo Nicolás     23   ✅✅🟢❓✅🟢
+61962 Robledo, Rocio Micaela         15   ✅✅🟢❓✅🟢
 
 ```
 
@@ -243,15 +244,14 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61496 Parache, Ariana Agustina       30   ✅✅🟢❓❓🔴
       The entity type 'ItemCarrito' requires a primary key to be defined
 
-61962 Robledo, Rocio Micaela         15   ✅✅🟢❓✅🔴
-      'Layout' no existe en el espacio de nombres 'Cliente'
+61912 Nuñez, Arturo Valentin         22   ✅✅🟢❓❓❓
+      Pide campos adicionales al confirmar la compra, No limpia el carrito al confirmar la compra
 ```
 
 ## Alumnos que no presentaron
 ```
 61252 Aguirre Rojas, Lourdes Valenti 24   ✅✅🟢❓❓❓
 61226 Luna, Andres Maximiliano       30   ✅✅🟢✅✅❓
-61912 Nuñez, Arturo Valentin         22   ✅✅🟢❓❓❓
 61140 Perez, Fernando Alberto        23   ✅✅🟢❓✅❓
 61052 Reynoso, Braian Nicolás        34   ✅✅🟢✅✅❓
 61914 Robles, Leandro Gonzalo        17   ✅✅🟢✅✅❓
