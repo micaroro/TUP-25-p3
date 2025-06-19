@@ -159,6 +159,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61050 Diaz Sánchez, Nelson Santiago  34   ✅✅🟢✅✅🟢
 61328 Moussa Cancino, Mario Matias   29   ✅✅🟢✅✅🟢
 61051 Diaz, Agustin Emanuel          26   ✅✅🟢✅✅🟢
+61611 Coronel, Julieta Antonella     26   ✅✅🟢✅✅🟢
+61345 Caro, Tobias                   22   ✅✅🟢✅✅🟢
 
 ```
 
@@ -172,11 +174,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61314 Morales, Ignacio Agustin      24   ✅✅🟢✅✅🟡
       debe ir directamente al catalogo, no controla stock en el carrito
 
-61345 Caro, Tobias                   22   ✅✅🟢✅✅🟡
-      no actualiza stock
-
-61611 Coronel, Julieta Antonella     26   ✅✅🟢✅✅🟡
-      no actualiza stock, mejorar presentacion
 
 61673 Delgado, Augusto Emanuel       21   ✅✅🟢✅❓🟡
       no funciona, no muestra productos
@@ -210,7 +207,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
       no actualiza stock, no controla stock, me da mensaje al confimar
 
 61732 Paz, Mikael                    24   ✅✅🟢✅✅🟡
-      no funciona, no muestra productos
+      Cuando agrega al carrito reinicia la cantidad, no actualiza el stock al agregar, no controla el stock
 
 61125 Rocha, Luca                    31   ✅✅🟢✅✅🟡
       no muestra imagen, no agrega al carrito, doble navegacion, ir al catalogo directamente
