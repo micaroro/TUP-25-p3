@@ -91,28 +91,25 @@ namespace cliente.Services
         {
             try
             {
-                Console.WriteLine($"[API] Añadiendo al carrito ID: {cartId} | Artículo ID: {articuloId} | Cantidad: {cantidad}");
 
-                var response = await _httpClient.PutAsync($"carritos/{cartId}/anadir/{articuloId}?cantidadSolicitada={cantidad}", null);
-                var content = await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.PutAsync(
+                    $"carritos/{cartId}/anadir/{articuloId}?cantidadSolicitada={cantidad}", null
+                );
 
-                Console.WriteLine($"[API] Estado respuesta: {response.StatusCode}");
-                Console.WriteLine($"[API] Contenido recibido: {content}");
 
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorResponse = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-                    if (errorResponse != null && errorResponse.TryGetValue("error", out var errorMessage))
+
+                    if (errorResponse != null && errorResponse.TryGetValue("error", out var errorMsg))
                     {
-                        Console.WriteLine($"Mensaje de error del backend: {errorMessage}");
-                        throw new Exception(errorMessage);
+                        throw new Exception(errorMsg);
                     }
 
-                    throw new HttpRequestException($"La petición no fue exitosa: {response.StatusCode}");
+                    throw new HttpRequestException($"Fallo al añadir item: {response.StatusCode}");
                 }
 
                 var nuevosItems = await response.Content.ReadFromJsonAsync<List<DetalleCarritoMemoria>>();
-                Console.WriteLine($"[API] Ítems recibidos tras añadir: {nuevosItems?.Count}");
 
                 if (nuevosItems != null)
                 {
@@ -123,10 +120,13 @@ namespace cliente.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[API] Error: {ex.Message}");
-                return false;
+
+                Console.WriteLine($"[API] Error al añadir al carrito: {ex.Message}");
+                throw;
             }
         }
+
+
 
 
 
