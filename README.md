@@ -30,6 +30,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 ```
 61200 Gauna Serrano, Martín Javier   32   ✅✅🟢❓❓🟢
 61450 Jiménez Paz, Patricio Agustín  33   ✅✅🟢✅✅🟢
+62263  Orellana, José Augusto        30   ✅✅🟢✅✅🟢
+
 ```
 
 ## Alumnos que deben recuperar
