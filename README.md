@@ -146,16 +146,21 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61064 Racedo, Francisco Nicolas      33   ✅✅🟢✅✅🟢
 62104 Robledo, Juan Gerardo          31   ✅✅🟢✅✅🟢
 61340 Tognalli, Mateo Fabrizio       33   ✅✅🟢✅✅🟢
-61988 Villada, Guillermo Nicolás     23   ✅✅🟢❓✅🟢
+61988 Villada, Guillermo Nicolás     23   ✅✅🟢✅✅🟢
 61962 Robledo, Rocio Micaela         15   ✅✅🟢❓✅🟢
+61680 Dziewulski, Karen              33   ✅✅🟢✅✅🟢
+61535 Mainardi, Facundo              32   ✅✅🟢✅✅🟢
+61652 Heredia, Juan Pablo            29   ✅✅🟢✅✅🟢
+61491 Acuña, Alejo Gabriel           33   ✅✅🟢✅✅🟢
+61060 Fioretti, Elian Enrique        28   ✅✅🟢✅✅🟢
+61053 Matas Molina, Agustín          32   ✅✅🟢✅✅🟢
+
 
 ```
 
 ## Alumnos que deben recuperar
 ```
 
-61491 Acuña, Alejo Gabriel           33   ✅✅🟢✅✅🟡
-      No actualiza el stock, no permite volver al catalogo
 
 61189 Buzza, Juliana                 24   ✅✅🟢✅✅🟡
       solo funciona una vez, al confirmar carrito deja de funcionar
@@ -178,11 +183,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61050 Diaz Sánchez, Nelson Santiago  34   ✅✅🟢✅✅🟡
       no tiene forma de volver al catalogo, no actualiza stock
 
-61680 Dziewulski, Karen              33   ✅✅🟢✅✅🟡
-      me da error al confirmar la compra, no actualiza stock, ni controla el stock
 
-61060 Fioretti, Elian Enrique        28   ✅✅🟢✅✅🟡
-      no actualiza stock al agregar al carrito, estetica muy cuidada
 
 61540 Garcia Mc Guiness, Gonzalo     31   ✅✅🟢✅✅🟡
       no muestra imagen de producto, no actualiza stock
@@ -190,20 +191,14 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61042 Gonzalez, Luis David           31   ✅✅🟢✅✅🟡
       no tiene imagenes, no actualiza stock, en el carrito no controla stock
 
-61652 Heredia, Juan Pablo            29   ✅✅🟢✅✅🟡
-      no actualiza stock, al agregar al carrito no incrementa la cantidad
 
 61218 Liendo, Lautaro                31   ✅✅🟢✅✅🟡
       no tiene imagen, no va al carrito al comprar, me dice
 
-61535 Mainardi, Facundo              32   ✅✅🟢✅✅🟡
-      no actualiza stock
 
 61905 Martinez, Augusto              23   ✅❓🟢✅❓🟡
       no muestra imagenes, no confirma compra
 
-61053 Matas Molina, Agustín          32   ✅✅🟢✅✅🟡
-      no actualiza stock, no vacia el carrito al confirmar la compra
 
 61848 Mazza Leon, Fabrizio Lautaro   33   ✅✅🟢✅✅🟡
       sacar la cantidad a agregar en el catalogo, poner botones de "+" y "-" en el carrito, no actualiza el stock
@@ -234,6 +229,10 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 61227 Valdiglesias Martel, Federico  34   ✅✅🟢✅✅🟡
       cuando confirma no vuelve al catalogo, no carga toda las imagenes
+
+61912 Nuñez, Arturo Valentin         22   ✅✅🟢✅✅🟡
+      Pide campos adicionales al confirmar la compra, No limpia el carrito al confirmar la compra
+
 ```
 
 ## Alumnos que deben corregir 
@@ -244,8 +243,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61496 Parache, Ariana Agustina       30   ✅✅🟢❓❓🔴
       The entity type 'ItemCarrito' requires a primary key to be defined
 
-61912 Nuñez, Arturo Valentin         22   ✅✅🟢❓❓❓
-      Pide campos adicionales al confirmar la compra, No limpia el carrito al confirmar la compra
 ```
 
 ## Alumnos que no presentaron
