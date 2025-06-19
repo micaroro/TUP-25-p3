@@ -154,7 +154,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61491 Acuña, Alejo Gabriel           33   ✅✅🟢✅✅🟢
 61060 Fioretti, Elian Enrique        28   ✅✅🟢✅✅🟢
 61053 Matas Molina, Agustín          32   ✅✅🟢✅✅🟢
-
+61122 Molina Hernando, Nahuel        32   ✅✅🟢✅✅🟢
+62136 Muse, Alejandro                30   ✅✅🟢✅✅🟢
 
 ```
 
@@ -206,14 +207,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61048 Medina, Luciano                26   ✅✅🟢✅✅🟡
       muestra las imagenes
 
-61122 Molina Hernando, Nahuel        32   ✅✅🟢✅✅🟡
-      verifica mal al tratar de confirmar la compra
-
-62136 Muse, Alejandro                30   ✅✅🟢✅✅🟡
-      ir directamente al catalogo, no actualiza stock, no verifica el stock, no permite confirmar pedido
-
 61985 Orqueda, Francisco Nicolás     25   ✅✅🟢✅✅🟡
-      no actualiza stock
+      Reinicia la cantidad en el carrito al agregar un producto desde el catolog, deberia incrementar la cantidad
 
 61644 Ortega, Fernando Nicolas       35   ✅✅🟢✅✅🟡
       no actualiza stock, no controla stock, me da mensaje al confimar
