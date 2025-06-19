@@ -210,7 +210,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
       no actualiza stock, no vacia el carrito al confirmar la compra
 
 61848 Mazza Leon, Fabrizio Lautaro   33   ✅✅🟢✅✅🟡
-      no actualiza el stock
+      sacar la cantidad a agregar en el catalogo, poner botones de "+" y "-" en el carrito, no actualiza el stock
 
 61048 Medina, Luciano                26   ✅✅🟢✅✅🟡
       muestra las imagenes
