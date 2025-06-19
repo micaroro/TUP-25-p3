@@ -24,9 +24,9 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Id = 1,
                     Nombre = "Zapatillas Adidas Gazelle Bold",
                     Descripcion = "Diseño rosa con verde. Plataforma triple y gamuza supersuave para un estilo clásico renovado.",
-                    Precio = 15000,
+                    Precio = 150000,
                     Stock = 50,
-                    ImagenUrl = "img/zapa1.jpg"
+                    ImagenUrl = "zapa1.jpg.webp"
                 },
                 new Producto
                 {
@@ -35,7 +35,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Verde y rosa vibrantes. Las adidas London Green Pink están inspiradas en la colaboración Gucci x Gazelle.",
                     Precio = 250000,
                     Stock = 30,
-                    ImagenUrl = "img/zapa2.jpg"
+                    ImagenUrl = "zapa2.jpg.webp"
                 },
                 new Producto
                 {
@@ -44,25 +44,25 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Modelo clásico de los 80. Rosa vibrante con esencia futbolera británica.",
                     Precio = 185000,
                     Stock = 30,
-                    ImagenUrl = "img/zapa3.jpg"
+                    ImagenUrl = "zapa3.jpg.webp"
                 },
                 new Producto
                 {
                     Id = 4,
                     Nombre = "Zapatillas Nike Air Max",
                     Descripcion = "Comodidad y estilo para correr con tecnología Air Max.",
-                    Precio = 20000,
+                    Precio = 200000,
                     Stock = 40,
-                    ImagenUrl = "img/zapa4.jpg"
+                    ImagenUrl = "zapa4.jpg.webp"
                 },
                 new Producto
                 {
                     Id = 5,
-                    Nombre = "Zapatilla Dc",
+                    Nombre = "Zapatillas DC Pink Breeze",
                     Descripcion = "Diseño retro con comodidad moderna.",
                     Precio = 180000,
                     Stock = 35,
-                    ImagenUrl = "img/zapa5.jpg"
+                    ImagenUrl = "zapa5.jpg.webp"
                 },
                 new Producto
                 {
@@ -71,7 +71,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Estilo clásico y comodidad todo el día.",
                     Precio = 220000,
                     Stock = 45,
-                    ImagenUrl = "img/zapa6.jpg"
+                    ImagenUrl = "zapa6.jpg.webp"
                 },
                 new Producto
                 {
@@ -80,7 +80,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Perfectas para correr largas distancias con soporte extra.",
                     Precio = 270000,
                     Stock = 25,
-                    ImagenUrl = "img/zapa7.jpg"
+                    ImagenUrl = "zapa7.jpg.webp"
                 },
                 new Producto
                 {
@@ -89,7 +89,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Clásicas y atemporales, con estilo urbano.",
                     Precio = 140000,
                     Stock = 50,
-                    ImagenUrl = "img/zapa8.jpg"
+                    ImagenUrl = "zapa8.jpg.webp"
                 },
                 new Producto
                 {
@@ -98,7 +98,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Diseño icónico para uso casual y skateboarding.",
                     Precio = 160000,
                     Stock = 40,
-                    ImagenUrl = "img/zapa9.jpg"
+                    ImagenUrl = "zapa9.jpg.webp"
                 },
                 new Producto
                 {
@@ -107,7 +107,7 @@ public DbSet<ItemCarrito> ItemsCarrito => Set<ItemCarrito>();
                     Descripcion = "Comodidad y estilo para uso diario y entrenamiento.",
                     Precio = 190000,
                     Stock = 30,
-                    ImagenUrl = "img/zapa10.jpg"
+                    ImagenUrl = "zapa10.jpg.jpg"
                 }
             );
         }

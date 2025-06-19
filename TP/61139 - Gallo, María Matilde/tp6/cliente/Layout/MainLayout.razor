@@ -1,4 +1,64 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
+﻿@using cliente.Services
+@inject ApiService ApiService
+@inject CarritoService CarritoService
+@inject NavigationManager NavigationManager
+@inherits LayoutComponentBase
+@implements IDisposable
+
+<header class="cabecera">
+    <div class="logo-nombre">
+        <img src="icon-192.png" alt="Logo" class="logo" />
+        <a href="/" class="titulo-sitio">MG Shoes</a>
+    </div>
+
+    <div class="buscador-wrapper">
+        <input
+            type="text"
+            placeholder="Buscar productos..."
+            @bind="terminoBusqueda"
+            @bind:event="oninput"
+            class="buscador" />
+        <button class="btn-buscar" @onclick="Buscar">Buscar</button>
+    </div>
+
+    <div class="carrito-icono" style="cursor:pointer" @onclick="IrAlCarrito">
+        🛒 <span>@CantidadEnCarrito</span>
+    </div>
+</header>
+
+<main class="contenido">
     @Body
-</div>
+</main>
+
+@code {
+    private int CantidadEnCarrito => CarritoService.Items.Sum(p => p.Cantidad);
+
+    private string terminoBusqueda = "";
+
+    private void Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(terminoBusqueda))
+        {
+            NavigationManager.NavigateTo($"/?buscar={terminoBusqueda}");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private void IrAlCarrito()
+    {
+        NavigationManager.NavigateTo("/carrito");
+    }
+
+    protected override void OnInitialized()
+    {
+        CarritoService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarritoService.OnChange -= StateHasChanged;
+    }
+}

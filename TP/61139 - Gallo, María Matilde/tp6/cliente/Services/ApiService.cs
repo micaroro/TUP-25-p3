@@ -1,3 +1,4 @@
+using cliente.Modelos;
 using System.Net.Http.Json;
 
 namespace cliente.Services;
