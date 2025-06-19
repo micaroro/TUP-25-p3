@@ -31,6 +31,13 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61200 Gauna Serrano, Martín Javier   32   ✅✅🟢❓❓🟢
 61450 Jiménez Paz, Patricio Agustín  33   ✅✅🟢✅✅🟢
 62263  Orellana, José Augusto        30   ✅✅🟢✅✅🟢
+61626 Diaz Londero, Sergio Gonzalo   27   ✅✅🟢✅✅🟢
+61473 Lagoria García, Tomás Gustavo  30   ✅✅🟢✅✅🟢
+61129 Tello, Abril María Agostina    33   ✅✅🟢✅✅🟢
+61032 Moya, Mariano                  24   ✅✅🟢✅✅🟢
+62555 Verón, Matias Gabriel          27   ✅✅🟢✅✅🟢
+
+
 
 ```
 
@@ -42,8 +49,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 62055 Ahumada, Aiquén                34   ✅✅🟢✅✅🟡
       no descuenta stock al agregar al carrito
 
-61626 Diaz Londero, Sergio Gonzalo   27   ✅✅🟢✅✅🟡
-      debe mostrar directamente la lista de productos, no descuenta stock
 
 61271 Donelli, Gerardo Exequiel      34   ✅✅🟢✅✅🟡
       no descuenta stock, pesima presentacion
@@ -57,9 +62,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61627 Juárez Fernández, Lourdes Abril35   ✅✅🟢✅✅🟡
       no descuenta stock, no controla stock, no permite volver al catalogo
 
-61473 Lagoria García, Tomás Gustavo  30   ✅✅🟢✅✅🟡
-      no inicia en home, muestra alert, el subtotal dice '3100.0.ToString("C")'
-
 61794 Lobo Campero, Hernán Ignacio   23   ✅✅🟢✅✅🟡
       No descuenta stock, al agregar al carrito comienza de 1.
 
@@ -71,9 +73,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 61676 Massey, Maximiliano            32   ✅✅🟢✅✅🟡
       no muestra productos al iniciar, no descuenta stock, no controla stock
-
-61032 Moya, Mariano                  24   ✅✅🟢✅✅🟡
-      no descuenta stock al agregar al carrito
 
 61037 Paz, Rodrigo Federico          30   ✅✅🟢✅✅🟡
       no controla stock en el carrito.
@@ -87,11 +86,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61478 Soto, Antonella                29   ✅✅🟢✅✅🟡
       no agrega al carrito
 
-61129 Tello, Abril María Agostina    33   ✅✅🟢✅✅🟡
-      no actualiza stock
-
-62555 Verón, Matias Gabriel          27   ✅✅🟢✅✅🟡
-      al agregar al carrito lo reinicia (debe acumular la cantidad)
 ```
 
 ## Alumnos que deben corregir
@@ -114,8 +108,8 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61096 Suarez Vece, Leandro Andres    31   ✅✅🟢✅✅🔴
       El espacio de nombres 'Servidor.Models' ya contiene una definición para 'Producto'
 
-61793 Trujillo, Facundo Nahuel       35   ✅✅🟢✅✅🔴
-      'ApiService' no se encontró
+61793 Trujillo, Facundo Nahuel       35   ✅✅🟢✅✅🟡
+      Cuanto agrega al carrito reinicia la cantidad.
 ```
 
 ## Alumnos que no presentaron
