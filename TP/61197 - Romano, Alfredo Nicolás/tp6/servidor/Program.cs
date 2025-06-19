@@ -67,8 +67,6 @@ using (var scope = app.Services.CreateScope())
 // Mapear rutas básicas
 app.MapGet("/", () => "Servidor API está en funcionamiento");
 
-// Carritos en memoria (por usuario/carritoId)
-var carritos = new Dictionary<string, List<(int productoId, int cantidad)>>();
 
 // Endpoint para obtener productos
 app.MapGet("/productos", async ([FromServices] TiendaContext db, [FromQuery] string? q) =>
@@ -237,11 +235,21 @@ app.MapDelete("/carritos/{carrito}/{producto}", async ([FromRoute] string carrit
 var carritos = new Dictionary<string, List<(int productoId, int cantidad)>>();
 
 // POST /carritos (inicializa un carrito)
-app.MapPost("/carritos", () =>
+app.MapPost("/carritos", (TiendaContext db) =>
 {
-    var carritoId = Guid.NewGuid().ToString();
-    carritos[carritoId] = new List<(int, int)>();
-    return Results.Ok(new { carritoId });
+    var compra = new Compra
+    {
+        Fecha = DateTime.UtcNow,
+        Total = 0, // Inicialmente 0, se actualizará al confirmar la compra
+        NombreCliente = "",
+        ApellidoCliente = "",
+        EmailCliente = "",
+        Items = new List<Item>()
+    };
+    db.Compras.Add(compra);
+    db.SaveChanges();
+    db.Compras.Update(compra);
+    return Results.Ok(new { carritoId = compra.Id });
 });
 
 // GET /carritos/{carrito}
