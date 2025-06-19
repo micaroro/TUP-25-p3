@@ -47,7 +47,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 62055 Ahumada, Aiquén                34   ✅✅🟢✅✅🟡
       no descuenta stock al agregar al carrito
 
-
 61271 Donelli, Gerardo Exequiel      34   ✅✅🟢✅✅🟡
       no descuenta stock, pesima presentacion
 
@@ -83,7 +82,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 61478 Soto, Antonella                29   ✅✅🟢✅✅🟡
       no agrega al carrito
-
 ```
 
 ## Alumnos que deben corregir
@@ -161,6 +159,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61051 Diaz, Agustin Emanuel          26   ✅✅🟢✅✅🟢
 61611 Coronel, Julieta Antonella     26   ✅✅🟢✅✅🟢
 61345 Caro, Tobias                   22   ✅✅🟢✅✅🟢
+61673 Delgado, Augusto Emanuel       21   ✅✅🟢✅✅🟢
 
 ```
 
@@ -174,25 +173,17 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61314 Morales, Ignacio Agustin      24   ✅✅🟢✅✅🟡
       debe ir directamente al catalogo, no controla stock en el carrito
 
-
-61673 Delgado, Augusto Emanuel       21   ✅✅🟢✅❓🟡
-      no funciona, no muestra productos
-
-
 61540 Garcia Mc Guiness, Gonzalo     31   ✅✅🟢✅✅🟡
       no muestra imagen de producto, no actualiza stock
 
 61042 Gonzalez, Luis David           31   ✅✅🟢✅✅🟡
       no tiene imagenes, no actualiza stock, en el carrito no controla stock
 
-
 61218 Liendo, Lautaro                31   ✅✅🟢✅✅🟡
       no tiene imagen, no va al carrito al comprar, me dice
 
-
 61905 Martinez, Augusto              23   ✅❓🟢✅❓🟡
       no muestra imagenes, no confirma compra
-
 
 61848 Mazza Leon, Fabrizio Lautaro   33   ✅✅🟢✅✅🟡
       sacar la cantidad a agregar en el catalogo, poner botones de "+" y "-" en el carrito, no actualiza el stock
@@ -220,18 +211,15 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 
 61912 Nuñez, Arturo Valentin         22   ✅✅🟢✅✅🟡
       Pide campos adicionales al confirmar la compra, No limpia el carrito al confirmar la compra
-
 ```
 
 ## Alumnos que deben corregir 
 ```
-
 61496 Parache, Ariana Agustina       30   ✅✅🟢❓❓🔴
       The entity type 'ItemCarrito' requires a primary key to be defined
 
 61226 Luna, Andres Maximiliano       30   ✅✅🟢✅✅🟡
       Se rompe la presentacion esta mal bootstrap.min.css, no poner la posibilidad de elegiar cuanto agrega el carrito, al contola el stock a agregar.
-
 ```
 
 ## Alumnos que no presentaron
