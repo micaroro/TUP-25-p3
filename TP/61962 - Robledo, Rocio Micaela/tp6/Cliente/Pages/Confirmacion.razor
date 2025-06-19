@@ -1,11 +1,12 @@
 @page "/confirmacion"                         
 
 @using Cliente.Models                         
+@using Microsoft.AspNetCore.Components.Forms
 
-@inject HttpClient Http                    
-@inject NavigationManager Nav              
-@inject IJSRuntime JS                        
-@inject CarritoService CarritoSrv            
+@inject HttpClient Http                   
+@inject NavigationManager Nav             
+@inject IJSRuntime JS                       
+@inject CarritoService CarritoSrv           
 
 <h3>🧾 Confirmación de Compra</h3>
 
@@ -35,15 +36,15 @@ else
 
         <div class="mb-3">
             <label class="form-label">Nombre:</label>
-            <InputText @bind-Value="formulario.NombreCliente" class="form-control" />
+            <InputText @bind="formulario.NombreCliente" class="form-control" />
         </div>
         <div class="mb-3">
             <label class="form-label">Apellido:</label>
-            <InputText @bind-Value="formulario.ApellidoCliente" class="form-control" />
+            <InputText @bind="formulario.ApellidoCliente" class="form-control" />
         </div>
         <div class="mb-3">
             <label class="form-label">Email:</label>
-            <InputText @bind-Value="formulario.EmailCliente" class="form-control" />
+            <InputText @bind="formulario.EmailCliente" class="form-control" />
         </div>
 
         <button type="submit" class="btn btn-success">Confirmar compra</button>

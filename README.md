@@ -36,9 +36,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61129 Tello, Abril María Agostina    33   ✅✅🟢✅✅🟢
 61032 Moya, Mariano                  24   ✅✅🟢✅✅🟢
 62555 Verón, Matias Gabriel          27   ✅✅🟢✅✅🟢
-
-
-
+61688 García Romano, Lucas           33   ✅✅🟢✅✅🟢
 ```
 
 ## Alumnos que deben recuperar
@@ -188,9 +186,6 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61540 Garcia Mc Guiness, Gonzalo     31   ✅✅🟢✅✅🟡
       no muestra imagen de producto, no actualiza stock
 
-61688 García Romano, Lucas           33   ✅✅🟢✅✅🟡
-      no realiza busqueda, no actualiza stock
-
 61042 Gonzalez, Luis David           31   ✅✅🟢✅✅🟡
       no tiene imagenes, no actualiza stock, en el carrito no controla stock
 
@@ -216,7 +211,7 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
       muestra las imagenes
 
 61122 Molina Hernando, Nahuel        32   ✅✅🟢✅✅🟡
-      no agrega al carrito
+      verifica mal al tratar de confirmar la compra
 
 62136 Muse, Alejandro                30   ✅✅🟢✅✅🟡
       ir directamente al catalogo, no actualiza stock, no verifica el stock, no permite confirmar pedido
