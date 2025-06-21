@@ -1,0 +1,101 @@
+@page "/carrito"
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h1>Carrito de Compra</h1>
+
+@if (mostrarMensaje)
+{
+    <div class="alert alert-success">
+        <p>Gracias por su compra</p>
+        <button class="btn btn-primary" @onclick="RedirigirInicio">OK</button>
+    </div>
+}
+else if (items.Count == 0)
+{
+    <p>Carrito vacío.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.ProductoId</td>
+                    <td>$@item.PrecioUnitario</td>
+                    <td>@item.Cantidad</td>
+                    <td>$@(item.PrecioUnitario * item.Cantidad)</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" @onclick="() => RestarCantidad(item.ProductoId)">−</button>
+                        <button class="btn btn-sm btn-success" @onclick="() => SumarCantidad(item.ProductoId)">+</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p><strong>Total ítems:</strong> @items.Sum(i => i.Cantidad)</p>
+    <p><strong>Importe total:</strong> $@items.Sum(i => i.Cantidad * i.PrecioUnitario)</p>
+
+    <button class="btn btn-danger" @onclick="ConfirmPurchase">Confirmar Compra</button>
+    <button class="btn btn-secondary" @onclick="VaciarCarrito">Vaciar Carrito</button>
+}
+
+@code {
+    private int carritoId = 1;
+    private List<ItemCompra> items = new();
+    private bool mostrarMensaje = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCarrito();
+    }
+
+    private async Task CargarCarrito()
+    {
+        items = await Http.GetFromJsonAsync<List<ItemCompra>>($"carritos/{carritoId}") ?? new();
+    }
+
+    private async Task SumarCantidad(int productoId)
+    {
+        await Http.PutAsync($"carritos/{carritoId}/agregar/{productoId}", null);
+        await CargarCarrito();
+    }
+
+    private async Task RestarCantidad(int productoId)
+    {
+        await Http.PutAsync($"carritos/{carritoId}/restar/{productoId}", null);
+        await CargarCarrito();
+    }
+
+    private async Task ConfirmPurchase()
+    {
+        await Http.PostAsync($"carritos/{carritoId}/confirmar", null);
+        await Http.DeleteAsync($"carritos/{carritoId}/vaciar");
+        items.Clear();
+        mostrarMensaje = true;
+        StateHasChanged();
+    }
+
+    private void RedirigirInicio()
+    {
+        Nav.NavigateTo("/", forceLoad: true);
+    }
+
+    private async Task VaciarCarrito()
+    {
+        await Http.DeleteAsync($"carritos/{carritoId}/vaciar");
+        items.Clear();
+        StateHasChanged();
+    }
+}
