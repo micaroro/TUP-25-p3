@@ -1,4 +1,74 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    @Body
+﻿@using cliente.Services
+@inherits LayoutComponentBase
+@inject CarritoService CarritoSrv
+
+<div class="layout-container">
+    <nav class="sidebar">
+        <NavLink href="/" class="nav-link" activeClass="active">🏠 Catálogo</NavLink>
+        <NavLink href="/carrito" class="nav-link" activeClass="active">
+            🛒 Carrito
+            @if (CarritoSrv.TotalItems() > 0)
+            {
+                <span class="carrito-contador">@CarritoSrv.TotalItems()</span>
+            }
+        </NavLink>
+    </nav>
+    <main class="main-content">
+        @Body
+    </main>
 </div>
+
+<style>
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+.sidebar {
+    width: 180px;
+    background: #1976d2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 0;
+}
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 18px 24px;
+    font-size: 1.1rem;
+    border-radius: 0 24px 24px 0;
+    margin-bottom: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+.nav-link:hover, .nav-link.active {
+    background: #1565c0;
+    color: #ffeb3b;
+}
+.main-content {
+    flex: 1;
+    padding: 32px 40px;
+    background: #f8fafc;
+}
+.carrito-contador {
+    background: #ff4081;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 0.9em;
+    margin-left: 6px;
+    font-weight: bold;
+}
+</style>
+
+@code {
+    protected override void OnInitialized()
+    {
+        CarritoSrv.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarritoSrv.OnChange -= StateHasChanged;
+    }
+}

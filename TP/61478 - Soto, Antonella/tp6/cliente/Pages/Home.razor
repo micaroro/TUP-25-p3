@@ -1,59 +1,275 @@
 ﻿@page "/"
 @using cliente.Services
-@inject ApiService ApiService
+@using cliente.Models
+@inject ApiService Api
+@inject CarritoService CarritoSrv
+@inject HttpClient Http
 
-<PageTitle>Inicio</PageTitle>
-
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1>Comunicación Cliente-Servidor</h1>
+<div class="main-content">
+    <div class="catalogo-header">
+        <h1>MUNDO MAKEUP</h1>
+        <div class="buscador-box">
+            <input class="buscador"
+                   @bind="busqueda"
+                   @oninput="BuscarEnTiempoReal"
+                   placeholder="Buscar producto…" />
+            <button class="boton-buscar" @onclick="Buscar">Buscar</button>
         </div>
     </div>
-    
-    <div class="row mb-4">
-        <div class="col-12">
-            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor">Obtener datos del servidor</button>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12">            
-            @if (cargando) {
-                <div class="alert alert-info">Cargando datos...</div>
-            } else if (datos != null) {                <div class="card" style="width: 300px;">
-                    <div class="card-header">
-                        Respuesta del servidor
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">@datos.Mensaje</h5>
-                        <p class="card-text">Fecha: @datos.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
-                    </div>
-                </div>
-            } else if (error != null) {
-                <div class="alert alert-danger">
-                    Error: @error
+    @if (productos == null)
+    {
+        <p class="loading">Cargando…</p>
+    }
+    else
+    {
+        <div class="productos-grid">
+            @foreach (var prod in productos)
+            {
+                <div class="producto-card" @key="prod.Id">
+                    <img src="@prod.ImagenUrl" alt="@prod.Nombre" class="producto-img" />
+                    <h2>@prod.Nombre</h2>
+                    <p class="desc">@prod.Descripcion</p>
+                    <p><b>Precio:</b> $@prod.Precio.ToString("N0")</p>
+                    <p>
+    <b>Stock:</b>
+    <span style="color:@(prod.Stock == 0 ? "#e53935" : (prod.Stock <= 3 ? "#ff9800" : "#00B4D8"))">
+        @prod.Stock
+    </span>
+    @(prod.Stock == 0 ? " (Sin stock)" : (prod.Stock <= 3 ? " (¡Pocos!)" : ""))
+</p>
+                    <button class="btn-carrito"
+                            @onclick="() => AgregarAlCarrito(prod, 1)"
+                            disabled="@(prod.Stock <= 0)">
+                        Agregar al carrito
+                    </button>
                 </div>
             }
         </div>
-    </div>
+    }
 </div>
 
 @code {
-    private DatosRespuesta datos;
-    private string error;
-    private bool cargando = false;
+    List<Producto> productos = new();
+    string busqueda = "";
 
-    private async Task ObtenerDatosDelServidor() {
-        try {
-            cargando = true;
-            error = null;
-            datos = await ApiService.ObtenerDatosAsync();
-        } catch (Exception ex) {
-            error = ex.Message;
-            datos = null;
-        } finally {
-            cargando = false;
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await Http.GetFromJsonAsync<List<Producto>>("productos");
+    }
+
+    async Task CargarProductos()
+    {
+        try
+        {
+            productos = await Api.ObtenerProductos(busqueda);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al cargar productos: " + ex.Message);
         }
     }
+
+    async Task Buscar()
+    {
+        await CargarProductos();
+    }
+
+    async Task BuscarEnTiempoReal(ChangeEventArgs e)
+    {
+        busqueda = e.Value?.ToString() ?? "";
+        await CargarProductos();
+    }
+
+    async Task AgregarAlCarrito(Producto prod, int cantidad)
+    {
+        // Buscar si ya está en el carrito
+        var item = CarritoSrv.Items.FirstOrDefault(i => i.ProductoId == prod.Id);
+        int nuevaCantidad = (item?.Cantidad ?? 0) + cantidad;
+
+        await CarritoSrv.Agregar(prod.Id, nuevaCantidad);
+        await CargarProductos(); // refresca el stock en el catálogo
+    }
 }
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #18122B 0%, #393053 100%);
+        color: #f3f3f3;
+    }
+
+    .main-content {
+        padding: 30px;
+    }
+
+    .catalogo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .catalogo-header h1 {
+        font-size: 2rem;
+        color: #A3A3FF;
+        margin: 0;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 8px #7c3aed55;
+    }
+
+    .buscador-box {
+        display: flex;
+        gap: 10px;
+    }
+
+    .buscador {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        border: 1.5px solid #7c3aed;
+        border-radius: 8px;
+        background: #232136;
+        color: #fff;
+        font-size: 1rem;
+        transition: border 0.2s;
+    }
+
+    .buscador:focus {
+        outline: none;
+        border-color: #00B4D8;
+        background: #18122B;
+    }
+
+    .boton-buscar {
+        height: 35px;
+        padding: 0 18px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #7c3aed 60%, #00B4D8 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #7c3aed33;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .boton-buscar:hover {
+        background: linear-gradient(90deg, #5b21b6 60%, #0096c7 100%);
+        box-shadow: 0 4px 16px #00B4D855;
+    }
+
+    .loading {
+        text-align: center;
+        margin: 40px 0;
+        font-size: 1.1rem;
+        color: #A3A3FF;
+    }
+
+    .productos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 32px;
+        justify-items: center;
+        align-items: stretch;
+    }
+
+    .producto-card {
+        background: linear-gradient(135deg, #232136 60%, #393053 100%);
+        border-radius: 18px;
+        box-shadow: 0 2px 16px #7c3aed33;
+        padding: 22px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow 0.2s, transform 0.2s;
+        width: 100%;
+        max-width: 370px;
+        box-sizing: border-box;
+        border: 1.5px solid #7c3aed55;
+    }
+
+    .producto-card:hover {
+        box-shadow: 0 6px 24px #00B4D855;
+        transform: translateY(-4px) scale(1.03);
+        border-color: #00B4D8;
+    }
+
+    .producto-img {
+        width: 180px;
+        height: 160px;
+        object-fit: contain;
+        margin-bottom: 14px;
+        background: #18122B;
+        border-radius: 10px;
+        border: 2px solid #7c3aed33;
+        box-shadow: 0 2px 8px #7c3aed22;
+    }
+
+    .producto-card h2 {
+        font-size: 1.15rem;
+        margin: 0 0 6px;
+        font-weight: 600;
+        color: #A3A3FF;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    .desc {
+        font-size: 0.97rem;
+        color: #bdbdfc;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .producto-card p {
+        margin: 3px 0;
+        font-size: 0.95rem;
+        color: #f3f3f3;
+    }
+
+    .btn-carrito {
+        margin-top: 18px;
+        width: 100%;
+        height: 44px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #7c3aed 60%, #00B4D8 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #7c3aed33;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-carrito:hover:enabled {
+        background: linear-gradient(90deg, #5b21b6 60%, #0096c7 100%);
+        box-shadow: 0 4px 16px #00B4D855;
+    }
+
+    .btn-carrito:disabled {
+        background: #393053;
+        color: #aaa;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    /* Stock colores */
+    .producto-card .stock-bajo {
+        color: #ff9800;
+        font-weight: bold;
+    }
+    .producto-card .stock-cero {
+        color: #e53935;
+        font-weight: bold;
+    }
+    .producto-card .stock-normal {
+        color: #00B4D8;
+        font-weight: bold;
+    }
+</style>

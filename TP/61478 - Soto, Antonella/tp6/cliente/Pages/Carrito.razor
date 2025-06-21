@@ -1,0 +1,357 @@
+@page "/carrito"
+@using cliente.Services
+@using cliente.Models
+@inject CarritoService CarritoSrv
+@inject NavigationManager Navigation
+
+<div class="carrito-container">
+    <div class="carrito-main">
+        <a href="/" class="btn-volver">← Volver al catálogo</a>
+        <h2>🛒 Carrito de compras</h2>
+        @if (items == null || items.Count == 0)
+        {
+            <p class="carrito-vacio">Tu carrito está vacío.</p>
+        }
+        else
+        {
+            <table class="carrito-tabla">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td><img src="@item.ImagenUrl" class="carrito-img" /></td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Precio.ToString("")</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary me-1"
+                                        @onclick="() => CambiarCantidad(item, cantidades[item.ProductoId] - 1)"
+                                        disabled="@(cantidades[item.ProductoId] <= 1)">−</button>
+                                <span style="margin: 0 8px;">@cantidades[item.ProductoId]</span>
+                                <button class="btn btn-sm btn-secondary me-2"
+                                        @onclick="() => CambiarCantidad(item, cantidades[item.ProductoId] + 1)"
+                                        disabled="@(cantidades[item.ProductoId] >= (item.Producto.Stock + cantidades[item.ProductoId]))">+</button>
+                                <div class="text-danger small" style="min-height: 1.2em;">
+                                    @if (errores.ContainsKey(item.ProductoId))
+                                    {
+                                        <span>@errores[item.ProductoId]</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                $@( (item.Precio * cantidades[item.ProductoId]).ToString("N0") )
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger ms-2"
+                                        @onclick="() => QuitarDelCarrito(item)">
+                                    Quitar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="carrito-resumen">
+        <div class="resumen-box">
+            <h3>Total: $@TotalImporte()</h3>
+            <button class="btn-confirmar" @onclick="IrAConfirmar" disabled="@(items == null || items.Count == 0)">Confirmar compra</button>
+            <button class="btn-vaciar" @onclick="VaciarCarrito" disabled="@(items == null || items.Count == 0)">Vaciar carrito</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<ItemCarrito>? items;
+    private Dictionary<int, int> cantidades = new();
+    private Dictionary<int, string> errores = new();
+
+    protected override void OnInitialized()
+    {
+        CargarItems();
+    }
+
+    private void CargarItems()
+    {
+        items = CarritoSrv.Items.ToList();
+        cantidades.Clear();
+        if (items != null)
+        {
+            foreach (var item in items)
+            {
+                cantidades[item.ProductoId] = item.Cantidad;
+            }
+        }
+        StateHasChanged();
+    }
+
+    void IrAConfirmar()
+    {
+        Navigation.NavigateTo("/confirmar");
+    }
+
+    void QuitarDelCarrito(ItemCarrito item)
+    {
+        CarritoSrv.Quitar(item.ProductoId);
+        CargarItems();
+    }
+
+    void VaciarCarrito()
+    {
+        CarritoSrv.Vaciar();
+        CargarItems();
+    }
+
+    void CambiarCantidad(ItemCarrito item, int nuevaCantidad)
+    {
+        if (nuevaCantidad < 1)
+            return;
+
+        ActualizarCantidad(item, nuevaCantidad.ToString());
+    }
+
+    void ActualizarCantidad(ItemCarrito item, string? nuevoValor)
+    {
+        errores.Remove(item.ProductoId);
+
+        if (int.TryParse(nuevoValor, out int nuevaCantidad))
+        {
+            if (nuevaCantidad <= 0)
+            {
+                errores[item.ProductoId] = "La cantidad debe ser mayor a 0.";
+                cantidades[item.ProductoId] = item.Cantidad;
+                StateHasChanged();
+                return;
+            }
+
+            if (nuevaCantidad > item.Producto.Stock)
+            {
+                errores[item.ProductoId] = $"Máximo disponible: {item.Producto.Stock}.";
+                cantidades[item.ProductoId] = item.Producto.Stock;
+                StateHasChanged();
+                return;
+            }
+
+            cantidades[item.ProductoId] = nuevaCantidad;
+            item.Cantidad = nuevaCantidad;
+            // item.Importe eliminado, se calcula en la vista
+
+            // Guardar el cambio en el backend si tu servicio lo requiere
+            CarritoSrv.ActualizarCantidad(item.ProductoId, nuevaCantidad);
+            CargarItems();
+        }
+        else
+        {
+            errores[item.ProductoId] = "Cantidad inválida.";
+            cantidades[item.ProductoId] = item.Cantidad;
+            StateHasChanged();
+        }
+    }
+
+    decimal TotalImporte()
+    {
+        if (items == null) return 0;
+        decimal total = 0;
+        foreach (var item in items)
+        {
+            total += item.Precio * cantidades[item.ProductoId];
+        }
+        return total;
+    }
+}
+
+<style>
+.carrito-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 36px 40px;
+    background: #fff; /* Fondo blanco */
+    min-height: 80vh;
+}
+.carrito-main {
+    flex: 2 1 600px;
+    min-width: 340px;
+}
+.carrito-resumen {
+    flex: 1 1 260px;
+    min-width: 260px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+.resumen-box {
+    background: #f7f7ff;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px #7c3aed22;
+    padding: 28px 22px;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+    border: 1.5px solid #7c3aed33;
+}
+.carrito-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px #7c3aed22;
+}
+.carrito-tabla th, .carrito-tabla td {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    color: #232136;
+}
+.carrito-tabla th {
+    background: linear-gradient(90deg, #7c3aed 60%, #00B4D8 100%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #f7f7ff;
+}
+.carrito-tabla tr:last-child td {
+    border-bottom: none;
+}
+.carrito-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f7f7ff;
+    border: 2px solid #7c3aed22;
+    box-shadow: 0 2px 8px #7c3aed11;
+}
+.btn-quitar, .btn.btn-danger {
+    background: #e53935;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px #e5393533;
+    min-width: 70px;
+    min-height: 36px;
+    display: inline-block;
+}
+.btn-quitar:hover, .btn.btn-danger:hover {
+    background: #b71c1c;
+}
+.btn-confirmar {
+    background: linear-gradient(90deg, #7c3aed 60%, #00B4D8 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1.08rem;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px #7c3aed22;
+}
+.btn-confirmar:disabled {
+    background: #e0e0e0;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.btn-confirmar:hover:enabled {
+    background: linear-gradient(90deg, #5b21b6 60%, #0096c7 100%);
+}
+.btn-vaciar {
+    background: #fff;
+    color: #00B4D8;
+    border: 2px solid #00B4D8;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-vaciar:disabled {
+    color: #bdbdbd;
+    border-color: #bdbdbd;
+    cursor: not-allowed;
+}
+.btn-vaciar:hover:enabled {
+    background: #00B4D8;
+    color: #fff;
+}
+.btn-volver {
+    display: inline-block;
+    margin-bottom: 18px;
+    background: #fff;
+    color: #00B4D8;
+    border: 2px solid #00B4D8;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-volver:hover {
+    background: #00B4D8;
+    color: #fff;
+}
+.carrito-vacio {
+    color: #7c3aed;
+    font-size: 1.1rem;
+    margin: 32px 0;
+}
+.carrito-tabla button {
+    width: 28px;
+    height: 28px;
+    font-size: 1.1em;
+    margin: 0 2px;
+    border-radius: 4px;
+    border: 1px solid #7c3aed33;
+    background: #f7f7ff;
+    color: #7c3aed;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.carrito-tabla button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.input-cantidad {
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid #7c3aed33;
+    border-radius: 4px;
+    margin: 0 4px;
+    background: #fff;
+    color: #232136;
+}
+.resumen-box h3 {
+    color: #7c3aed;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+.text-danger {
+    color: #e53935 !important;
+}
+</style>

@@ -91,6 +91,9 @@ Las personas que les falte presentar prácticos lo pueden presentar y recuperar 
 61679 Lobo Barrera, Mia de los Angele35   ✅✅🟢✅✅🔴
       "Carrito" no contiene una definición para "Items"
 
+61572  Parrado Navarrete, Alex Daniel     ✅✅🟢✅✅🔴
+      no muestra productos, IGUAL que 61579
+
 61579 Marti, Gonzalo                 27   ✅✅🟢✅❓🔴
       no muestra productos, IGUAL que 61572
 

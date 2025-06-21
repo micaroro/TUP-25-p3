@@ -1,0 +1,225 @@
+@page "/confirmar"
+@using System.ComponentModel.DataAnnotations
+@using cliente.Services
+@using cliente.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject CarritoService CarritoSrv
+
+<div class="confirmar-container">
+    <div class="confirmar-card">
+        <h2>🛒 Confirmar compra</h2>
+
+        @if (CarritoSrv.Items == null || CarritoSrv.Items.Count == 0)
+        {
+            <p class="carrito-vacio">El carrito está vacío.</p>
+        }
+        else
+        {
+            <!-- resumen -->
+            <div class="resumen-box">
+                <h4>Resumen de la compra</h4>
+                <ul>
+                    @foreach (var item in CarritoSrv.Items)
+                    {
+                        <li>
+                            <span class="prod-nombre">@item.Nombre</span>
+                            <span class="prod-cant">x @item.Cantidad</span>
+                            <span class="prod-precio">$@(item.Precio * item.Cantidad)</span>
+                        </li>
+                    }
+                </ul>
+                <div class="resumen-total">
+                    <b>Total: $@CarritoSrv.TotalImporte()</b>
+                </div>
+            </div>
+
+            <!-- formulario -->
+            <EditForm Model="@datosCliente" OnValidSubmit="ConfirmarCompra" class="form-confirmar">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-row">
+                    <label>Nombre:</label>
+                    <InputText @bind-Value="datosCliente.Nombre" class="input-confirmar" />
+                </div>
+                <div class="form-row">
+                    <label>Apellido:</label>
+                    <InputText @bind-Value="datosCliente.Apellido" class="input-confirmar" />
+                </div>
+                <div class="form-row">
+                    <label>Email:</label>
+                    <InputText @bind-Value="datosCliente.Email" class="input-confirmar" />
+                </div>
+
+                <button type="submit" class="btn-confirmar">Confirmar compra</button>
+            </EditForm>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <p class="mensaje">@mensaje</p>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    class DatosCliente
+    {
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        public string Nombre { get; set; } = "";
+        [Required(ErrorMessage = "El apellido es obligatorio")]
+        public string Apellido { get; set; } = "";
+        [Required(ErrorMessage = "El email es obligatorio")]
+        [EmailAddress(ErrorMessage = "Email inválido")]
+        public string Email { get; set; } = "";
+    }
+
+    DatosCliente datosCliente = new();
+    string mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarritoSrv.ActualizarItems();
+    }
+
+    async Task ConfirmarCompra()
+    {
+        int carritoId = CarritoSrv.CarritoId;
+
+        var url = $"http://localhost:5184/carritos/{carritoId}/confirmar?nombre={datosCliente.Nombre}&apellido={datosCliente.Apellido}&email={datosCliente.Email}";
+        var response = await Http.PutAsync(url, null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            mensaje = "¡Compra confirmada!";
+            await CarritoSrv.Vaciar();
+            await Task.Delay(1500);
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            var errorMsg = await response.Content.ReadAsStringAsync();
+            mensaje = $"Error al confirmar la compra: {errorMsg}";
+        }
+    }
+}
+
+<style>
+.confirmar-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    background: #fff;
+    padding: 40px 0;
+}
+.confirmar-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px #7c3aed22;
+    padding: 38px 32px 32px 32px;
+    min-width: 340px;
+    max-width: 420px;
+    width: 100%;
+}
+.confirmar-card h2 {
+    margin-bottom: 18px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #7c3aed;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.resumen-box {
+    background: #f7f7ff;
+    border-radius: 10px;
+    padding: 18px 18px 12px 18px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px #7c3aed11;
+    border: 1.5px solid #7c3aed33;
+}
+.resumen-box h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #232136;
+    font-weight: 600;
+}
+.resumen-box ul {
+    list-style: disc inside;
+    padding-left: 0;
+    margin: 0 0 10px 0;
+}
+.resumen-box li {
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+}
+.prod-nombre { font-weight: 500; color: #232136; }
+.prod-cant { color: #00B4D8; margin: 0 8px; }
+.prod-precio { font-weight: 600; color: #7c3aed; }
+.resumen-total {
+    text-align: right;
+    font-size: 1.1rem;
+    margin-top: 8px;
+    color: #00B4D8;
+}
+.form-confirmar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 10px;
+}
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.form-row label {
+    font-size: 1rem;
+    color: #232136;
+    font-weight: 500;
+}
+.input-confirmar {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #7c3aed33;
+    font-size: 1rem;
+    background: #f7f7ff;
+    transition: border 0.2s;
+    color: #232136;
+}
+.input-confirmar:focus {
+    border: 1.5px solid #00B4D8;
+    outline: none;
+}
+.btn-confirmar {
+    margin-top: 10px;
+    padding: 12px 0;
+    border-radius: 7px;
+    border: none;
+    background: linear-gradient(90deg, #7c3aed 60%, #00B4D8 100%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px #7c3aed22;
+}
+.btn-confirmar:hover {
+    background: linear-gradient(90deg, #5b21b6 60%, #0096c7 100%);
+}
+.mensaje {
+    margin-top: 16px;
+    color: #00B4D8;
+    font-weight: 600;
+    text-align: center;
+}
+.carrito-vacio {
+    color: #7c3aed;
+    font-size: 1.1rem;
+    margin: 32px 0;
+}
+</style>
