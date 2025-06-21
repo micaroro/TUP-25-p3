@@ -1,0 +1,126 @@
+@page "/confirmacion"
+@using System.Net.Http.Json
+@using cliente.Modelos
+@using cliente.Services
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject CarritoService CarritoService
+
+<h1>Confirmación de Compra</h1>
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (mensajeExito)
+{
+    <div class="alert alert-success">¡Gracias por tu compra! Serás redirigido al inicio...</div>
+}
+else if (compra == null)
+{
+    <p>Cargando información...</p>
+}
+else
+{
+    <div>
+        <p><strong>Total de Ítems:</strong> @compra.Items.Sum(i => i.Cantidad)</p>
+        <p><strong>Importe Total:</strong> $@compra.Total</p>
+    </div>
+
+    <EditForm Model="compra" OnValidSubmit="OnConfirmar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group mb-3">
+            <label>Nombre</label>
+            <InputText @bind-Value="compra.NombreCliente" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+            <label>Apellido</label>
+            <InputText @bind-Value="compra.ApellidoCliente" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+            <label>Email</label>
+            <InputText @bind-Value="compra.EmailCliente" type="email" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Confirmar Compra</button>
+    </EditForm>
+}
+
+@code {
+    private Compra compra;
+    private string error;
+    private bool mensajeExito = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await CarritoService.IncializarAsync();
+            var carritoId = await CarritoService.ObtenerCarritoIdActual();
+
+            var response = await Http.GetAsync($"http://localhost:5184/carritos/{carritoId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                error = $"Error al obtener el carrito. Código: {response.StatusCode}";
+                return;
+            }
+
+            var carrito = await response.Content.ReadFromJsonAsync<CarritoModel>();
+            if (carrito == null || !carrito.Items.Any())
+            {
+                error = "El carrito está vacío.";
+                return;
+            }
+
+            compra = new Compra
+            {
+                Items = carrito.Items.Select(i => new ItemCompra
+                {
+                    ProductoId = i.Producto.Id,
+                    Cantidad = i.Cantidad,
+                    PrecioUnitario = i.Producto.Precio,
+                    Productos = i.Producto
+                }).ToList(),
+                Total = carrito.Items.Sum(i => i.Cantidad * i.Producto.Precio),
+                Fecha = DateTime.Now
+            };
+        }
+        catch (Exception ex)
+        {
+            error = $"Ocurrió un error inesperado: {ex.Message}";
+        }
+    }
+
+    private async Task OnConfirmar()
+    {
+        try
+        {
+            var carritoId = await CarritoService.ObtenerCarritoIdActual();
+            var response = await Http.PutAsJsonAsync($"http://localhost:5184/carritos/{carritoId}/confirmar", compra);
+
+            if (response.IsSuccessStatusCode)
+            {
+                mensajeExito = true;
+
+                // ⚠️ Solo vaciamos y reiniciamos el carrito si la compra fue exitosa
+                CarritoService.ReiniciarCarrito();
+                await CarritoService.CargarCarritoDesdeBackend();
+
+                await Task.Delay(3000);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                var textoError = await response.Content.ReadAsStringAsync();
+                error = $"Error al confirmar compra: {textoError}";
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Excepción al confirmar compra: {ex.Message}";
+        }
+    }
+}

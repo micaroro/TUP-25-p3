@@ -1,0 +1,79 @@
+@page "/carrito"
+@using cliente.Services
+@inject CarritoService CarritoService
+@inject NavigationManager Navigation
+
+<h3>Carrito de Compras</h3>
+
+@if (!CarritoService.Items.Any())
+{
+    <p>No hay productos en el carrito.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in CarritoService.Items)
+            {
+                <tr>
+                    <td>@item.Producto.Nombre</td>
+                    <td>$@item.Producto.Precio</td>
+                    <td>@item.Cantidad</td>
+                    <td>$@(item.Cantidad * item.Producto.Precio)</td>
+                    <td class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-warning" @onclick="async () => await CambiarCantidad(item.Producto.Id, -1)">-</button>
+                        <span class="mx-1">@item.Cantidad</span>
+                        <button class="btn btn-sm btn-success" @onclick="async () => await CambiarCantidad(item.Producto.Id, 1)">+</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Total: $@CarritoService.Total</h4>
+
+    <div class="mt-3">
+        <button class="btn btn-secondary me-2" @onclick="Volver">Seguir comprando</button>
+        <button class="btn btn-danger me-2" @onclick="VaciarCarrito">Vaciar carrito</button>
+        <button class="btn btn-primary" @onclick="ConfirmarCompra">Confirmar compra</button>
+    </div>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CarritoService.CargarCarritoDesdeBackend();
+    }
+
+    private void Volver() => Navigation.NavigateTo("/");
+
+    private async Task VaciarCarrito()
+    {
+        await CarritoService.VaciarCarrito();
+        StateHasChanged(); // actualiza la vista
+    }
+
+    private void ConfirmarCompra()
+    {
+        Navigation.NavigateTo("/confirmacion");
+    }
+
+    private async Task CambiarCantidad(int productoId, int cambio)
+    {
+        if (cambio > 0)
+            await CarritoService.IncrementarCantidad(productoId);
+        else
+            await CarritoService.DisminuirCantidad(productoId);
+
+        StateHasChanged(); // actualiza vista después del cambio
+    }
+}
