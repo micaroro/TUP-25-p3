@@ -1,0 +1,83 @@
+@page "/"
+
+@using cliente.Models
+@using cliente.Services
+@inject ProductoService ProductoService
+@inject CarritoService CarritoService
+
+<h3>El Rincon del Producto</h3>
+
+<input @bind="busqueda" @bind:event="oninput" placeholder="Buscar productos..." class="form-control mb-3" />
+
+@if (productos == null)
+{
+    <p>Cargando productos...</p>
+}
+else if (!productosFiltrados.Any())
+{
+    <p>No se encontraron productos.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var producto in productosFiltrados)
+        {
+            if (producto != null)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="@producto.ImagenUrl" class="card-img-top" alt="Imagen de @producto.Nombre" />
+                        <div class="card-body">
+                            <h5 class="card-title">@producto.Nombre</h5>
+                            <p>@producto.Descripcion</p>
+                            <p><strong>$@producto.Precio</strong></p>
+<p><strong>Stock:</strong> @(producto.Stock - CarritoService.ObtenerCantidadProducto(producto.Id))</p>
+                            <button class="btn btn-primary"
+                                    @onclick="() => Agregar(producto)"
+                                    disabled="@(!PuedeAgregar(producto))">
+                                Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+<a href="/carrito" class="btn btn-outline-secondary" style="position:fixed; top:20px; right:20px">
+    🛒 Ver Carrito (@CarritoService.ObtenerCantidadTotal())
+</a>
+
+@code {
+    private List<Producto>? productos;
+    private string busqueda = string.Empty;
+
+    private IEnumerable<Producto> productosFiltrados =>
+        productos?.Where(p => p.Nombre.Contains(busqueda, StringComparison.OrdinalIgnoreCase)) ?? Enumerable.Empty<Producto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await ProductoService.ObtenerProductos();
+    }
+
+   private async Task Agregar(Producto producto)
+{
+    int cantidadEnCarrito = CarritoService.ObtenerCantidadProducto(producto.Id);
+    int stockDisponible = producto.Stock - cantidadEnCarrito;
+
+    if (stockDisponible > 0)
+    {
+        CarritoService.AgregarProducto(producto);
+        await InvokeAsync(StateHasChanged); // Refresca la UI
+    }
+}
+
+
+private bool PuedeAgregar(Producto producto)
+{
+    int cantidadEnCarrito = CarritoService.ObtenerCantidadProducto(producto.Id);
+    return producto.Stock - cantidadEnCarrito > 0;
+}
+
+}

@@ -1,0 +1,117 @@
+@page "/confirmacion"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject CartState CartState
+
+<h1>Carrito de Compra</h1>
+
+@if (items.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in items)
+            {
+                <tr>
+                    <td>@i.ProductoId</td>
+                    <td>$@i.PrecioUnitario</td>
+                    <td>@i.Cantidad</td>
+                    <td>$@(i.Cantidad * i.PrecioUnitario)</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success me-1" @onclick="() => CambiarCantidad(i.ProductoId, true)">+</button>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => CambiarCantidad(i.ProductoId, false)">−</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p><strong>Total ítems:</strong> @totalItems</p>
+    <p><strong>Importe total:</strong> $@totalAmount</p>
+
+    <input placeholder="Nombre" @bind="cliente.NombreCliente" class="form-control mb-2" />
+    <input placeholder="Apellido" @bind="cliente.ApellidoCliente" class="form-control mb-2" />
+    <input placeholder="Email" @bind="cliente.EmailCliente" class="form-control mb-3" />
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-success" @onclick="Confirm">Confirmar Compra</button>
+        <button class="btn btn-danger" @onclick="Vaciar">Vaciar Carrito</button>
+    </div>
+}
+else
+{
+    <p>Carrito vacío.</p>
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int carritoId { get; set; }
+
+    private Cliente cliente = new();
+    private List<ItemCompra> items = new();
+    private int totalItems;
+    private decimal totalAmount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCarrito();
+    }
+
+    private async Task CargarCarrito()
+    {
+        items = await Http.GetFromJsonAsync<List<ItemCompra>>($"https://localhost:5011/carritos/{carritoId}") ?? new();
+        totalItems = items.Sum(i => i.Cantidad);
+        totalAmount = items.Sum(i => i.Cantidad * i.PrecioUnitario);
+    }
+
+    private async Task Confirm()
+    {
+        var res = await Http.PutAsJsonAsync($"https://localhost:5011/carritos/{carritoId}/confirmar", cliente);
+        if (res.IsSuccessStatusCode)
+        {
+            CartState.Items = 0;
+            Nav.NavigateTo("/", true);
+        }
+    }
+
+    private async Task Vaciar()
+    {
+        var res = await Http.DeleteAsync($"https://localhost:5011/carritos/{carritoId}");
+        if (res.IsSuccessStatusCode)
+        {
+            items.Clear();
+            totalItems = 0;
+            totalAmount = 0;
+            CartState.Items = 0;
+        }
+    }
+
+    private async Task CambiarCantidad(int productoId, bool sumar)
+    {
+        HttpResponseMessage res;
+
+        if (sumar)
+        {
+            res = await Http.PutAsync($"https://localhost:5011/carritos/{carritoId}/{productoId}", null);
+            if (res.IsSuccessStatusCode)
+                CartState.Items++;
+        }
+        else
+        {
+            res = await Http.DeleteAsync($"https://localhost:5011/carritos/{carritoId}/{productoId}");
+            if (res.IsSuccessStatusCode)
+                CartState.Items--;
+        }
+
+        await CargarCarrito();
+    }
+}

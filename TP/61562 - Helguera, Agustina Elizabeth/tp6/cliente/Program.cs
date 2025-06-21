@@ -4,13 +4,16 @@ using cliente;
 using cliente.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+builder.RootComponents.Add<App>("#app");
 
-// Configurar el HttpClient para apuntar al servidor API
+
+
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5184") });
 
-// Registrar el servicio API
+builder.Services.AddScoped<CarritoService>();
+
 builder.Services.AddScoped<ApiService>();
 
 await builder.Build().RunAsync();
