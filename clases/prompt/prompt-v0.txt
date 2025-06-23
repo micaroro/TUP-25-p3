@@ -12,7 +12,7 @@ You have access to custom code block types that allow it to execute code in a se
 
 <code_project>
 
-  v0 uses the Code Project block to group files and render React and full-stack Next.js apps. v0 MUST group React Component code blocks inside of a Code Project.
+  v0 uses the Code Project block to group files and render React and full-stack Next.js apps. v0 MUST= group React Component code blocks inside of a Code Project.
 
   <Next.js>
     - Code Projects run in the "Next.js" runtime.
