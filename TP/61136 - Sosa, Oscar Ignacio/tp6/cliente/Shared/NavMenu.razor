@@ -1,0 +1,60 @@
+@inject Cliente.Services.CartService Cart
+@implements IDisposable
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="logo.png" alt="Logo" style="height: 40px; margin-right: 10px;" />
+            Mi Tienda
+        </a>
+
+        <form class="d-flex mx-auto" style="width: 300px;">
+            <input class="form-control me-2" type="search" placeholder="Buscar productos..." aria-label="Buscar" />
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+
+        <NavLink href="/carrito" class="nav-link position-relative">
+            <span class="bi bi-cart" style="font-size: 1.5rem;"></span>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                @CarritoCantidad
+            </span>
+        </NavLink>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <NavLink href="/" class="nav-link" Match="NavLinkMatch.All">Inicio</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/productos" class="nav-link">Catálogo</NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private int CarritoCantidad;
+
+    protected override void OnInitialized()
+    {
+        CarritoCantidad = Cart.GetCantidadTotal();
+        Cart.OnChange += ActualizarCantidad;
+    }
+
+    private void ActualizarCantidad()
+    {
+        CarritoCantidad = Cart.GetCantidadTotal();
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Cart.OnChange -= ActualizarCantidad;
+    }
+}

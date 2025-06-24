@@ -1,32 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cliente</title>
-    <base href="/" />
-    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="cliente.styles.css" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta charset="UTF-8" />
+  <title>Bienvenido a Tienda Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #085caf;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 20px;
+      color: #f3efef;
+      text-align: center;
+    }
+    h1 {
+      color: #db1616;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .producto {
+      background: #4db5cf;
+      margin: 12px auto;
+      padding: 12px;
+      border-radius: 8px;
+      max-width: 320px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      color: #000;
+      text-align: left;
+    }
+    .producto img {
+      width: 100%;
+      border-radius: 6px;
+    }
+    .producto h3 {
+      margin: 8px 0 4px 0;
+      color: #db1616;
+    }
+    .producto p {
+      margin: 4px 0;
+    }
+    .producto button {
+      background-color: #0f4b1d;
+      color: #68b6e4;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+    .producto button:hover {
+      background-color: #1e7e34;
+    }
+    #btnCarrito {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+    #contadorCarrito {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 8px;
+      margin-left: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  </style>
 </head>
-
 <body>
-    <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
-    </div>
+  <h1>Bienvenido a Tienda Online</h1>
+  <div id="catalogo"></div>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
-    </div>
-    <script src="_framework/blazor.webassembly.js"></script>
+  <button id="btnCarrito" onclick="location.href='carrito.html'">
+    Ir al carrito <span id="contadorCarrito">0</span>
+  </button>
+
+  <script>
+   const productos = [
+  { Id: 1, Nombre: "Chocolate Milka", Descripcion: "Chocolate con leche 100g", Precio: 950, Stock: 30, ImagenUrl: "Imagenes/milka.jpg" },
+  { Id: 2, Nombre: "Bon o Bon", Descripcion: "Bombón relleno", Precio: 120, Stock: 30, ImagenUrl: "Imagenes/bonobon.jpg" },
+  { Id: 3, Nombre: "Sugus", Descripcion: "Caramelos masticables", Precio: 80, Stock: 30, ImagenUrl: "Imagenes/sugus.jpg" },
+  { Id: 4, Nombre: "Rocklets", Descripcion: "Confites chocolate 40g", Precio: 250, Stock: 30, ImagenUrl: "Imagenes/rocklets_01.jpg" },
+  { Id: 5, Nombre: "Mogul", Descripcion: "Gomitas frutales 50g", Precio: 180, Stock: 30, ImagenUrl: "Imagenes/mogul_01.jpg" },
+  { Id: 6, Nombre: "Tita", Descripcion: "Galletita bañada en chocolate", Precio: 90, Stock: 30, ImagenUrl: "Imagenes/tita_01.jpg" },
+  { Id: 7, Nombre: "Rhodesia", Descripcion: "Galletita bañada en chocolate", Precio: 90, Stock: 30, ImagenUrl: "Imagenes/rhodesia_01.jpg" },
+  { Id: 8, Nombre: "Menta Cristal", Descripcion: "Caramelos de menta", Precio: 70, Stock: 30, ImagenUrl: "Imagenes/menta_cristal.jpg" },
+  { Id: 9, Nombre: "Caramelos Arcor", Descripcion: "Caramelos duros surtidos", Precio: 60, Stock: 30, ImagenUrl: "Imagenes/caramelos_arcor.jpg" },
+  { Id: 10, Nombre: "Chocolinas", Descripcion: "Galletitas de chocolate 170g", Precio: 350, Stock: 30, ImagenUrl: "Imagenes/chocolinas.jpg" },
+  { Id: 11, Nombre: "Alfajor Jorgito", Descripcion: "Alfajor dulce de leche", Precio: 180, Stock: 30, ImagenUrl: "Imagenes/alfajor.jpg" },
+  { Id: 12, Nombre: "Bananita Dolca", Descripcion: "Banana en chocolate", Precio: 100, Stock: 30, ImagenUrl: "Imagenes/bananita_dolca.jpg" },
+  { Id: 13, Nombre: "Kinder Bueno", Descripcion: "Chocolate con leche y avellanas", Precio: 400, Stock: 30, ImagenUrl: "Imagenes/kinder_bueno.jpg" },
+  { Id: 14, Nombre: "KitKat", Descripcion: "Chocolate con obleas", Precio: 350, Stock: 30, ImagenUrl: "Imagenes/kitkat.jpg" },
+  { Id: 15, Nombre: "M&M's", Descripcion: "Confites chocolate 45g", Precio: 300, Stock: 30, ImagenUrl: "Imagenes/mms.jpg" }
+];
+
+
+
+    if (!localStorage.getItem('productosStock')) {
+      localStorage.setItem('productosStock', JSON.stringify(productos));
+    }
+
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    const catalogo = document.getElementById('catalogo');
+    const contador = document.getElementById('contadorCarrito');
+
+    function renderCatalogo() {
+      catalogo.innerHTML = '';
+      const productosStock = JSON.parse(localStorage.getItem('productosStock'));
+
+      productosStock.forEach(producto => {
+        const enCarrito = carrito.find(p => p.Id === producto.Id);
+        const cantidadEnCarrito = enCarrito ? enCarrito.cantidad : 0;
+        const stockDisponible = producto.Stock - cantidadEnCarrito;
+
+        const div = document.createElement('div');
+        div.className = 'producto';
+        div.innerHTML = `
+          <img src="${producto.ImagenUrl}" alt="${producto.Nombre}" />
+          <h3>${producto.Nombre}</h3>
+          <p>${producto.Descripcion}</p>
+          <p><strong>Precio:</strong> $${producto.Precio}</p>
+          <p><strong>Stock disponible:</strong> ${stockDisponible}</p>
+          <button onclick="agregarAlCarrito(${producto.Id})" ${stockDisponible === 0 ? 'disabled' : ''}>Agregar al carrito</button>
+        `;
+        catalogo.appendChild(div);
+      });
+    }
+
+    function agregarAlCarrito(id) {
+      const productosStock = JSON.parse(localStorage.getItem('productosStock'));
+      const producto = productosStock.find(p => p.Id === id);
+      if (!producto) return;
+
+      const itemCarrito = carrito.find(p => p.Id === id);
+      const cantidadActual = itemCarrito ? itemCarrito.cantidad : 0;
+      if (cantidadActual >= producto.Stock) return;
+
+      if (itemCarrito) {
+        itemCarrito.cantidad++;
+      } else {
+        carrito.push({ Id: producto.Id, Nombre: producto.Nombre, Precio: producto.Precio, cantidad: 1 });
+      }
+
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      actualizarContador();
+      renderCatalogo();
+    }
+
+    function actualizarContador() {
+      const total = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+      contador.textContent = total;
+    }
+
+    actualizarContador();
+    renderCatalogo();
+  </script>
 </body>
-
 </html>

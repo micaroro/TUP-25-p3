@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirmación de compra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #085caf;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #f7f7f7;
+    }
+    h1 {
+      color: #db1616;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #4db5cf;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(241, 125, 16, 0.05);
+    }
+    th, td {
+      padding: 12px 8px;
+      text-align: center;
+      border-bottom: 1px solid #066613;
+    }
+    th {
+      background: #f30d0d;
+      color: #f7f6f8;
+    }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: white;
+      display: block;
+      margin: 20px auto;
+      font-size: 16px;
+      font-weight: bold;
+      max-width: 250px;
+      text-align: center;
+      text-decoration: none;
+    }
+    .formulario {
+      max-width: 400px;
+      margin: 0 auto 20px;
+      background: #4db5cf;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .formulario input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Resumen de tu compra</h1>
+
+  <table id="tabla-confirmacion">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-body">
+      <!-- Se llenará con JS -->
+    </tbody>
+  </table>
+
+  <div class="formulario">
+    <input type="text" id="nombre" placeholder="Nombre" />
+    <input type="text" id="apellido" placeholder="Apellido" />
+    <input type="email" id="email" placeholder="Correo electrónico" />
+  </div>
+
+  <button id="btn-finalizar" class="btn">Finalizar compra</button>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <button class="btn" onclick="location.href='index.html'">← Volver al catálogo</button>
+  </div>
+
+  <script>
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const tablaBody = document.getElementById('tabla-body');
+    const btnFinalizar = document.getElementById('btn-finalizar');
+
+    function renderizarResumen() {
+      tablaBody.innerHTML = '';
+      if (carrito.length === 0) {
+        tablaBody.innerHTML = '<tr><td colspan="4">No tienes productos en el carrito.</td></tr>';
+        btnFinalizar.disabled = true;
+        return;
+      }
+
+      btnFinalizar.disabled = false;
+      let totalCompra = 0;
+
+      carrito.forEach(item => {
+        const subtotal = item.Precio * item.cantidad;
+        totalCompra += subtotal;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.Nombre}</td>
+          <td>${item.cantidad}</td>
+          <td>$${item.Precio.toFixed(2)}</td>
+          <td>$${subtotal.toFixed(2)}</td>
+        `;
+        tablaBody.appendChild(tr);
+      });
+
+      const trTotal = document.createElement('tr');
+      trTotal.innerHTML = `
+        <td colspan="3" style="font-weight:bold;">Total a pagar</td>
+        <td style="font-weight:bold;">$${totalCompra.toFixed(2)}</td>
+      `;
+      tablaBody.appendChild(trTotal);
+    }
+
+    function validarFormulario() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!nombre || !apellido || !email) {
+        alert('Por favor completá todos los campos.');
+        return false;
+      }
+
+      const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Ingresá un correo electrónico válido.');
+        return false;
+      }
+
+      return true;
+    }
+
+    btnFinalizar.addEventListener('click', () => {
+      if (!validarFormulario()) return;
+
+      const productosStock = JSON.parse(localStorage.getItem('productosStock')) || [];
+
+      carrito.forEach(item => {
+        const producto = productosStock.find(p => p.Id === item.Id);
+        if (producto) {
+          producto.Stock -= item.cantidad;
+          if (producto.Stock < 0) producto.Stock = 0;
+        }
+      });
+
+      localStorage.setItem('productosStock', JSON.stringify(productosStock));
+      localStorage.removeItem('carrito');
+
+      alert('¡Gracias por tu compra! Pronto recibirás un correo de confirmación.');
+      window.location.href = 'index.html';
+    });
+
+    renderizarResumen();
+  </script>
+
+</body>
+</html>
+
