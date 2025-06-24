@@ -23,7 +23,7 @@ var db = app.Services.GetRequiredService<AppDb>();
 db.Database.EnsureCreated(); // crear BD si no existe
 // Agregar productos de ejemplo al crear la base de datos
 
-app.Run("http://localhost:5000"); 
+app.Run("http://localhost:5177"); 
 // NOTA: Si falla la primera vez, corralo nuevamente.
 
 

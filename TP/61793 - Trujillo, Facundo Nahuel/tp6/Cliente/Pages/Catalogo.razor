@@ -1,0 +1,94 @@
+﻿@page "/"
+@using cliente.Modelo
+@using cliente.Services
+@inject ProductoService ProductoService
+@inject CartService CartService
+
+<h3>Catálogo de Productos</h3>
+
+<input class="form-control mb-3" type="text" placeholder="Buscar producto..." @bind="busqueda" @bind:event="oninput" />
+
+@if (productos is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var producto in productosFiltrados)
+        {
+            <div class="col-4 mb-3">
+                <div class="card">
+                    <img src="@producto.ImagenUrl" class="card-img-top" style="height:200px;object-fit:cover;" alt="@producto.Nombre" />
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">@producto.Descripcion</p>
+                        <p>Precio: $@producto.Precio</p>
+                        <p>Stock: @producto.Stock</p>
+                        <button class="btn btn-primary" @onclick="() => AgregarAlCarrito(producto.Id)">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    List<Producto>? productos;
+    Dictionary<int, int> cantidades = new();
+    string busqueda = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProductos();
+        productos = await ProductoService.ObtenerProductos();
+        if (productos != null)
+            foreach (var p in productos)
+                cantidades[p.Id] = 1;
+    }
+    
+    async Task AgregarAlCarrito(int productoId)
+{
+    // Obtener cantidad actual del producto en el carrito
+    var itemsCarrito = await CartService.ObtenerItems();
+    var existente = itemsCarrito.FirstOrDefault(i => i.ProductoId == productoId);
+    int cantidadActual = existente?.Cantidad ?? 0;
+
+    int nuevaCantidad = cantidadActual + 1;
+
+    // Obtener stock actual del producto
+    var producto = productos?.FirstOrDefault(p => p.Id == productoId);
+    if (producto != null && nuevaCantidad > producto.Stock + cantidadActual)
+    {
+        // Ya se llegó al máximo posible en stock
+        return;
+    }
+
+    await CartService.ActualizarCantidad(productoId, nuevaCantidad);
+
+    // Descontar stock visualmente en catálogo
+    if (producto != null)
+    {
+        producto.Stock -= 1;
+        if (producto.Stock < 0) producto.Stock = 0;
+    }
+}
+    private async Task CargarProductos()
+{
+    productos = await ProductoService.ObtenerProductos();
+
+    if (productos != null)
+    {
+        cantidades.Clear(); // resetear cantidades
+        foreach (var p in productos)
+            cantidades[p.Id] = 1;
+    }
+}
+    IEnumerable<Producto> productosFiltrados =>
+        string.IsNullOrWhiteSpace(busqueda)
+            ? productos ?? Enumerable.Empty<Producto>()
+            : productos?.Where(p =>
+                (p.Nombre?.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (p.Descripcion?.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ?? false)
+            ) ?? Enumerable.Empty<Producto>();
+}

@@ -7,10 +7,13 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configurar el HttpClient para apuntar al servidor API
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5184") });
+// **AQUÍ** le decimos que el base address sea tu API HTTPS v1
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("https://localhost:5001/")
+});
 
-// Registrar el servicio API
-builder.Services.AddScoped<ApiService>();
+// y tu singleton de estado…
+builder.Services.AddSingleton<CartState>();
 
 await builder.Build().RunAsync();

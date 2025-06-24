@@ -1,12 +1,15 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using cliente.Layout
+
+<Router AppAssembly="@typeof(Program).Assembly">
+  <Found Context="routeData">
+    <!-- Usa RouteView en lugar de LayoutView para enrutar -->
+    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+  </Found>
+  <NotFound>
+    <!-- Para la página no encontrada sí usamos LayoutView -->
+    <LayoutView Layout="@typeof(MainLayout)">
+      <p>Lo siento, no hay nada en esta ruta.</p>
+    </LayoutView>
+  </NotFound>
 </Router>

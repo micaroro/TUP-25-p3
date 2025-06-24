@@ -19,6 +19,7 @@
     <Compile Include="Menu.cs" />
     <Compile Include="EstadoPractico.cs" />
     <Compile Include="Asistencias.cs" />
+    <Compile Include="Corredor.cs" />
   </ItemGroup>
 
 </Project>
