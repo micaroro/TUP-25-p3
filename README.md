@@ -6,7 +6,7 @@
 img[alt="Calculadora"] { width: 300px; }
 </style>
 
-![Calculadora](./Enunciados/tp7/image.png)
+![Calculadora](./Enunciados/calculadora.png)
 
 Para ello, debe modificar el archivo `calculadora.html`.
 
