@@ -1,0 +1,104 @@
+@page "/"
+@page "/productos"
+@using cliente.Services
+@using cliente.Models
+@inject ApiService ApiService
+@inject CarritoService CarritoService
+@inject NavigationManager Navigation
+
+<h1 class="barra-superior">
+    <img src="img/logo.jpg" alt="Aura" style="height: 50px;" />
+    <div class="contenedor-derecha">
+        <button class="boton-principal" @onclick="Buscar">Buscar</button>
+        <button class="boton-principal" @onclick="IrCarrito" style="position: relative; margin-left: 15px;">
+            🛒
+            <span class="contador-carrito">@CarritoService.TotalItems</span>
+        </button>
+    </div>
+</h1>
+
+@if (mostrarMensaje)
+{
+    <div style="text-align:center;">
+        <div class="mensaje-compra">¡Compra realizada con éxito!</div>
+    </div>
+}
+
+@if (cargando)
+{
+    <p>Cargando productos...</p>
+}
+else if (productos != null && productos.Any())
+{
+    <div class="grid-productos">
+        @foreach (var producto in productos)
+        {
+            <div class="tarjeta-producto">
+                <img src="@producto.ImagenUrl" alt="@producto.Nombre" />
+                <h4>@producto.Nombre</h4>
+                <p class="descripcion">@producto.Descripcion</p>
+                <p>$@producto.Precio.ToString("N2")</p>
+                <p><strong>Stock disponible:</strong> @CarritoService.ObtenerStockReal(producto.Id)</p>
+                <button class="btn-dorado" 
+                        @onclick="() => AgregarAlCarrito(producto)" 
+                        disabled="@(CarritoService.ObtenerStockReal(producto.Id) == 0)">
+                    @(CarritoService.ObtenerStockReal(producto.Id) == 0 ? "Sin stock" : "Agregar al carrito")
+                </button>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No hay productos disponibles.</p>
+}
+
+@code {
+    private List<Producto> productos;
+    private bool cargando = true;
+    private bool mostrarMensaje = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Leer query string para saber si mostrar mensaje
+        var uri = new Uri(Navigation.Uri);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var valor = queryParams.Get("compraExitosa");
+        mostrarMensaje = valor == "true";
+
+        if (mostrarMensaje)
+        {
+            await Task.Delay(3000); 
+            mostrarMensaje = false;
+            StateHasChanged();
+        }
+
+        await CargarProductos();
+    }
+
+    private async Task CargarProductos()
+    {
+        cargando = true;
+        productos = await ApiService.ObtenerProductosAsync();
+        cargando = false;
+
+        CarritoService.SetProductosDisponibles(productos);
+        StateHasChanged();
+    }
+
+    private void AgregarAlCarrito(Producto producto)
+    {
+        CarritoService.AgregarProducto(producto, 1);
+        StateHasChanged();
+    }
+
+    private void IrCarrito()
+    {
+        Navigation.NavigateTo("/carrito");
+    }
+
+    private void Buscar()
+    {
+        Navigation.NavigateTo("/productos/buscar");
+    }
+}

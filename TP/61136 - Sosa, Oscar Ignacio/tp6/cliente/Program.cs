@@ -1,13 +1,17 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Cliente;
-using Cliente.Services;
+using cliente;
+using Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app"); // <- Aquí usa el componente App
+
+builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSingleton<CartService>();
+// Configurar el HttpClient para apuntar al servidor API
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5184") });
+
+// Registrar el servicio API
 builder.Services.AddScoped<ApiService>();
 
 await builder.Build().RunAsync();

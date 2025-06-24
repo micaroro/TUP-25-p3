@@ -1,0 +1,44 @@
+@inject NavigationManager Navigation
+@inject CarritoService CarritoService
+@using cliente.Services
+@inject CarritoService CarritoService
+
+
+<header class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#" @onclick="IrHome">
+            <img src="img/logo.jpg" alt="AuraÑ" style="height: 40px;" />
+             <strong class="ms-2 text-light">Aura</strong>
+        </a>
+
+        <!-- Buscador -->
+        <input class="form-control w-50 mx-3" placeholder="Buscar productos..." @bind="busqueda" @bind:event="oninput" />
+
+        <!-- Ícono carrito con contador -->
+        <button class="btn btn-outline-light position-relative" @onclick="IrCarrito">
+            <i class="bi bi-cart3"></i> <!-- Icono Bootstrap Icons -->
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                @CarritoService.TotalItems
+                <span class="visually-hidden">productos en el carrito</span>
+            </span>
+        </button>
+    </div>
+</header>
+
+@code {
+    string busqueda = "";
+
+    // navegar al home
+    void IrHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    // para navegar al carrito
+    void IrCarrito()
+    {
+        Navigation.NavigateTo("/carrito");
+    }
+
+}

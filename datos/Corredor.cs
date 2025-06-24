@@ -53,11 +53,11 @@ public class Corredor {
             try {
                 var psi = new ProcessStartInfo {
                     FileName = "open",
-                    Arguments = "http://localhost:5177",
+                    Arguments = "http://localhost:5184",
                     UseShellExecute = true
                 };
                 Process.Start(psi);
-                Consola.Escribir("[Auditoría] Navegador abierto en http://localhost:5177", ConsoleColor.Yellow);
+                Consola.Escribir("[Auditoría] Navegador abierto en http://localhost:5184", ConsoleColor.Yellow);
                 return ResultadoEjecucion.Ok;
             } catch {
                 return ResultadoEjecucion.FallaNavegador;

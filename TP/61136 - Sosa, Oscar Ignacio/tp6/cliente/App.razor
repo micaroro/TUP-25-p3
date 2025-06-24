@@ -1,36 +1,14 @@
-﻿@using Cliente.Shared
-
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="HandleNavigationAsync">
+﻿@using cliente.Shared;
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        @if (isLoading)
-        {
-            <Loading />
-        }
-        else
-        {
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        }
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <Header />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
+        <PageTitle>Not found</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <p>Lo sentimos, no se encontró esta dirección.</p>
+            <p role="alert">Sorry, there's nothing at this address.</p>
         </LayoutView>
     </NotFound>
 </Router>
-
-@code {
-    private bool isLoading;
-
-    private async Task HandleNavigationAsync(NavigationContext args)
-    {
-        isLoading = true;
-        StateHasChanged();
-
-        // Simular espera, aquí puedes poner lógica real si necesitas cargar datos
-        await Task.Delay(500);
-
-        isLoading = false;
-        StateHasChanged();
-    }
-}
-

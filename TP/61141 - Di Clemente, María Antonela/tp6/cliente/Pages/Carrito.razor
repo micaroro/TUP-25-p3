@@ -1,0 +1,113 @@
+@page "/carrito"
+@using cliente.Services
+@using cliente.Models
+@inject CarritoService CarritoService
+@inject NavigationManager Navigation
+
+<h3>Carrito de Compras</h3>
+
+@if (!CarritoService.Items.Any())
+{
+    <div class="alert alert-info">Tu carrito está vacío.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Subtotal</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in CarritoService.Items)
+            {
+                <tr>
+                    <td>@item.Producto.Nombre</td>
+                    <td>
+                     <button class="btn btn-sm btn-secondary" @onclick="() => DisminuirCantidad(item.Producto)">-</button>
+                        <span style="margin: 0 8px;">@item.Cantidad</span>
+                          <button class="btn btn-sm btn-secondary" @onclick="() => AumentarCantidad(item.Producto)">+</button>
+                    </td>
+                    <td>$@item.Producto.Precio.ToString("N0")</td>
+                    <td>@($"${(item.Cantidad * item.Producto.Precio):N0}")</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => QuitarDelCarrito(item.Producto)">
+                            Quitar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                 <td><strong>Total</strong></td>
+                    <td></td>
+                    <td></td>
+                <td colspan="2">$@CarritoService.Total().ToString("N0")</td>
+            </tr>
+        </tfoot>
+    </table>
+
+<button class="btn-dorado" @onclick="ConfirmarCompra">
+    Confirmar compra
+</button>
+
+<button class="btn btn-success" @onclick="FinalizarCompra">
+    Vaciar carrito
+</button>
+}
+
+@code {
+    void QuitarDelCarrito(Producto producto)
+    {
+        CarritoService.QuitarProducto(producto);
+    }
+
+    // Vacía el carrito y recarga la página
+    void FinalizarCompra()
+    {
+        CarritoService.Vaciar();
+        Navigation.NavigateTo("/carrito", true);
+    }
+    void IrAConfirmarCompra()
+    {
+    Navigation.NavigateTo("/carrito/confirmar");
+    }
+
+    private void ConfirmarCompra()
+    {
+    Navigation.NavigateTo("/carrito/confirmar");
+    }
+    void AumentarCantidad(Producto producto)
+    {
+        var item = CarritoService.Items.FirstOrDefault(i => i.Producto.Id == producto.Id);
+        if (item != null)
+        {
+            int stockDisponible = CarritoService.ObtenerStockReal(producto.Id);
+            if (stockDisponible > 0)
+            {
+                item.Cantidad++;
+                StateHasChanged();
+            }
+        }
+    }
+
+    void DisminuirCantidad(Producto producto)
+    {
+        var item = CarritoService.Items.FirstOrDefault(i => i.Producto.Id == producto.Id);
+        if (item != null)
+        {
+            item.Cantidad--;
+            if (item.Cantidad <= 0)
+            {
+                CarritoService.QuitarProducto(producto);
+            }
+             StateHasChanged();
+        }
+    }
+
+}

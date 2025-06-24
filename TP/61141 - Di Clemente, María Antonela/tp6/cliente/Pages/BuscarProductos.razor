@@ -1,0 +1,93 @@
+@page "/productos/buscar"
+@using cliente.Services
+@using cliente.Models
+@inject ApiService ApiService
+@inject NavigationManager Navigation
+@inject CarritoService CarritoService
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+    <!-- Barra superior -->
+    <h1 class="barra-superior">
+        <div style="flex-grow:1; font-size: 1.5rem; font-weight: bold;">Buscar Productos</div>
+        <button class="boton-principal" @onclick="Volver">Volver</button>
+    </h1>
+
+    <!-- Buscador -->
+    <div class="contenedor-buscador">
+        <input @bind="terminoBusqueda" placeholder="Buscar por nombre..." />
+    </div>
+
+    <!-- Productos encontrados -->
+    @if (cargando)
+    {
+        <p>Cargando productos...</p>
+    }
+    else if (productos != null && productos.Any())
+    {
+        var filtrados = productos
+            .Where(p => string.IsNullOrEmpty(terminoBusqueda) || p.Nombre.Contains(terminoBusqueda, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (filtrados.Any())
+        {
+            <div class="grid-productos">
+                @foreach (var p in filtrados)
+                {
+                    <div class="tarjeta-producto">
+                        <img src="@p.ImagenUrl" alt="@p.Nombre" />
+                        <h4>@p.Nombre</h4>
+                        <p class="descripcion">@p.Descripcion</p>
+                        <p><strong>Stock disponible:</strong> @CarritoService.ObtenerStockReal(p.Id)</p>
+                        <button class="btn-dorado" @onclick="() => AgregarAlCarrito(p)" disabled="@(CarritoService.ObtenerStockReal(p.Id) == 0)">
+                            @(CarritoService.ObtenerStockReal(p.Id) == 0 ? "Sin stock" : "Agregar al carrito")
+                        </button>
+                        <p>$@p.Precio.ToString("N2")</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No se encontraron productos con ese nombre.</p>
+        }
+    }
+    else
+    {
+        <p>No hay productos disponibles.</p>
+    }
+
+</div>
+
+@code {
+    private string terminoBusqueda = string.Empty;
+    private List<Producto> productos;
+    private bool cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProductos();
+    }
+
+    private async Task CargarProductos()
+    {
+        cargando = true;
+        productos = await ApiService.ObtenerProductosAsync();
+        cargando = false;
+
+        CarritoService.SetProductosDisponibles(productos);
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/productos");
+    }
+
+   private void AgregarAlCarrito(Producto producto)
+    {
+        CarritoService.AgregarProducto(producto, 1);
+    }
+
+}
+
+

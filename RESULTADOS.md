@@ -35,12 +35,16 @@
 62093 Frías Silva, Juan Segundo      29   ✅✅🟢✅✅🟢
 62263 Orellana, José Augusto         30   ✅✅🟢✅✅🟢
 62555 Verón, Matias Gabriel          27   ✅✅🟢✅✅🟢
+61200 Gauna Serrano, Martín Javier   32   ✅✅🟢✅🟢🟢
+61139 Gallo, María Matilde           20   ✅✅🟢✅✅🟢
+61214 Collazos Cortez, Máximo Albert 28   ✅✅🟢✅✅🟢
+61136 Sosa, Oscar Ignacio                 ✅✅🟢✅✅❓ <- revisar html
+61141 Di Clemente, María Antonela    25   ✅✅🟢✅✅🟢
+
 ```
 
 ## Alumnos que deben completar practicos
 ```
-61139 Gallo, María Matilde           20   ✅✅🟢❓❓🟢
-61200 Gauna Serrano, Martín Javier   32   ✅✅🟢❓❓🟢
 61579 Marti, Gonzalo                 27   ✅✅🟢✅❓🟢 xx
 61956 Leglisé, Laureano              28   ✅✅🟢✅❓🟢
 ```
@@ -48,9 +52,7 @@
 ## Alumnos que no presentaron
 ```
 61118 Barrios, Santiago Alexis       28   ✅✅🟢❓❓❓
-61141 Di Clemente, María Antonela    25   ✅✅🟢✅✅❓
 61203 Acevedo Costello, Juan Ignacio 31   ✅✅🟢✅❓❓
-61214 Collazos Cortez, Máximo Albert 28   ✅✅🟢❓❓❓
 61248 Palma Collado, Nahuel          34   ✅✅🟢✅✅❓
 61319 Carabajal, José Gabriel        30   ✅✅🟢✅❓❓
 61562 Helguera, Agustina Elizabeth   30   ✅✅🟢✅❓❓
@@ -107,13 +109,13 @@
 61988 Villada, Guillermo Nicolás     23   ✅✅🟢✅✅🟢
 62104 Robledo, Juan Gerardo          31   ✅✅🟢✅✅🟢
 62136 Muse, Alejandro                30   ✅✅🟢✅✅🟢
+61422 Pedraza, Estaban Daniel        28   ✅✅🟢✅✅🟢
+61962 Robledo, Rocio Micaela         15   ✅✅🟢✅✅🟢
 ```
 
 ## Alumnos que deben completar practicos
 ```
-61422 Pedraza, Estaban Daniel        28   ✅✅🟢✅❓🟢
 61905 Martinez, Augusto              23   ✅❓🟢✅❓🟢
-61962 Robledo, Rocio Micaela         15   ✅✅🟢❓✅🟢
 ```
 
 ## Alumnos que no presentaron

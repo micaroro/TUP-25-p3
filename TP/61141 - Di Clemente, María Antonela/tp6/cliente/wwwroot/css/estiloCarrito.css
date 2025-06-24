@@ -1,0 +1,211 @@
+table.table {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    border-collapse: separate;
+    border-spacing: 0 12px; 
+    background-color: #111;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+    overflow: hidden;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+
+table.table thead tr {
+    background-color: #222;
+    color: #FFD700;
+    font-weight: 700;
+    font-size: 1rem;
+    border-bottom: 2px solid #d4af37;
+}
+
+table.table thead th {
+    padding: 14px 20px;
+    text-align: left;
+}
+
+
+table.table tbody tr {
+    background-color: #222;
+    transition: background-color 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(212, 175, 55, 0.3);
+}
+
+table.table tbody tr:hover {
+    background-color: #333;
+}
+
+
+table.table tbody td {
+    padding: 12px 20px;
+    vertical-align: middle;
+    color: #e6d98a;
+}
+
+
+table.table button.btn {
+    background-color: #d4af37;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+table.table button.btn:hover {
+    background-color: #b28f21;
+}
+
+
+table.table button.btn-danger {
+    background-color: #8b0000;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+
+table.table button.btn-danger:hover {
+    background-color: #b22222;
+}
+
+
+table.table tfoot tr {
+    background-color: #111;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #d4af37;
+    border-top: 2px solid #d4af37;
+}
+
+table.table tfoot td {
+    padding: 14px 20px;
+    text-align: left;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #d4af37;
+}
+
+.alert-info {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #222;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    color: #d4af37;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 0 12px #d4af37;
+}
+
+.contenedor-botones-carrito {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px auto;
+}
+
+.boton-carrito {
+    width: 220px;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease;
+}
+
+.btn-dorado {
+    background-color: #d4af37;
+    color: black;
+}
+
+.btn-dorado:hover {
+    background-color: #b28f21;
+}
+
+.btn-verde {
+    background-color: #004d00;
+    color: #d4af37;
+}
+
+.btn-verde:hover {
+    background-color: #006600;
+}
+
+/*confirmarcompra*/
+h3 {
+    color: #FFD700;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-label {
+    color: #FFD700;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-control {
+    background-color: #222;
+    border: 1px solid #444;
+    color: #FFD700;
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-success {
+    background-color: #FFD700;
+    color: #111;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-success:hover {
+    background-color: #e6c200;
+}
+
+.alert {
+    background-color: #222;
+    color: #FFD700;
+    padding: 12px 15px;
+    border-radius: 4px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #FFD700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-link:hover {
+    color: #e6c200;
+}
